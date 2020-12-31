@@ -6,7 +6,7 @@
         <el-button type="primary" size="mini" @click="remove(0)">删除</el-button>
       </template>
       <template slot="enable" slot-scope="scope">
-        <span>{{ scope.value.enable?'启用':'禁用' }}</span>
+        <span>{{ scope.value.enable ? '启用' : '禁用' }}</span>
       </template>
       <template slot="oper" slot-scope="scope">
         <el-button size="mini" type="text" @click="edit(scope.value)">编辑</el-button>
@@ -18,22 +18,22 @@
     <el-dialog width="50%" :title="subFormData.id?'编辑':'新增'" :visible.sync="dialogFormVisible">
       <el-form ref="subFormData" :model="subFormData" :rules="subFormDataRule" class="subFormData" label-width="100px">
         <el-form-item label="名称" prop="name">
-          <el-input v-model="subFormData.name" size="mini" auto-complete="off" />
+          <el-input v-model="subFormData.name" size="mini" auto-complete="off"/>
         </el-form-item>
         <el-form-item label="编码" prop="code">
-          <el-input v-model="subFormData.code" size="mini" auto-complete="off" />
+          <el-input v-model="subFormData.code" size="mini" auto-complete="off"/>
         </el-form-item>
         <el-form-item label="最大用户数" prop="number">
-          <el-input-number v-model="subFormData.number" :min="0" size="mini" auto-complete="off" />
+          <el-input-number v-model="subFormData.number" :min="0" size="mini" auto-complete="off"/>
         </el-form-item>
         <el-form-item label="联系方式" prop="phone">
-          <el-input v-model="subFormData.phone" size="mini" auto-complete="off" />
+          <el-input v-model="subFormData.phone" size="mini" auto-complete="off"/>
         </el-form-item>
         <el-form-item label="地址" prop="address">
-          <el-input v-model="subFormData.address" size="mini" auto-complete="off" />
+          <el-input v-model="subFormData.address" size="mini" auto-complete="off"/>
         </el-form-item>
         <el-form-item label="备注" prop="remark">
-          <el-input v-model="subFormData.remark" size="mini" auto-complete="off" />
+          <el-input v-model="subFormData.remark" size="mini" auto-complete="off"/>
         </el-form-item>
         <el-form-item label="状态" prop="enable">
           <el-radio-group v-model="subFormData.enable">
@@ -50,24 +50,26 @@
 
     <!--配置界面-->
     <el-dialog width="50%" :title="'配置'" :visible.sync="configDialogFormVisible">
-      <el-form ref="subConfigFormData" :model="subConfigFormData" :rules="subConfigFormDataRule" class="subFormData" label-width="100px">
+      <el-form ref="subConfigFormData" :model="subConfigFormData" :rules="subConfigFormDataRule"
+               class="subConfigFormData" label-width="100px"
+      >
         <el-form-item label="项目id" prop="projectId">
-          <el-input v-model="subConfigFormData.projectId" size="mini" auto-complete="off" />
+          <el-input v-model="subConfigFormData.projectId" size="mini" auto-complete="off"/>
         </el-form-item>
-        <el-form-item label="模块" prop="moduleId">
-          <el-input v-model="subConfigFormData.moduleId" size="mini" auto-complete="off" />
+        <el-form-item label="模块id" prop="moduleId">
+          <el-input v-model="subConfigFormData.moduleId" size="mini" auto-complete="off"/>
         </el-form-item>
         <el-form-item label="iam账号" prop="iamUname">
-          <el-input v-model="subConfigFormData.iamUname" size="mini" auto-complete="off" />
+          <el-input v-model="subConfigFormData.iamUname" size="mini" auto-complete="off"/>
         </el-form-item>
         <el-form-item label="iam密码" prop="iamPassword">
-          <el-input v-model="subConfigFormData.iamPassword" size="mini" auto-complete="off" />
+          <el-input v-model="subConfigFormData.iamPassword" size="mini" auto-complete="off"/>
         </el-form-item>
         <el-form-item label="iam域账号" prop="iamDomain">
-          <el-input v-model="subConfigFormData.iamDomain" size="mini" auto-complete="off" />
+          <el-input v-model="subConfigFormData.iamDomain" size="mini" auto-complete="off"/>
         </el-form-item>
         <el-form-item label="备注" prop="remark">
-          <el-input v-model="subConfigFormData.remark" size="mini" auto-complete="off" />
+          <el-input v-model="subConfigFormData.remark" size="mini" auto-complete="off"/>
         </el-form-item>
         <el-form-item label="状态" prop="enable">
           <el-radio-group v-model="subConfigFormData.enable">
@@ -75,10 +77,13 @@
             <el-radio :label="false">禁用</el-radio>
           </el-radio-group>
         </el-form-item>
+        <el-form-item v-show="false" label="租户id" prop="tenantId">
+          <el-input v-model="subConfigFormData.tenantId" size="mini" auto-complete="off"/>
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button size="mini" @click="configDialogFormVisible = false">取 消</el-button>
-        <el-button size="mini" type="primary" @click="subForm('subConfigFormData')">确 定</el-button>
+        <el-button size="mini" type="primary" @click="subConfigForm('subConfigFormData')">确 定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -121,7 +126,8 @@ export default {
         iamPassword: null,
         iamDomain: null,
         remark: null,
-        enable: null
+        enable: null,
+        tenantId: null
       },
       subFormDataRule: {
         'name': [{
@@ -279,7 +285,8 @@ export default {
   },
   async created() {
   },
-  mounted() {},
+  mounted() {
+  },
   methods: {
     // 删除
     remove(row) {
@@ -311,7 +318,8 @@ export default {
             this.dialogFormVisible = false
           })
         })
-        .catch(() => {})
+        .catch(() => {
+        })
     },
     subForm(formData) {
       this.$refs[formData].validate((valid) => {
@@ -327,9 +335,23 @@ export default {
         }
       })
     },
+    subConfigForm(formData) {
+      this.$refs[formData].validate((valid) => {
+        if (valid) {
+          console.log('!!!!!!!' + this[formData].tenantId)
+          api.submitConfigForm(this[formData]).then(res => {
+            this.$message.success('保存成功')
+            this.getData(this.datas)
+            this.configDialogFormVisible = false
+          }).catch(() => {
+          })
+        } else {
+          return false
+        }
+      })
+    },
     // 新增或编辑页面
     edit(row) {
-      console.log(row)
       this.dialogFormVisible = true
       if (!row) {
         this.$set(this, 'subFormData', {
@@ -358,30 +380,27 @@ export default {
     // 配置页面
     editConfig(id) {
       this.configDialogFormVisible = true
-      // if (!id) {
-      //   this.$set(this, 'subFormData', {
-      //     'name': null,
-      //     'code': null,
-      //     'number': null,
-      //     'phone': null,
-      //     'address': null,
-      //     'remark': null,
-      //     'enable': true
-      //   })
-      //   this.$nextTick(() => {
-      //     this.$refs['subFormData'].resetFields()
-      //   })
-      //   return
-      // }
+      if (id == null) {
+        this.resetConfigValue()
+      }
       this.getConfigData(id)
-      // this.$set(this.subConfigFormData, 'id', subConfigFormData.id)
-      // this.$set(this.subConfigFormData, 'projectId', subConfigFormData.name)
-      // this.$set(this.subConfigFormData, 'moduleId', subConfigFormData.code)
-      // this.$set(this.subConfigFormData, 'iamUname', subConfigFormData.number)
-      // this.$set(this.subConfigFormData, 'iamPassword', subConfigFormData.phone)
-      // this.$set(this.subConfigFormData, 'iamDomain', subConfigFormData.address)
-      // this.$set(this.subConfigFormData, 'remark', subConfigFormData.remark)
-      // this.$set(this.subConfigFormData, 'enable', subConfigFormData.enable)
+      this.$set(this.subConfigFormData, 'tenantId', id)
+      console.log('ssss' + this.subConfigFormData.tenantId)
+    },
+    resetConfigValue() {
+      this.$set(this, 'subConfigFormData', {
+        'projectId': null,
+        'moduleId': null,
+        'iamUname': null,
+        'iamPassword': null,
+        'iamDomain': null,
+        'remark': null,
+        'enable': true
+      })
+      this.$nextTick(() => {
+        this.$refs['subConfigFormData'].resetFields()
+      })
+      return
     },
     getData(datas = this.datas) {
       this.$set(this, 'datas', datas)
@@ -398,7 +417,11 @@ export default {
     },
     getConfigData(id) {
       api.getConfigData(id).then(res => {
-        this.subConfigFormData = JSON.parse(JSON.stringify(res.model))
+        if (res.model != null) {
+          this.subConfigFormData = JSON.parse(JSON.stringify(res.model))
+        } else {
+          this.resetConfigValue()
+        }
       })
     }
   }

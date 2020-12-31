@@ -27,7 +27,7 @@
         <el-form-item label="编码" prop="code">
           <el-input v-model="subFormData.code" size="mini" auto-complete="off" />
         </el-form-item>
-        <el-form-item label="节点" prop="nodeId">
+        <el-form-item label="节点id" prop="nodeId">
           <el-input v-model="subFormData.nodeId" size="mini" auto-complete="off" />
         </el-form-item>
         <el-form-item label="备注" prop="remark">
@@ -91,7 +91,7 @@ export default {
         }],
         'nodeId': [{
           required: true,
-          message: '请填写节点'
+          message: '请填写节点id'
         }],
         'enable': [{
           required: true,
@@ -152,8 +152,8 @@ export default {
             prop: 'nodeId',
             conditionshow: true,
             filedShow: true,
-            label: '节点',
-            placeholder: '节点',
+            label: '节点id',
+            placeholder: '节点id',
             optList: []
           },
           {

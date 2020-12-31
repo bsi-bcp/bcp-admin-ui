@@ -5,6 +5,10 @@ const URL = {
   orgClass: '/services/fwcore/orgClasses'
 }
 
+const ConfigURL = {
+  tenantconfig: '/services/fwcore/tenantconfig'
+}
+
 // 1、租户列表
 export function getPage(params) {
   return request({
@@ -16,7 +20,6 @@ export function getPage(params) {
 
 // 2、新增/保存租户
 export function submitForm(params) {
-  debugger
   return request({
     url: params.id != null ? URL.orgClass + '/' + params.id + '' : URL.orgClass,
     method: params.id == null ? 'post' : 'put',
@@ -24,7 +27,16 @@ export function submitForm(params) {
   })
 }
 
-// 3、批量删除
+// 3、配置租户
+export function submitConfigForm(params) {
+  return request({
+    url: params.id != null ? ConfigURL.tenantconfig + '/' + params.id + '' : ConfigURL.tenantconfig,
+    method: params.id == null ? 'post' : 'put',
+    data: params
+  })
+}
+
+// 4、批量删除
 export function batchDelete(params) {
   var ids = common.splitArr(params.items, ',')
   return request({
@@ -34,7 +46,7 @@ export function batchDelete(params) {
   })
 }
 
-// 3、获取当前租户的配置信息
+// 5、获取当前租户的配置信息
 export function getConfigData(id) {
   return request({
     url: '/services/fwcore/tenantconfig/' + id,
