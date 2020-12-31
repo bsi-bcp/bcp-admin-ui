@@ -2,22 +2,22 @@ import request from '@/utils/request'
 import * as common from '@/api/common.js'
 
 const URL = {
-  orgClass: '/services/fwcore/orgClasses'
+  frontcomputer: '/services/fwcore/frontcomputer'
 }
 
-// 1、租户列表
+// 1、前置机列表
 export function getPage(params) {
   return request({
-    url: URL.orgClass,
+    url: URL.frontcomputer,
     method: 'get',
     params
   })
 }
 
-// 2、新增/保存租户
+// 2、新增/保存前置机
 export function submitForm(params) {
   return request({
-    url: params.id ? URL.orgClass + '/' + params.id + '' : URL.orgClass,
+    url: params.id ? URL.frontcomputer + '/' + params.id + '' : URL.frontcomputer,
     method: params.id ? 'put' : 'post',
     data: params
   })
@@ -27,16 +27,16 @@ export function submitForm(params) {
 export function batchDelete(params) {
   var ids = common.splitArr(params.items, ',')
   return request({
-    url: URL.orgClass + '?items=' + ids,
+    url: URL.frontcomputer + '?items=' + ids,
     method: 'DELETE'
     // params
   })
 }
 
-// 3、获取当前租户的配置信息
-export function getConfigData(id) {
+// 5、查询租户列表
+export function getTenants() {
   return request({
-    url: '/services/fwcore/tenantconfig/' + id,
-    method: 'GET'
+    url: '/services/fwcore/orgClasses',
+    method: 'get'
   })
 }
