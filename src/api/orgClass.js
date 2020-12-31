@@ -16,9 +16,10 @@ export function getPage(params) {
 
 // 2、新增/保存租户
 export function submitForm(params) {
+  debugger
   return request({
-    url: params.id ? URL.orgClass + '/' + params.id + '' : URL.orgClass,
-    method: params.id ? 'put' : 'post',
+    url: params.id != null ? URL.orgClass + '/' + params.id + '' : URL.orgClass,
+    method: params.id == null ? 'post' : 'put',
     data: params
   })
 }
