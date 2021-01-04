@@ -317,9 +317,12 @@ export default {
       this.$set(this.datas.table, 'loading', true)
       this.$set(this.params, 'orgId', this.params.orgName)
       api.getPage(this.params).then(res => {
-        for (var i = 0; i < res.model.length; i++) {
-          this.addDisable(res.model[i].menuTree)
+        if(res.model!=null){
+          for (var i = 0; i < res.model.length; i++) {
+            this.addDisable(res.model[i].menuTree)
+          }
         }
+        
         this.$set(this.datas.resData, 'rows', res.model)
         this.$set(this.datas.params, 'currentPage', res.currentPage)
         this.$set(this.datas.params, 'pageSize', res.pageSize)
