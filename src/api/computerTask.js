@@ -2,13 +2,13 @@ import request from '@/utils/request'
 import * as common from '@/api/common.js'
 
 const URL = {
-  frontcomputer: '/services/fwcore/task'
+  frontcomputertask: '/services/fwcore/frontcomputertask'
 }
 
 // 1、计划任务列表
 export function getPage(params) {
   return request({
-    url: URL.frontcomputer,
+    url: URL.frontcomputertask,
     method: 'get',
     params
   })
@@ -17,7 +17,7 @@ export function getPage(params) {
 // 2、新增/保存计划任务
 export function submitForm(params) {
   return request({
-    url: params.id ? URL.frontcomputer + '/' + params.id + '' : URL.frontcomputer,
+    url: params.id ? URL.frontcomputertask + '/' + params.id + '' : URL.frontcomputertask,
     method: params.id ? 'put' : 'post',
     data: params
   })
@@ -45,7 +45,7 @@ export function submitAllocationForm(params) {
 export function batchDelete(params) {
   var ids = common.splitArr(params.items, ',')
   return request({
-    url: URL.frontcomputer + '?items=' + ids,
+    url: URL.frontcomputertask + '?items=' + ids,
     method: 'DELETE'
     // params
   })
@@ -67,10 +67,19 @@ export function getTenants() {
   })
 }
 
-// 6、查询所选租户下所有的前置机
+// 7、查询所选租户下所有的前置机
 export function getComputers(tenantId) {
   return request({
     url: '/services/fwcore/getFrontComputerByTenantId/' + tenantId,
+    method: 'get'
+  })
+}
+
+// 8、查询字典
+export function getSourceTypeOptions(code) {
+  return request({
+    // url: '/services/fwcore/prop/' + code + '/proplists',
+    url: '/services/fwcore/props/getPropListByPropCode?code=' + code,
     method: 'get'
   })
 }

@@ -4,6 +4,7 @@
       <template slot="lastBtn">
         <el-button type="primary" size="mini" @click="edit(0)">新增</el-button>
         <el-button type="primary" size="mini" @click="remove(0)">删除</el-button>
+        <el-button type="primary" size="mini" @click="allocation(0)">分配</el-button>
       </template>
       <template slot="enable" slot-scope="scope">
         <span>{{ scope.value.enable ? '启用' : '禁用' }}</span>
@@ -63,20 +64,55 @@
         <el-button size="mini" type="primary" @click="subForm('subFormData')">确 定</el-button>
       </div>
     </el-dialog>
+
+    <!--分配界面-->
+    <el-dialog width="50%" :title="'分配'" :visible.sync="allocationDialogFormVisible">
+      <el-form ref="allocationSubFormData" :model="allocationSubFormData" :rules="allocationSubFormDataRule"
+               class="allocationSubFormData" label-width="100px"
+      >
+        <el-form-item label="计划任务名称">
+          <el-select v-model="allocationNames" multiple disabled size="mini" auto-complete="off">
+            <el-option v-for="item in allocationNames" :key="item" :label="item" :value="item"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="items" v-show="false" prop="items">
+          <el-input v-model="allocationSubFormData.items" size="mini" auto-complete="off"/>
+        </el-form-item>
+        <el-form-item label="租户" prop="sourceType">
+          <el-select v-model="allocationSubFormData.tenantId" size="mini" @change="getComputers">
+            <el-option v-for="(optItem,optindex) in tenants" :key="optindex" :label="optItem.name" :value="optItem.id"/>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="前置机" prop="sourceType">
+          <el-select v-model="allocationSubFormData.computerId" size="mini">
+            <el-option v-for="(optItem,optindex) in computers" :key="optindex" :label="optItem.name"
+                       :value="optItem.id"
+            />
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button size="mini" @click="allocationDialogFormVisible = false">取 消</el-button>
+        <el-button size="mini" type="primary" @click="allocationSubForm('allocationSubFormData')">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import * as api from '@/api/task'
-import cron from '@/components/cron/cron'
 
 export default {
   data() {
     return {
       planOptions: [],
+      nameOptions: [],
       planCheckWay: 1,
       tenants: [],
+      computers: [],
       dialogFormVisible: false,
+      allocationDialogFormVisible: false,
       dialogRowTitle: null,
       selectionPropList: [],
       rowData: {
@@ -95,6 +131,12 @@ export default {
         execService: null,
         cron: null
       },
+      allocationSubFormData: {
+        items: null,
+        tenantId: null,
+        computerId: null
+      },
+      allocationNames: null,
       subFormDataRule: {
         'name': [{
           required: true,
@@ -115,6 +157,16 @@ export default {
         'cron': [{
           required: true,
           message: '请填写cron'
+        }]
+      },
+      allocationSubFormDataRule: {
+        'tenantId': [{
+          required: true,
+          message: '请选择租户'
+        }],
+        'computerId': [{
+          required: true,
+          message: '请选择前置机'
         }]
       },
       tableData: [],
@@ -193,17 +245,16 @@ export default {
   },
   async created() {
     this.getPlanOptions()
+    this.getTenants()
   },
   mounted() {
   },
   methods: {
     inputByMenu() {
       this.subFormData.cron = null
-      this.subFormDataRule.cron[0].required = false
     },
     inputByCustom() {
       this.subFormData.cron = null
-      this.subFormDataRule.cron[0].required = true
     },
     // 删除
     remove(row) {
@@ -238,6 +289,28 @@ export default {
         .catch(() => {
         })
     },
+    allocation(row) {
+      let items = []
+      let names = []
+      if (!row) {
+        if (!this.datas.multipleSelection.length) {
+          this.$message.info('请选择相关数据')
+          return
+        }
+        items = this.datas.multipleSelection.map((value) => {
+          return value['id']
+        })
+        names = this.datas.multipleSelection.map((value) => {
+          return value['name']
+        })
+      } else {
+        items.push(row.id)
+        names.push(row.name)
+      }
+      this.allocationNames = names
+      this.allocationDialogFormVisible = true
+      this.$set(this.allocationSubFormData, 'items', items)
+    },
     subForm(formData) {
       this.showCronBox = false
       this.$refs[formData].validate((valid) => {
@@ -247,6 +320,21 @@ export default {
             this.$message.success('保存成功')
             this.getData(this.datas)
             this.dialogFormVisible = false
+          }).catch(() => {
+          })
+        } else {
+          return false
+        }
+      })
+    },
+    allocationSubForm(formData) {
+      this.$refs[formData].validate((valid) => {
+        if (valid) {
+          api.submitAllocationForm(this[formData]).then(res => {
+            console.log(this[formData])
+            this.$message.success('保存成功')
+            this.getData(this.datas)
+            this.allocationDialogFormVisible = false
           }).catch(() => {
           })
         } else {
@@ -293,6 +381,23 @@ export default {
     getPlanOptions() {
       api.getPlanOptions('fw.task.plan').then(res => {
         this.planOptions = res.model
+      }).catch(e => {
+        return false
+      })
+    },
+    getTenants() {
+      api.getTenants().then(res => {
+        this.tenants = res.model
+      }).catch(e => {
+        return false
+      })
+    },
+    getComputers() {
+      this.allocationSubFormData.computerId = null
+      const tenantId = this.allocationSubFormData.tenantId
+      api.getComputers(tenantId).then(res => {
+        console.log(res.model)
+        this.computers = res.model
       }).catch(e => {
         return false
       })
