@@ -9,10 +9,14 @@
         <span>{{ scope.value.enable ? '启用' : '禁用' }}</span>
       </template>
       <template slot="oper" slot-scope="scope">
+        <!-- 带参数跳转 -->
+        <router-link :to="{path:'taskRunInfo',query:{code:scope.value.code}}">
+          <el-button size="mini" type="text" @click="runLog(scope.value)">运行日志</el-button>
+        </router-link>
         <el-button size="mini" type="text" @click="send(scope.value)">下发</el-button>
         <el-button size="mini" type="text" @click="edit(scope.value)">编辑</el-button>
         <el-button size="mini" type="text" @click="remove(scope.value)">删除</el-button>
-        <el-button size="mini" type="text" @click="runLog(scope.value)">运行日志</el-button>
+<!--        <el-button size="mini" type="text" @click="runLog(scope.value)">运行日志</el-button>-->
       </template>
     </mod-filter>
     <!--编辑界面-->
@@ -301,7 +305,7 @@ export default {
           },
           {
             type: 'input',
-            prop: 'status',
+            prop: 'statusName',
             conditionshow: false,
             filedShow: true,
             label: '任务状态',
@@ -378,7 +382,7 @@ export default {
       console.log(row)
     },
     // 运行日志
-    runLog() {
+    runLog(row) {
       console.log(row)
     },
     subForm(formData) {

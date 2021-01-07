@@ -398,6 +398,9 @@ export default {
       api.getComputers(tenantId).then(res => {
         console.log(res.model)
         this.computers = res.model
+        if (this.computers.length === 1) {
+          this.allocationSubFormData.computerId = this.computers[0].id
+        }
       }).catch(e => {
         return false
       })
