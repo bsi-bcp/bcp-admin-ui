@@ -60,6 +60,18 @@ export default {
             optList: []
           },
           {
+            type: 'daterange',
+            dateProp: 'runTimeRange',
+            props: ['runTimeBegin', 'runTimeEnd'],
+            conditionshow: true,
+            isSearchHide: false,
+            just: true,
+            createTimeRange: [],
+            label: '操作时间',
+            startTitle: '开始日期',
+            endTitle: '结束日期'
+          },
+          {
             type: 'select',
             prop: 'result',
             conditionshow: true,
