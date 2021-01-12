@@ -16,7 +16,7 @@
         <el-button size="mini" type="text" @click="edit(scope.value)">编辑</el-button>
         <el-button size="mini" type="text" @click="send(scope.value)">下发</el-button>
         <el-button size="mini" type="text" @click="remove(scope.value)">删除</el-button>
-<!--        <el-button size="mini" type="text" @click="runLog(scope.value)">运行日志</el-button>-->
+        <!--        <el-button size="mini" type="text" @click="runLog(scope.value)">运行日志</el-button>-->
       </template>
     </mod-filter>
     <!--编辑界面-->
@@ -73,23 +73,23 @@
         <el-form-item label="绑定用户场景" prop="userCase">
           <el-input v-model="subFormData.userCaseId" size="mini" auto-complete="off"/>
         </el-form-item>
-<!--        <el-form-item label="下发状态" prop="sendStatusName">-->
-<!--          <el-select v-model="subFormData.sendStatus" size="mini">-->
-<!--            <el-option v-for="(optItem,optindex) in sendStatusOptions" :key="optindex" :label="optItem.propvalue"-->
-<!--                       :value="optItem.propkey"-->
-<!--            />-->
-<!--          </el-select>-->
-<!--        </el-form-item>-->
-<!--        <el-form-item label="运行状态" prop="resultName">-->
-<!--          <el-select v-model="subFormData.result" size="mini">-->
-<!--            <el-option v-for="(optItem,optindex) in resultOptions" :key="optindex" :label="optItem.propvalue"-->
-<!--                       :value="optItem.propkey"-->
-<!--            />-->
-<!--          </el-select>-->
-<!--        </el-form-item>-->
-<!--        <el-form-item label="任务状态" prop="status">-->
-<!--          <el-input v-model="subFormData.status" size="mini" auto-complete="off"/>-->
-<!--        </el-form-item>-->
+        <!--        <el-form-item label="下发状态" prop="sendStatusName">-->
+        <!--          <el-select v-model="subFormData.sendStatus" size="mini">-->
+        <!--            <el-option v-for="(optItem,optindex) in sendStatusOptions" :key="optindex" :label="optItem.propvalue"-->
+        <!--                       :value="optItem.propkey"-->
+        <!--            />-->
+        <!--          </el-select>-->
+        <!--        </el-form-item>-->
+        <!--        <el-form-item label="运行状态" prop="resultName">-->
+        <!--          <el-select v-model="subFormData.result" size="mini">-->
+        <!--            <el-option v-for="(optItem,optindex) in resultOptions" :key="optindex" :label="optItem.propvalue"-->
+        <!--                       :value="optItem.propkey"-->
+        <!--            />-->
+        <!--          </el-select>-->
+        <!--        </el-form-item>-->
+        <!--        <el-form-item label="任务状态" prop="status">-->
+        <!--          <el-input v-model="subFormData.status" size="mini" auto-complete="off"/>-->
+        <!--        </el-form-item>-->
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button size="mini" @click="dialogFormVisible = false;showCronBox=false">取 消</el-button>
@@ -392,7 +392,11 @@ export default {
         codes.push(row.code)
       }
       api.batchSendTask(codes).then(res => {
-        this.$message.success('下发成功')
+        if (res.model === 200) {
+          this.$message.success(res.model)
+        } else {
+          this.$message.error(res.model)
+        }
         this.getData(this.datas)
       }).catch(e => {
         return false
