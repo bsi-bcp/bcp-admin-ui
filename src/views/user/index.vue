@@ -666,9 +666,6 @@ export default {
           'enable': true,
           'orgId': this.orgId
         })
-        // this.$nextTick(() => {
-        //   this.$refs['subFormData'].resetFields()
-        // })
         return
       } else {
         // this.$set(this, 'subFormData', formList)

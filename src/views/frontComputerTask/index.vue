@@ -392,7 +392,7 @@ export default {
         codes.push(row.code)
       }
       api.batchSendTask(codes).then(res => {
-        if (res.model === 200) {
+        if (res.code === 200) {
           this.$message.success(res.model)
         } else {
           this.$message.error(res.model)

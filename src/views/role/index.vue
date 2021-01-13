@@ -298,9 +298,9 @@ export default {
           'remark': null,
           'enable': true
         })
-        this.$nextTick(() => {
+        if (this.$refs['subFormData']) {
           this.$refs['subFormData'].resetFields()
-        })
+        }
         return
       }
       this.$set(this.subFormData, 'id', row.id)
@@ -322,7 +322,7 @@ export default {
             this.addDisable(res.model[i].menuTree)
           }
         }
-        
+
         this.$set(this.datas.resData, 'rows', res.model)
         this.$set(this.datas.params, 'currentPage', res.currentPage)
         this.$set(this.datas.params, 'pageSize', res.pageSize)

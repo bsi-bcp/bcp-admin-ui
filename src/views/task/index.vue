@@ -151,7 +151,7 @@ export default {
         plan: null,
         execService: null,
         cron: null,
-        type: null,
+        type: '2',
         userCaseId: null,
         remark: null
       },
@@ -363,7 +363,7 @@ export default {
       this.$refs[formData].validate((valid) => {
         if (valid) {
           api.submitAllocationForm(this[formData]).then(res => {
-            console.log(this[formData])
+            // console.log(this[formData])
             this.$message.success('保存成功')
             this.getData(this.datas)
             this.allocationDialogFormVisible = false
@@ -388,9 +388,12 @@ export default {
           'userCaseId': null,
           'remark': null
         })
-        this.$nextTick(() => {
+        // this.$nextTick(() => {
+        //   this.$refs['subFormData'].resetFields()
+        // })
+        if (this.$refs['subFormData']) {
           this.$refs['subFormData'].resetFields()
-        })
+        }
         return
       }
       this.$set(this.subFormData, 'id', row.id)

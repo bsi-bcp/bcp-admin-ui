@@ -6,7 +6,7 @@
         <el-button type="primary" size="mini" @click="remove(0)">删除</el-button>
       </template>
       <template slot="enable" slot-scope="scope">
-        <span>{{ scope.value.enable?'启用':'禁用' }}</span>
+        <span>{{ scope.value.enable ? '启用' : '禁用' }}</span>
       </template>
       <template slot="oper" slot-scope="scope">
         <el-button size="mini" type="text" @click="edit(scope.value)">编辑</el-button>
@@ -18,20 +18,22 @@
       <el-form ref="subFormData" :model="subFormData" :rules="subFormDataRule" class="subFormData" label-width="100px">
         <el-form-item label="租户" prop="sourceType">
           <el-select v-model="subFormData.tenantId" size="mini">
-            <el-option v-for="(optItem,optindex) in tenants" :key="optindex" :label="optItem.name" :value="optItem.id" />
+            <el-option v-for="(optItem,optindex) in tenants" :key="optindex" :label="optItem.name" :value="optItem.id"/>
           </el-select>
         </el-form-item>
         <el-form-item label="名称" prop="name">
-          <el-input v-model="subFormData.name" size="mini" auto-complete="off" />
+          <el-input v-model="subFormData.name" maxlength="100" size="mini" auto-complete="off"/>
         </el-form-item>
         <el-form-item label="编码" prop="code">
-          <el-input v-model="subFormData.code" size="mini" auto-complete="off" />
+          <el-input v-model="subFormData.code" maxlength="20" size="mini" auto-complete="off"/>
         </el-form-item>
         <el-form-item label="节点id" prop="nodeId">
-          <el-input v-model="subFormData.nodeId" size="mini" auto-complete="off" />
+          <el-input v-model="subFormData.nodeId" maxlength="50" size="mini" auto-complete="off"
+                    onkeyup="this.value=this.value.replace(/[^\d.]/g,'')"
+          />
         </el-form-item>
         <el-form-item label="备注" prop="remark">
-          <el-input v-model="subFormData.remark" size="mini" auto-complete="off" />
+          <el-input v-model="subFormData.remark" maxlength="500" size="mini" auto-complete="off"/>
         </el-form-item>
         <el-form-item label="状态" prop="enable">
           <el-radio-group v-model="subFormData.enable">
@@ -193,7 +195,8 @@ export default {
   async created() {
     this.getTenants()
   },
-  mounted() {},
+  mounted() {
+  },
   methods: {
     // 删除
     remove(row) {
@@ -225,7 +228,8 @@ export default {
             this.dialogFormVisible = false
           })
         })
-        .catch(() => {})
+        .catch(() => {
+        })
     },
     subForm(formData) {
       this.$refs[formData].validate((valid) => {
@@ -245,6 +249,7 @@ export default {
     edit(row) {
       this.dialogFormVisible = true
       if (!row) {
+        debugger
         this.$set(this, 'subFormData', {
           'name': null,
           'code': null,
@@ -254,9 +259,9 @@ export default {
           'nodeId': null,
           'enable': true
         })
-        this.$nextTick(() => {
+        if (this.$refs['subFormData']) {
           this.$refs['subFormData'].resetFields()
-        })
+        }
         return
       }
       this.$set(this.subFormData, 'id', row.id)

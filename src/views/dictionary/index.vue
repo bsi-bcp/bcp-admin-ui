@@ -532,9 +532,9 @@ export default {
           'remark': null,
           'enable': true
         })
-        this.$nextTick(() => {
+        if (this.$refs['subFormData']) {
           this.$refs['subFormData'].resetFields()
-        })
+        }
         return
       }
       this.$set(this.subFormData, 'id', row.id)
