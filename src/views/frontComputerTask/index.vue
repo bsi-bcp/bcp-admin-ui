@@ -10,13 +10,12 @@
       </template>
       <template slot="oper" slot-scope="scope">
         <!-- 带参数跳转 -->
-        <router-link :to="{path:'taskRunInfo',query:{code:scope.value.code}}">
-          <el-button size="mini" type="text">运行日志</el-button>
-        </router-link>
         <el-button size="mini" type="text" @click="edit(scope.value)">编辑</el-button>
-        <el-button size="mini" type="text" @click="send(scope.value)">下发</el-button>
-        <el-button size="mini" type="text" @click="remove(scope.value)">删除</el-button>
-        <!--        <el-button size="mini" type="text" @click="runLog(scope.value)">运行日志</el-button>-->
+        <router-link :to="{path:'taskRunInfo',query:{code:scope.value.code}}">
+          <el-button size="mini" type="text">日志</el-button>
+        </router-link>
+<!--        <el-button size="mini" type="text" @click="send(scope.value)">下发</el-button>-->
+<!--        <el-button size="mini" type="text" @click="remove(scope.value)">删除</el-button>-->
       </template>
     </mod-filter>
     <!--编辑界面-->
