@@ -30,35 +30,36 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item v-if="planCheckWay===1" label="运行计划" prop="plan">
-          <el-select v-model="subFormData.plan" size="mini" auto-complete="off" @change="getCronByPlan">
-            <el-option v-for="(optItem,optindex) in planOptions" :key="optindex" :label="optItem.propvalue"
+          <!--          <el-select v-model="subFormData.plan" size="mini" auto-complete="off" @change="getCronByPlan">-->
+          <el-select v-model="subFormData.plan" size="mini" auto-complete="off">
+            <el-option v-for="(optItem,optindex) in planOptions" :key="optindex" :label="optItem.propkey"
                        :value="optItem.propkey"
             />
           </el-select>
         </el-form-item>
-        <el-form-item v-if="planCheckWay===1" v-show="false" label="cron" prop="cron">
-          <el-input v-model="subFormData.cron" maxlength="50" size="mini" auto-complete="off"/>
-        </el-form-item>
+<!--        <el-form-item v-if="planCheckWay===1" v-show="false" label="cron" prop="cron">-->
+<!--          <el-input v-model="subFormData.cron" maxlength="50" size="mini" auto-complete="off"/>-->
+<!--        </el-form-item>-->
         <el-form-item v-if="planCheckWay===2" label="cron" prop="cron">
           <el-input v-model="subFormData.cron" maxlength="50" size="mini" auto-complete="off"/>
         </el-form-item>
         <el-form-item label="绑定service" prop="execService">
           <el-input v-model="subFormData.execService" maxlength="50" size="mini" auto-complete="off"/>
         </el-form-item>
-<!--        <el-form-item label="类型" prop="type">-->
-<!--          <el-select v-model="subFormData.type" size="mini" auto-complete="off">-->
-<!--            <el-option v-for="(optItem,optindex) in typeOptions" :key="optindex" :label="optItem.propvalue"-->
-<!--                       :value="optItem.propkey"-->
-<!--            />-->
-<!--          </el-select>-->
-<!--        </el-form-item>-->
-<!--        <el-form-item v-if="subFormData.type==='1'" label="绑定用户场景" prop="userCaseId">-->
-<!--          <el-select v-model="subFormData.userCaseId" size="mini" auto-complete="off">-->
-<!--            <el-option v-for="(optItem,optindex) in userCaseOptions" :key="optindex" :label="optItem.propvalue"-->
-<!--                       :value="optItem.propkey"-->
-<!--            />-->
-<!--          </el-select>-->
-<!--        </el-form-item>-->
+        <!--        <el-form-item label="类型" prop="type">-->
+        <!--          <el-select v-model="subFormData.type" size="mini" auto-complete="off">-->
+        <!--            <el-option v-for="(optItem,optindex) in typeOptions" :key="optindex" :label="optItem.propvalue"-->
+        <!--                       :value="optItem.propkey"-->
+        <!--            />-->
+        <!--          </el-select>-->
+        <!--        </el-form-item>-->
+        <!--        <el-form-item v-if="subFormData.type==='1'" label="绑定用户场景" prop="userCaseId">-->
+        <!--          <el-select v-model="subFormData.userCaseId" size="mini" auto-complete="off">-->
+        <!--            <el-option v-for="(optItem,optindex) in userCaseOptions" :key="optindex" :label="optItem.propvalue"-->
+        <!--                       :value="optItem.propkey"-->
+        <!--            />-->
+        <!--          </el-select>-->
+        <!--        </el-form-item>-->
         <el-form-item label="备注" prop="remark">
           <el-input v-model="subFormData.remark" maxlength="500" size="mini" auto-complete="off"/>
         </el-form-item>
@@ -80,7 +81,7 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="items" v-show="false" prop="items">
+        <el-form-item v-show="false" label="items" prop="items">
           <el-input v-model="allocationSubFormData.items" size="mini" auto-complete="off"/>
         </el-form-item>
         <el-form-item label="租户" prop="sourceType">
@@ -231,7 +232,7 @@ export default {
           },
           {
             type: 'input',
-            prop: 'planName',
+            prop: 'plan',
             conditionshow: false,
             filedShow: true,
             label: '运行计划',
@@ -352,7 +353,7 @@ export default {
         if (valid) {
           api.submitAllocationForm(this[formData]).then(res => {
             // console.log(this[formData])
-            this.$message.success('保存成功')
+            this.$message.success('分配成功')
             this.getData(this.datas)
             this.allocationDialogFormVisible = false
           }).catch(() => {
@@ -376,9 +377,6 @@ export default {
           'userCaseId': null,
           'remark': null
         })
-        // this.$nextTick(() => {
-        //   this.$refs['subFormData'].resetFields()
-        // })
         if (this.$refs['subFormData']) {
           this.$refs['subFormData'].resetFields()
         }
@@ -405,13 +403,6 @@ export default {
         this.$set(this.datas.params, 'pageSize', res.pageSize)
         this.$set(this.datas.resData, 'totalCount', res.totalCount)
         this.$set(this.datas.table, 'loading', false)
-      })
-    },
-    getPropOptions(propCode) {
-      api.getPropOptions('fw.task.plan').then(res => {
-        this.planOptions = res.model
-      }).catch(e => {
-        return false
       })
     },
     getSourceTypeOptions() {
@@ -451,49 +442,49 @@ export default {
         return false
       })
     },
-    // 定义plan转cron表达式
-    getCronByPlan(plan) {
-      let cron
-      switch (plan) {
-        case '1':
-          cron = '0 0/1 * * * ?'
-          break
-        case '2':
-          cron = '0 0/5 * * * ?'
-          break
-        case '3':
-          cron = '0 0/10 * * * ?'
-          break
-        case '4':
-          cron = '0 0/30 * * * ?'
-          break
-        case '5':
-          cron = '0 0 */1 * * ?'
-          break
-        case '6':
-          cron = '0 0 */3 * * ?'
-          break
-        case '7':
-          cron = '0 0 */6 * * ?'
-          break
-        case '8':
-          cron = '0 0 */12 * * ?'
-          break
-        case '9':
-          cron = '0 0 0 * * ? *'
-          break
-        case '10':
-          cron = '0 0 0 /2 * ? *'
-          break
-        case '11':
-          cron = '0 0 0 0 0 ? *'
-          break
-        case '12':
-          cron = '0 0 0 0 * ? *'
-          break
-      }
-      this.$set(this.subFormData, 'cron', cron)
-    }
+    // // 定义plan转cron表达式
+    // getCronByPlan(plan) {
+    //   let cron
+    //   switch (plan) {
+    //     case '1':
+    //       cron = '0 0/1 * * * ?'
+    //       break
+    //     case '2':
+    //       cron = '0 0/5 * * * ?'
+    //       break
+    //     case '3':
+    //       cron = '0 0/10 * * * ?'
+    //       break
+    //     case '4':
+    //       cron = '0 0/30 * * * ?'
+    //       break
+    //     case '5':
+    //       cron = '0 0 */1 * * ?'
+    //       break
+    //     case '6':
+    //       cron = '0 0 */3 * * ?'
+    //       break
+    //     case '7':
+    //       cron = '0 0 */6 * * ?'
+    //       break
+    //     case '8':
+    //       cron = '0 0 */12 * * ?'
+    //       break
+    //     case '9':
+    //       cron = '0 0 0 * * ? *'
+    //       break
+    //     case '10':
+    //       cron = '0 0 0 /2 * ? *'
+    //       break
+    //     case '11':
+    //       cron = '0 0 0 0 0 ? *'
+    //       break
+    //     case '12':
+    //       cron = '0 0 0 0 * ? *'
+    //       break
+    //   }
+    //   this.$set(this.subFormData, 'cron', cron)
+    // }
   }
 }
 </script>

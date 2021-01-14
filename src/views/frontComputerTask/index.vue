@@ -43,15 +43,15 @@
           <el-input v-model="subFormData.code" maxlength="20" size="mini" auto-complete="off"/>
         </el-form-item>
         <el-form-item label="运行计划" prop="plan">
-          <el-select v-model="subFormData.plan" size="mini" auto-complete="off" @change="getCronByPlan">
-            <el-option v-for="(optItem,optindex) in planOptions" :key="optindex" :label="optItem.propvalue"
+          <el-select v-model="subFormData.plan" size="mini" auto-complete="off">
+            <el-option v-for="(optItem,optindex) in planOptions" :key="optindex" :label="optItem.propkey"
                        :value="optItem.propkey"
             />
           </el-select>
         </el-form-item>
-        <el-form-item v-show="false" label="cron" prop="cron">
-          <el-input v-model="subFormData.cron" size="mini" auto-complete="off"/>
-        </el-form-item>
+<!--        <el-form-item v-show="false" label="cron" prop="cron">-->
+<!--          <el-input v-model="subFormData.cron" size="mini" auto-complete="off"/>-->
+<!--        </el-form-item>-->
         <!--   -->
         <!--        <el-form-item v-if="planCheckWay===1" label="运行计划" prop="plan">-->
         <!--          <el-select v-model="subFormData.plan" size="mini" auto-complete="off" @change="getCronByPlan">-->
@@ -123,7 +123,6 @@ export default {
         taskName: null,
         taskId: null,
         code: null,
-        planName: null,
         plan: null,
         cron: null,
         execService: null,
@@ -144,7 +143,6 @@ export default {
         taskName: null,
         taskId: null,
         code: null,
-        planName: null,
         plan: null,
         cron: null,
         execService: null,
@@ -174,7 +172,7 @@ export default {
           required: true,
           message: '请填写编码'
         }],
-        'planName': [{
+        'plan': [{
           required: true,
           message: '请填写运行计划'
         }],
@@ -259,7 +257,7 @@ export default {
           },
           {
             type: 'input',
-            prop: 'planName',
+            prop: 'plan',
             conditionshow: false,
             filedShow: true,
             label: '运行计划',
@@ -454,7 +452,6 @@ export default {
       this.$set(this.subFormData, 'taskName', row.taskName)
       this.$set(this.subFormData, 'taskId', row.taskId)
       this.$set(this.subFormData, 'code', row.code)
-      this.$set(this.subFormData, 'planName', row.planName)
       this.$set(this.subFormData, 'plan', row.plan)
       this.$set(this.subFormData, 'cron', row.cron)
       this.$set(this.subFormData, 'execService', row.execService)
@@ -516,49 +513,6 @@ export default {
       }).catch(e => {
         return false
       })
-    },
-    // 定义plan转cron表达式
-    getCronByPlan(plan) {
-      let cron
-      switch (plan) {
-        case '1':
-          cron = '0 0/1 * * * ?'
-          break
-        case '2':
-          cron = '0 0/5 * * * ?'
-          break
-        case '3':
-          cron = '0 0/10 * * * ?'
-          break
-        case '4':
-          cron = '0 0/30 * * * ?'
-          break
-        case '5':
-          cron = '0 0 */1 * * ?'
-          break
-        case '6':
-          cron = '0 0 */3 * * ?'
-          break
-        case '7':
-          cron = '0 0 */6 * * ?'
-          break
-        case '8':
-          cron = '0 0 */12 * * ?'
-          break
-        case '9':
-          cron = '0 0 0 * * ? *'
-          break
-        case '10':
-          cron = '0 0 0 /2 * ? *'
-          break
-        case '11':
-          cron = '0 0 0 0 0 ? *'
-          break
-        case '12':
-          cron = '0 0 0 0 * ? *'
-          break
-      }
-      this.$set(this.subFormData, 'cron', cron)
     }
   }
 }
