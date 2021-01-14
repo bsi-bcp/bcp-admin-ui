@@ -129,6 +129,9 @@ export default {
       console.log(row)
     },
     getData(datas = this.datas) {
+      if (datas.filterList[0].code === '') {
+        this.$set(this.datas.params, 'code', null)
+      }
       this.$set(this, 'datas', datas)
       this.$set(this, 'params', datas.params)
       this.$set(this.datas.table, 'loading', true)

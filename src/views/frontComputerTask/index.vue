@@ -14,8 +14,8 @@
         <router-link :to="{path:'taskRunInfo',query:{code:scope.value.code}}">
           <el-button size="mini" type="text">日志</el-button>
         </router-link>
-<!--        <el-button size="mini" type="text" @click="send(scope.value)">下发</el-button>-->
-<!--        <el-button size="mini" type="text" @click="remove(scope.value)">删除</el-button>-->
+        <!--        <el-button size="mini" type="text" @click="send(scope.value)">下发</el-button>-->
+        <!--        <el-button size="mini" type="text" @click="remove(scope.value)">删除</el-button>-->
       </template>
     </mod-filter>
     <!--编辑界面-->
@@ -69,9 +69,9 @@
         <el-form-item label="绑定service" prop="execService">
           <el-input v-model="subFormData.execService" maxlength="50" size="mini" auto-complete="off"/>
         </el-form-item>
-<!--        <el-form-item label="绑定用户场景" prop="userCase">-->
-<!--          <el-input v-model="subFormData.userCaseId" maxlength="10" size="mini" auto-complete="off"/>-->
-<!--        </el-form-item>-->
+        <!--        <el-form-item label="绑定用户场景" prop="userCase">-->
+        <!--          <el-input v-model="subFormData.userCaseId" maxlength="10" size="mini" auto-complete="off"/>-->
+        <!--        </el-form-item>-->
         <!--        <el-form-item label="下发状态" prop="sendStatusName">-->
         <!--          <el-select v-model="subFormData.sendStatus" size="mini">-->
         <!--            <el-option v-for="(optItem,optindex) in sendStatusOptions" :key="optindex" :label="optItem.propvalue"-->
