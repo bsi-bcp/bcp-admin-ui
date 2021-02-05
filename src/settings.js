@@ -1,6 +1,6 @@
 module.exports = {
 
-  title: '系统框架',
+  title: 'BCP Cloud',
 
   /**
    * @type {boolean} true | false
