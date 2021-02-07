@@ -153,8 +153,8 @@ export default {
         confirmPassword: [{ required: true, trigger: 'blur', validator: validateConfirmPassword }]
       },
       loginForm: {
-        uname: 'admin',
-        password: '123456'
+        uname: '',
+        password: ''
       },
       loginRules: {
         uname: [{ required: true, trigger: 'blur', validator: validateUsername }],

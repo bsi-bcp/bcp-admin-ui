@@ -73,7 +73,7 @@
             <el-button v-if="scope.value.status==='normal'" size="mini" type="text" @click="locked(scope.value)">锁定</el-button>
             <el-button v-else size="mini" type="text" @click="unLocked(scope.value)">解锁</el-button>
             <el-button size="mini" type="text" @click="resetPsd(scope.value)">重置密码</el-button>
-           <!--  <el-button size="mini" type="text" @click="remove(scope.value)">删除</el-button> -->
+            <!--  <el-button size="mini" type="text" @click="remove(scope.value)">删除</el-button> -->
           </template>
         </mod-filter>
         <!--新增/编辑界面-->
@@ -98,7 +98,7 @@
                 </el-select>
               </el-form-item>-->
               <el-form-item label="所属组织" prop="orgId">
-                <!-- <el-select v-model="subFormData.orgId" :disabled="cur_user.userType==='admin'" size="mini"> -->
+                <!--<el-select v-model="subFormData.orgId" :disabled="cur_user.userType==='admin'" size="mini">-->
                 <el-select v-model="subFormData.orgId" size="mini">
                   <el-option v-for="(item,index) in orgArr" :key="index" :label="item.name" :value="item.id" />
                 </el-select>
