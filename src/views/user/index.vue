@@ -37,7 +37,7 @@
           <template slot="lastBtn">
             <el-button type="primary" size="mini" @click="edit(0)">新增</el-button>
             <el-button type="primary" size="mini" @click="remove(0)">删除</el-button>
-            <el-button size="mini" type="primary" @click="syncFromTemp()">同步</el-button>
+            <!--<el-button size="mini" type="primary" @click="syncFromTemp()">同步</el-button>-->
             <!--<el-button size="mini" type="primary" @click="locked(0)">锁定</el-button>
             <el-button size="mini" type="primary" @click="unLocked(0)">解锁</el-button>
             <el-button size="mini" type="primary" @click="resetPsd(0)">重置密码</el-button>-->
