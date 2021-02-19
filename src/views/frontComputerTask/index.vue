@@ -376,19 +376,19 @@ export default {
     },
     // 下发
     send(row) {
-      let codes = []
+      let ids = []
       if (!row) {
         if (!this.datas.multipleSelection.length) {
           this.$message.info('请选择相关数据')
           return
         }
-        codes = this.datas.multipleSelection.map((value) => {
-          return value['code']
+        ids = this.datas.multipleSelection.map((value) => {
+          return value['id']
         })
       } else {
-        codes.push(row.code)
+        ids.push(row.id)
       }
-      api.batchSendTask(codes).then(res => {
+      api.batchSendTask(ids).then(res => {
         if (res.code === 200) {
           this.$message.success(res.model)
         } else {
