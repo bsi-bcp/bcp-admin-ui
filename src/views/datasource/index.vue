@@ -65,7 +65,7 @@
           <!--认证方式 无需改变-->
           <div id="noChangeOne" else v-if="subFormData.authmode === '1'">
           <el-form-item label="集成节点" prop="nodeId" >
-            <el-input  v-model="subFormDanodeIdta.nodeId" placeholder="节点ID"  maxlength="20" size="mini" auto-complete="off"></el-input>
+            <el-input  v-model="subFormData.nodeId" placeholder="节点ID"  maxlength="20" size="mini" auto-complete="off"></el-input>
           </el-form-item>
           </div>
           <!--认证方式 Basic Auth-->
@@ -91,8 +91,8 @@
           </div>
           <!--认证方式 Bearer Token-->
           <div id="divBearerToken" v-if="subFormData.authmode === '3'">
-          <el-form-item label="Token URL" prop="password" >
-            <el-input v-model="subFormData.url" placeholder="单行输入"  maxlength="20" size="mini" auto-complete="off"></el-input>
+          <el-form-item label="Token URL" prop="tokenUrl" >
+            <el-input v-model="subFormData.tokenUrl" placeholder="单行输入"  maxlength="20" size="mini" auto-complete="off"></el-input>
           </el-form-item>
           <el-form-item label="集成节点" prop="nodeId">
             <template>
@@ -422,32 +422,18 @@ export default {
     },
     // 删除
     remove(row) {
-      let items = []
-      if (!row) {
-        if (!this.datas.multipleSelection.length) {
-          this.$message.info('请选择相关数据')
-          return
-        }
-        items = this.datas.multipleSelection.map((value) => {
-          return value['id']
-        })
-      } else {
-        items.push(row.id)
-      }
       this.$confirm('是否删除?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       })
         .then(() => {
-          api.batchDelete({
-            'items': items
-          }).then(res => {
+          api.singleDelete(row.id).then(res => {
             this.$message.success({
               message: '删除成功'
             })
             this.getData()
-            this.dialogFormVisible = false
+            // this.dialogFormVisible = false
           })
         })
         .catch(() => {

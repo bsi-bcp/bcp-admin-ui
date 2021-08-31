@@ -2,7 +2,7 @@ import request from '@/utils/request'
 import qs from 'qs'
 
 const URL = {
-  role: '/services/fwcore/datasource'
+  role: '/services/fwcore/IntegratedConfigura'
 }
 
 // 1、角色列表

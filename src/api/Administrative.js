@@ -2,8 +2,10 @@ import request from '@/utils/request'
 import qs from 'qs'
 
 const URL = {
-  role: '/services/fwcore/datasource'
+  role: '/services/fwcore/Administrative'
 }
+const URL_data = '/services/fwcore/upload-any'
+
 
 // 1、角色列表
 export function getPage(params) {
@@ -18,7 +20,7 @@ export function getPage(params) {
 export function submitForm(params) {
   let ids = ''
   if (params.menuArr && params.menuArr.length) {
-    params.menuArr.forEach(function(item, index) {
+    params.menuArr.forEach(function (item, index) {
       if (index === params.menuArr.length - 1) {
         ids = ids + item
       } else {
@@ -45,7 +47,6 @@ export function batchDelete(params) {
     // params
   })
 }
-
 //4.单个删除
 export function singleDelete(id) {
   return request({
@@ -72,3 +73,44 @@ export function getName(params) {
     params
   })
 }
+//文件上传
+//4.单个删除
+export function upData(params) {
+  return request({
+    url: URL_data,
+    method: 'post',
+    data: params
+  })
+}
+//新增模板
+export function AddTemplate(params) {
+  return request({
+    url: '/services/fwcore/template',
+    method: params.showType ? 'PUT' : 'POST',
+    data: params
+  })
+}
+//模板列表
+export function GetTemplate(params) {
+  return request({
+    url: '/services/fwcore/template',
+    method: 'get',
+    data: params
+  })
+}
+//禁用或者启用
+export function disableType(data) {
+ var id = JSON.parse(data)
+  return request({
+    url: `/services/fwcore/template/${id}`,
+    method: 'post',
+  })
+}
+//禁用或者启用
+export function delType(data) {
+  var id = JSON.parse(data)
+   return request({
+     url: `/services/fwcore/template/${id}`,
+     method: 'DELETE',
+   })
+ }

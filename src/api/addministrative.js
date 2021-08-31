@@ -2,16 +2,7 @@ import request from '@/utils/request'
 import qs from 'qs'
 
 const URL = {
-  role: '/services/fwcore/datasource'
-}
-
-// 1、角色列表
-export function getPage(params) {
-  return request({
-    url: URL.role,
-    method: 'get',
-    params
-  })
+  role: 'services/fwcore/template'
 }
 
 // 2、新增/编辑
@@ -54,18 +45,16 @@ export function singleDelete(id) {
     // params
   })
 }
-
-// 5、根据用户id查询所拥有的角色
-export function getRolesByUserId(params) {
-  return request({
-    url: URL.role + '/user/' + params,
-    method: 'GET'
-    // params
-  })
-}
-
 // 6、获取页面表格信息的名称
 export function getName(params) {
+  return request({
+    url: URL.role,
+    method: 'get',
+    params
+  })
+}
+// 1、角色列表
+export function getPage(params) {
   return request({
     url: URL.role,
     method: 'get',
