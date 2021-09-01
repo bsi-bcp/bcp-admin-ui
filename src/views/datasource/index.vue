@@ -27,40 +27,30 @@
         <el-form-item label="类型" prop="type">
           <template>
             <el-select v-model="subFormData.type" placeholder="请选择">
-            <el-option
-            v-for="item in optionsTwe"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value">
-            </el-option>
+              <el-option v-for="(optItem,optindex) in typeOptions" :key="optindex" :label="optItem.propvalue" :value="optItem.propkey" />
           </el-select>
           </template>
         </el-form-item>
           <!--类型是API-->
-          <div v-if="subFormData.type === '1'">
+          <div v-if="subFormData.type === 'api'">
           <el-form-item label="URL" prop="url" >
             <el-input v-model="subFormData.url" placeholder="单行输入"  maxlength="20" size="mini" auto-complete="off"></el-input>
           </el-form-item>
           <el-form-item label="认证方式" prop="authmode">
             <template>
               <el-select id="elSelectChange" v-model="subFormData.authmode" placeholder="请选择" >
-              <el-option
-              v-for="item in optionsThree"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
-              </el-option>
-            </el-select>
+                <el-option v-for="(optItem,optindex) in authOptions" :key="optindex" :label="optItem.propvalue" :value="optItem.propkey" />
+              </el-select>
             </template>
           </el-form-item>
           <!--认证方式 无需改变-->
-          <div id="noChangeOne" else v-if="subFormData.authmode === '1'">
+          <div id="noChangeOne" else v-if="subFormData.authmode === 'noauth'">
           <el-form-item label="集成节点" prop="nodeId" >
             <el-input  v-model="subFormData.nodeId" placeholder="节点ID"  maxlength="20" size="mini" auto-complete="off"></el-input>
           </el-form-item>
           </div>
           <!--认证方式 Basic Auth-->
-          <div id="divBasicAuth" else v-if="subFormData.authmode === '2'">
+          <div id="divBasicAuth" else v-if="subFormData.authmode === 'basic'">
             <el-form-item label="用户名" prop="username" >
               <el-input v-model="subFormData.username" placeholder="单行输入"  maxlength="20" size="mini" auto-complete="off"></el-input>
             </el-form-item>
@@ -81,7 +71,7 @@
             </el-form-item>
           </div>
           <!--认证方式 Bearer Token-->
-          <div id="divBearerToken" v-if="subFormData.authmode === '3'">
+          <div id="divBearerToken" v-if="subFormData.authmode === 'bearer'">
           <el-form-item label="Token URL" prop="tokenUrl" >
             <el-input v-model="subFormData.tokenUrl" placeholder="单行输入"  maxlength="20" size="mini" auto-complete="off"></el-input>
           </el-form-item>
@@ -101,7 +91,7 @@
           </div>
           <!-- todo3 -->
           <!--类型是数据库-->
-          <div v-if="subFormData.type === '2'">
+          <div v-if="subFormData.type === 'db'">
             <el-form-item label="分类" prop="classify">
               <template>
                 <el-select v-model="subFormData.classify" placeholder="sqlserver">
@@ -141,52 +131,19 @@
         <el-button size="mini" type="primary" @click="subForm('subFormData')">确 定</el-button>
       </div>
     </el-dialog>
-
-    <!--分配界面-->
-    <el-dialog width="50%" :title="'分配'" :visible.sync="allocationDialogFormVisible">
-      <el-form ref="allocationSubFormData" :model="allocationSubFormData" :rules="allocationSubFormDataRule"
-               class="allocationSubFormData" label-width="100px"
-      >
-        <el-form-item label="计划任务名称">
-          <el-select v-model="allocationNames" multiple disabled size="mini" auto-complete="off">
-            <el-option v-for="item in allocationNames" :key="item" :label="item" :value="item"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item v-show="false" label="items" prop="items">
-          <el-input v-model="allocationSubFormData.items" size="mini" auto-complete="off"/>
-        </el-form-item>
-        <el-form-item label="租户" prop="sourceType">
-          <el-select v-model="allocationSubFormData.tenantId" size="mini" @change="getComputers">
-            <el-option v-for="(optItem,optindex) in tenants" :key="optindex" :label="optItem.name" :value="optItem.id"/>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="前置机" prop="sourceType">
-          <el-select v-model="allocationSubFormData.computerId" size="mini">
-            <el-option v-for="(optItem,optindex) in computers" :key="optindex" :label="optItem.name"
-                       :value="optItem.id"
-            />
-          </el-select>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button size="mini" @click="allocationDialogFormVisible = false">取 消</el-button>
-        <el-button size="mini" type="primary" @click="allocationSubForm('allocationSubFormData')">确 定</el-button>
-      </div>
-    </el-dialog>
   </div>
 </template>
 
 <script>
 import * as api from '@/api/datasource'
-
+import * as menuApi from '@/api/menu'
 export default {
   data() {
     return {
       planOptions: [],
       userCaseOptions: [],
       typeOptions: [],
-      nameOptions: [],
+      authOptions: [],
       planCheckWay: 1,
       tenants: [],
       computers: [],
@@ -195,65 +152,32 @@ export default {
       dialogRowTitle: null,
       selectionPropList: [],
       isJxBc: false,
-      optionsOne: [{
-          value: '1',
-          label: '则成'
-        }, {
-          value: '2',
-          label: '云鲸'
-        }],
-        optionsTwe: [{
-          value: '1',
-          label: 'API'
-        }, {
-          value: '2',
-          label: '数据库'
-        }],
-        optionsThree: [{
-          value: '1',
-          label: '无需认证'
-        }, {
-          value: '2',
-          label: 'Basic Auth'
-        }, {
-          value: '3',
-          label: 'Bearer Token'
-        }],
-        optionsfore: [{
-          value: 'SRM集成节点',
-          label: 'SRM集成节点'
-        }, {
-          value: 'MES集成节点',
-          label: 'MES集成节点'
-        }],
-        optionsFive: [{
-          value: 'sqlserver',
-          label: 'sqlserver'
-        }, {
-          value: 'oracle',
-          label: 'oracle'
-        }],
+      optionsfore: [{
+        value: 'SRM集成节点',
+        label: 'SRM集成节点'
+      }, {
+        value: 'MES集成节点',
+        label: 'MES集成节点'
+      }],
+      optionsFive: [{
+        value: 'sqlserver',
+        label: 'sqlserver'
+      }, {
+        value: 'oracle',
+        label: 'oracle'
+      }],
       rowData: {
         id: null,
         name: null,
         code: null,
-        plan: null,
-        execService: null,
-        cron: null,
         type: null,
-        userCaseId: null,
         remark: null
       },
       subFormData: {
         id: null,
         name: null,
         code: null,
-        plan: null,
-        execService: null,
-        cron: null,
         newType: null,
-        userCaseId: null,
-        remark: null,
         url:null,
         certificationMode:null,
         integrationNode:null,
@@ -262,12 +186,6 @@ export default {
         authmode:null,//类型为API时的认证方式
         classify: ''
       },
-      allocationSubFormData: {
-        items: null,
-        tenantId: null,
-        computerId: null
-      },
-      allocationNames: null,
       subFormDataRule: {
         'name': [{
           required: true,
@@ -277,35 +195,9 @@ export default {
           required: true,
           message: '请填写编码'
         }],
-        'plan': [{
-          required: true,
-          message: '请填写运行计划'
-        }],
-        'execService': [{
-          required: true,
-          message: '请填写绑定service'
-        }],
-        'cron': [{
-          required: true,
-          message: '请填写cron'
-        }],
         'type': [{
           required: true,
           message: '请填写类型'
-        }],
-        'userCaseId': [{
-          required: true,
-          message: '请填写绑定用户场景'
-        }]
-      },
-      allocationSubFormDataRule: {
-        'tenantId': [{
-          required: true,
-          message: '请选择租户'
-        }],
-        'computerId': [{
-          required: true,
-          message: '请选择前置机'
         }]
       },
       tableData: [],
@@ -399,8 +291,7 @@ export default {
     }
   },
   async created() {
-    // this.getSourceTypeOptions()
-    // this.getTenants()
+     this.getSourceTypeOptions()
   },
   mounted() {
   },
@@ -432,99 +323,6 @@ export default {
         })
         .catch(() => {
         })
-    },
-    allocation(row) {
-      let items = []
-      let names = []
-      if (!row) {
-        if (!this.datas.multipleSelection.length) {
-          this.$message.info('请选择相关数据')
-          return
-        }
-        items = this.datas.multipleSelection.map((value) => {
-          return value['id']
-        })
-        names = this.datas.multipleSelection.map((value) => {
-          return value['name']
-        })
-      } else {
-        items.push(row.id)
-        names.push(row.name)
-      }
-      this.allocationNames = names
-      this.allocationDialogFormVisible = true
-      this.$set(this.allocationSubFormData, 'items', items)
-    },
-    //新增的方法
-    subForm(subFormData) {
-      this.showCronBox = false
-      this.$refs.subFormData.validate((valid) => {
-        if (valid) {
-     
-          // let { userCaseId, name, type, url, authmode, tokenUrl, classify, databaseName, port, username, password, nodeId } = this[formData];
-          // let param = {
-          //   userCaseId,
-          //   name,
-          //   type
-          // };
-          
-          // if(type == 'API'){
-          //   param.classify = type;
-          //   param.configvalue = {
-          //     url,
-          //     authmode,
-          //     username,
-          //     password,
-          //     tokenUrl
-          //   }
-          // }else{
-          //   param.classify = type;
-          //   param.nodeId = nodeId;
-          //    param.configvalue = {
-          //     databaseName,
-          //     port,
-          //     username,
-          //      password,
-          //      url
-          //   }
-          // }
-          if(this.subFormData.type ==1){
-            this.subFormData.classify=this.subFormData.type
-          }
-            console.log('this.subFormData',this.subFormData)
-    let dataVale = JSON.stringify(this.subFormData)
-  
-     let  obj = {
-       configValue:dataVale,
-       ...this.subFormData
-     }
-       console.log(obj)
-     
-          console.log( '1111',obj)
-          api.submitForm(obj).then(res => {
-            this.$message.success('保存成功')
-            this.getData(this.datas)
-            this.dialogFormVisible = false
-          })
-        } else {
-          return false
-        }
-      })
-    },
-    allocationSubForm(formData) {
-      this.$refs[formData].validate((valid) => {
-        if (valid) {
-          api.submitAllocationForm(this[formData]).then(res => {
-            // console.log(this[formData])
-            this.$message.success('分配成功')
-            this.getData(this.datas)
-            this.allocationDialogFormVisible = false
-          }).catch(() => {
-          })
-        } else {
-          return false
-        }
-      })
     },
     // 新增或编辑页面
     edit(row) {
@@ -597,86 +395,45 @@ export default {
         this.$set(this.datas.table, 'loading', false)
       })
     },
+    subForm(subFormData) {
+      this.showCronBox = false
+      this.$refs.subFormData.validate((valid) => {
+        if (valid) {
+          if(this.subFormData.type =='api'){
+            this.subFormData.classify=this.subFormData.type
+          }
+            console.log('this.subFormData',this.subFormData)
+    let dataVale = JSON.stringify(this.subFormData)
+  
+     let  obj = {
+       configValue:dataVale,
+       ...this.subFormData
+     }
+       console.log(obj)
+     
+          console.log( '1111',obj)
+          api.submitForm(obj).then(res => {
+            this.$message.success('保存成功')
+            this.getData(this.datas)
+            this.dialogFormVisible = false
+          })
+        } else {
+          return false
+        }
+      })
+    },
     getSourceTypeOptions() {
-      api.getSourceTypeOptions('fw.task.plan').then(res => {
-        this.planOptions = res.model
-      }).catch(e => {
-        return false
-      })
-      api.getSourceTypeOptions('fw.task.userCase').then(res => {
-        this.userCaseOptions = res.model
-      }).catch(e => {
-        return false
-      })
-      api.getSourceTypeOptions('fw.task.type').then(res => {
+      menuApi.getSourceTypeOptions('md.bcp.datasource.type').then(res => {
         this.typeOptions = res.model
       }).catch(e => {
         return false
       })
-    },
-    getTenants() {
-      api.getTenants().then(res => {
-        this.tenants = res.model
-      }).catch(e => {
-        return false
-      })
-    },
-    getComputers() {
-      this.allocationSubFormData.computerId = null
-      const tenantId = this.allocationSubFormData.tenantId
-      api.getComputers(tenantId).then(res => {
-        console.log(res.model)
-        this.computers = res.model
-        if (this.computers.length === 1) {
-          this.allocationSubFormData.computerId = this.computers[0].id
-        }
+      menuApi.getSourceTypeOptions('md.bcp.datasource.authmode').then(res => {
+        this.authOptions = res.model
       }).catch(e => {
         return false
       })
     }
-    // // 定义plan转cron表达式
-    // getCronByPlan(plan) {
-    //   let cron
-    //   switch (plan) {
-    //     case '1':
-    //       cron = '0 0/1 * * * ?'
-    //       break
-    //     case '2':
-    //       cron = '0 0/5 * * * ?'
-    //       break
-    //     case '3':
-    //       cron = '0 0/10 * * * ?'
-    //       break
-    //     case '4':
-    //       cron = '0 0/30 * * * ?'
-    //       break
-    //     case '5':
-    //       cron = '0 0 */1 * * ?'
-    //       break
-    //     case '6':
-    //       cron = '0 0 */3 * * ?'
-    //       break
-    //     case '7':
-    //       cron = '0 0 */6 * * ?'
-    //       break
-    //     case '8':
-    //       cron = '0 0 */12 * * ?'
-    //       break
-    //     case '9':
-    //       cron = '0 0 0 * * ? *'
-    //       break
-    //     case '10':
-    //       cron = '0 0 0 /2 * ? *'
-    //       break
-    //     case '11':
-    //       cron = '0 0 0 0 0 ? *'
-    //       break
-    //     case '12':
-    //       cron = '0 0 0 0 * ? *'
-    //       break
-    //   }
-    //   this.$set(this.subFormData, 'cron', cron)
-    // }
   }
 }
 </script>
