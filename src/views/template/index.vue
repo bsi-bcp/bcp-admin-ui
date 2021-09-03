@@ -7,12 +7,13 @@
       <template slot="enable" slot-scope="scope">
   <span>{{ scope.value.enable ? "启用" : "禁用" }}</span>
 </template>
-      <template slot="oper" slot-scope="scope">
+<template slot="oper" slot-scope="scope">
+  <el-button size="mini" type="text" @click="edit(scope.value)">编辑</el-button>
   <el-button size="mini" type="text" @click="disableType(scope.value)">
     {{scope.value.enable ? "禁用" : "启用"}}
   </el-button>
-  <el-button size="mini" type="text" @click="edit(scope.value)">编辑</el-button>
   <el-button size="mini" type="text" @click="remove(scope.value)">删除</el-button>
+  <el-button size="mini" type="text" @click="download(scope.value)">下载</el-button>
 </template>
     </mod-filter>
     <!--新增/编辑界面-->
@@ -27,7 +28,7 @@
         <el-form-item label="备注" prop="remark">
           <el-input v-model="subFormData.remark" maxlength="500" size="mini" auto-complete="off"/>
         </el-form-item>
-        <el-form-item label="模板" prop="fileUrl">
+        <el-form-item label="模板" prop="fileUrl" v-if="!subFormData.id">
           <el-upload 
             :on-exceed="exceedFile"
             :file-list="fileList"
@@ -182,13 +183,11 @@ export default {
       });
     },
     disableType(row) {
-      console.log(row.enable);
       let obj = {
         enable:row.enable,
         id:row.id
       }
       disableType(obj).then((res) => {
-        console.log(res);
         this.$message.success({
           message: "操作成功",
         });
@@ -234,6 +233,9 @@ export default {
         })
         .catch(() => {});
     },
+    download(row) {
+      location.href = `${process.env.VUE_APP_BASE_API}/services/fwcore/template/down/${row.id}`
+    },
     //新增的方法
     subForm(formData) {
       this.showCronBox = false;
@@ -256,6 +258,7 @@ export default {
     // 新增或编辑页面
     edit(row) {
       this.dialogFormVisible = true
+      this.fileList = []
       //如果是新增
       if (row===0) {
         //清空属性值
