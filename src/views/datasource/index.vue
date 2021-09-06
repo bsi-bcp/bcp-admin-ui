@@ -54,10 +54,10 @@
           <!--认证方式 Basic Auth-->
           <div id="divBasicAuth" else v-if="subFormData.authmode === 'basic'">
             <el-form-item label="用户名" prop="username" >
-              <el-input v-model="subFormData.username" placeholder="单行输入"  maxlength="20" size="mini" auto-complete="off"></el-input>
+              <el-input v-model="subFormData.username" placeholder="单行输入"  maxlength="50" size="mini" auto-complete="off"></el-input>
             </el-form-item>
             <el-form-item label="密码" prop="password" >
-            <el-input v-model="subFormData.password" placeholder="单行输入"  maxlength="20" size="mini" auto-complete="off"></el-input>
+            <el-input v-model="subFormData.password" placeholder="单行输入"  maxlength="50" size="mini" auto-complete="off"></el-input>
             </el-form-item>
             <el-form-item label="集成节点" prop="nodeId">
               <template>
@@ -75,7 +75,7 @@
           <!--认证方式 Bearer Token-->
           <div id="divBearerToken" v-if="subFormData.authmode === 'bearer'">
           <el-form-item label="Token URL" prop="tokenUrl" >
-            <el-input v-model="subFormData.tokenUrl" placeholder="单行输入"  maxlength="20" size="mini" auto-complete="off"></el-input>
+            <el-input v-model="subFormData.tokenUrl" placeholder="单行输入"  maxlength="100" size="mini" auto-complete="off"></el-input>
           </el-form-item>
           <el-form-item label="集成节点" prop="nodeId">
             <template>
@@ -107,10 +107,10 @@
               </template>
             </el-form-item> 
             <el-form-item label="数据库地址" prop="url" >
-              <el-input v-model="subFormData.url" placeholder="单行输入"  maxlength="20" size="mini" auto-complete="off"></el-input>
+              <el-input v-model="subFormData.url" placeholder="单行输入"  maxlength="100" size="mini" auto-complete="off"></el-input>
             </el-form-item> 
             <el-form-item label="数据库名称" prop="databaseName" >
-              <el-input v-model="subFormData.databaseName" placeholder="单行输入"  maxlength="20" size="mini" auto-complete="off"></el-input>
+              <el-input v-model="subFormData.databaseName" placeholder="单行输入"  maxlength="50" size="mini" auto-complete="off"></el-input>
             </el-form-item> 
             <el-form-item label="端口号" prop="port" >
               <el-input v-model="subFormData.port" placeholder="单行输入"  maxlength="20" size="mini" auto-complete="off"></el-input>
@@ -122,7 +122,7 @@
               <el-input v-model="subFormData.password" placeholder="单行输入"  maxlength="20" size="mini" auto-complete="off"></el-input>
             </el-form-item> 
             <el-form-item label="集成节点" prop="nodeId" >
-              <el-input v-model="subFormData.nodeId" placeholder="节点ID"  maxlength="20" size="mini" auto-complete="off"></el-input>
+              <el-input v-model="subFormData.nodeId" placeholder="节点ID"  maxlength="50" size="mini" auto-complete="off"></el-input>
             </el-form-item>
         </div>
 
