@@ -342,7 +342,6 @@ export default {
       let data =JSON.parse(row.configValue)
       let tmp = {};
       Object.assign(tmp, row)
-      debugger
       delete tmp.configValue
       delete tmp.tenantId
       this.subFormData = {
@@ -367,16 +366,12 @@ export default {
       })
     },
     subForm(subFormData) {
-      console.log('id:'+subFormData.id);
-      console.log(JSON.stringify(this.subFormData));
       this.showCronBox = false
       this.$refs.subFormData.validate((valid) => {
         if (valid) {
           if(this.subFormData.type =='api'){
             this.subFormData.classify=this.subFormData.type
           }
-          console.log(JSON.stringify(this.subFormData));
-          debugger
           let dataVale = JSON.stringify(this.subFormData)
           let obj = {
             configValue:dataVale,
