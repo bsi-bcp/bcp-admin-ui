@@ -23,13 +23,13 @@
         <!--新增界面的客户项-->
         <el-form-item label="客户" prop="tenantId">
           <el-select v-model="subFormData.tenantId" placeholder="请选择">
-    <el-option
-      v-for="item in bcpTenantName"
-      :key="item.value"
-      :label="item.label"
-      :value="item.value">
-    </el-option>
-  </el-select>
+            <el-option
+              v-for="item in bcpTenantName"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
           <!-- <sxf-freelist v-model="subFormData.tenantId"   code="bcp.tenant.name" size="large" placeholder="请选择客户项" /> -->
         </el-form-item>
       </el-col>
@@ -175,16 +175,15 @@
           </el-table>
           <!--任务列表的按钮-->
           <el-row>
-            
             <el-button style="width:100%;margin-top:10px;" @click="tableAddSecond" >添加</el-button>
           </el-row>
-          <!-- <div @click="tableAddSecond">添加</div> -->
         </el-form-item>
       </el-form>
       <!--新增界面的确定取消-->
       <div slot="footer" class="dialog-footer">
         <el-button size="mini" @click="dialogFormVisible = false">取 消</el-button>
         <el-button size="mini" type="primary" @click="subForm('subFormData')">确 定</el-button>
+        <el-button size="mini"  type="primary" @click="issue(this.subFormData.id)">下发</el-button>
       </div>
     </el-dialog>
 <!-----------------------------------------------跳转的界面--------------------------------------------------------->
@@ -315,7 +314,7 @@ export default {
       },
       jobList: [  
         {
-       inNode:{
+        inNode:{
           //要什么就改成什么
           classify:"in",
           configValue:"",
@@ -530,6 +529,9 @@ export default {
     
   },
   methods: {
+    // issue(row){
+    //   location.href = `${process.env.VUE_APP_BASE_API}/services/fwcore/template/down/${row.id}`
+    // },
     templateData(val){
       //这个获取模板id
       console.log("val",val)
@@ -569,11 +571,8 @@ export default {
       if(this.subFormData.id!==undefined){
         this.inNode = JSON.parse(data.row.inNode.configValue)
         this.$nextTick(()=>{
-              // this.$refs.MonAco.$data.defaultOpts.value = this.inNode.MonAcoData
-        // this.$refs.MonAco.setValue(this.inNode.MonAcoData)
-        // console.log('this.$refs.MonAco',this.$refs.MonAco.setValue(this.inNode.MonAcoData))
-
-            // this.$refs.MonAco.init()
+        this.$refs.MonAco.$data.defaultOpts.value = this.inNode.MonAcoData
+        this.$refs.MonAco.setValue(this.inNode.MonAcoData)
         })
 
       }else{
@@ -602,13 +601,12 @@ export default {
     },
     //任务列表的转换节点的配置按钮方法
     changeOptionsTransform(data) {
+    console.log('data0',data)
            if(this.subFormData.id!==undefined){
-        // this.inNode = JSON.parse(data.row.inNode.configValue)
+        this.inNode = JSON.parse(data.row.inNode.configValue)
         this.$nextTick(()=>{
-        // this.$refs.MonAco.$data.defaultOpts.value = this.inNode.MonAcoData
-        // this.$refs.MonAco.setValue(this.inNode.MonAcoData)
-        // console.log('this.$refs.MonAco',this.$refs.MonAco.setValue(this.inNode.MonAcoData))
-        // this.$refs.MonAco.init()
+        this.$refs.MonAcoTransformNode.$data.defaultOpts.value = this.inNode.MonAcoData
+        this.$refs.MonAcoTransformNode.setValue(this.inNode.MonAcoData)
         })
 
       }
@@ -722,31 +720,14 @@ export default {
         .catch(() => {
         })
     },
-    //导出
-    // derive(row) {
-    //   this.$confirm('是否删除?', '提示', {
-    //     confirmButtonText: '确定',
-    //     cancelButtonText: '取消',
-    //     type: 'warning'
-    //   })
-    //     .then(() => {
-    //       api.singleDelete(row.id).then(res => {
-    //         this.$message.success({
-    //           message: '删除成功'
-    //         })
-    //         this.getData()
-    //       })
-    //     })
-    //     .catch(() => {
-    //     })
-    // },
+    
     //新增&编辑的确认方法
     subForm(formData) {
       let  obj  ={
         ...this.subFormData,
         jobList:this.jobList
       }
-      obj.configValue={tableData:JSON.stringify(this.tableData),subFormData:JSON.stringify(this.subFormData),jobList:JSON.stringify(this.jobList)},
+      obj.configValue={tableData:JSON.stringify(this.tableData),subFormData:JSON.stringify(this.subFormData)},
 
       console.log('obj----->data',obj)
       this.$refs[formData].validate((valid) => {
