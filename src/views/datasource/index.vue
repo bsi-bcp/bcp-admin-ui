@@ -349,11 +349,9 @@ export default {
       Object.assign(tmp, row)
       delete tmp.configValue
       this.subFormData = {
-        ...tmp,
-        ...data
+        ...data,
+        ...tmp
       }
-      //解构赋值id丢失，所以在这里单独设置一下id，原因待查找
-      this.subFormData.id = tmp.id
     },
     getData(datas = this.datas) {
       this.$set(this, 'datas', datas)
