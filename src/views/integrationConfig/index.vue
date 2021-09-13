@@ -14,6 +14,7 @@
     <el-dialog :close-on-click-modal="false"  :close-on-press-escape="false" width="1200px" :title="subFormData.id?'编辑':'新增'" :visible.sync="dialogFormVisible">
     <el-form ref="subFormData" :model="subFormData"  :rules="subFormDataRule" class="subFormData " label-width="100px" >
     <el-row>
+
       <el-col :span='12'>
         <!--新增界面的集成名称项-->
         <el-form-item label="集成名称" prop="name" >
@@ -511,15 +512,14 @@ export default {
       temData:{},
     };
   },
-  // dom元素创建完成；
-
-  mounted() {
+  created() {
+    // Dom 创建完成，由自己执行
      sel.getFreelist({ code: 'bcp.tenant.name'}).then((res) => {
       let arr = []
       for (const item in res.model) {
         this.bcpTenantName.push({ label: res.model[item], value: item });
       }
-    });
+    })
          sel.getFreelist({ code: 'bcp.datasource.name'}).then((res) => {
       let arr = []
       for (const item in res.model) {
@@ -540,19 +540,23 @@ export default {
       })
       console.log(row)
     },
+    //下发（问题：前端这边已向后台发送id，但是后台报500的错误）
     issue(row){
       api.issueType(row).then(res=>{
-        console.log(res)
-         this.$message({
-          showClose: true,
-          message: '恭喜你，这是一条成功消息',
-          type: 'success'
-        });
+        if(res.model.code==200){
           this.$message({
           showClose: true,
-          message: '警告哦，这是一条警告消息',
+          message: res.model.msg,
+          type: 'success'
+        });
+        }else{
+        this.$message({
+          showClose: true,
+          message: res.model.msg,
           type: 'warning'
         });
+        }    
+    
       })
       // location.href = `${process.env.VUE_APP_BASE_API}/services/fwcore/template/down/${row.id}`
     },
@@ -563,7 +567,10 @@ export default {
     },
     affirmInNode() {
       //获取当前代码块的值
-      this.inNode.MonAcoData = this.$refs.MonAco.getVal(),
+      this.$nextTick(()=>{
+      this.inNode.MonAcoData = this.$refs.MonAco.getVal()
+      })
+      console.log(this.inNode.idnex)
       this.jobList[this.inNode.idnex].inNode.type = this.jobList[this.inNode.idnex].valueInputName
       let data = JSON.parse(JSON.stringify(this.inNode))
       this.jobList[this.inNode.idnex].inNode.configValue = JSON.stringify(data)
@@ -571,15 +578,21 @@ export default {
     },
     affirmTransformNode() {
       //获取当前代码块的值      
-    this.transformNodedata.MonAcoData = this.$refs.MonAcoTransformNode.getVal(),
-      this.jobList[this.transformNodedata.index].transformNode.type = this.jobList[this.transformNodedata.index].valueTransformName
+        this.$nextTick(()=>{
+    this.transformNodedata.MonAcoData = this.$refs.MonAcoTransformNode.getVal()
+      })
+       //赋值操作
+      this.joLbist[this.transformNodedata.index].transformNode.type = this.jobList[this.transformNodedata.index].valueTransformName
      let data = JSON.parse(JSON.stringify(this.transformNodedata))
     this.jobList[this.transformNodedata.index].transformNode.configValue = JSON.stringify(data)
         //返回新增弹窗
         this.switchNode = false
     },
     affirmOutNode() {
-    this.outNodeTypeData.MonAcoData =  this.$refs.outNodeData.getVal(),
+          this.$nextTick(()=>{
+    this.outNodeTypeData.MonAcoData =  this.$refs.outNodeData.getVal()
+      })
+
     this.jobList[this.outNodeTypeData.index].transformNode.type = this.jobList[this.outNodeTypeData.index].valueOutputName
      let data = JSON.parse(JSON.stringify(this.outNodeTypeData))
      console.log(data)
@@ -715,7 +728,24 @@ export default {
     },
     //任务列表的添加
     tableAddSecond() {
-      this.jobList.push({ valueName: "" });
+      this.jobList.push({ valueName: "", 
+      inNode:{
+          //要什么就改成什么
+          classify:"in",
+          configValue:"",
+          type:""
+        },
+          outNode: {
+          classify: "out",
+          configValue: "",
+          type: ""
+          },      
+        transformNode: {
+            classify:"transform",
+            configValue: "",
+            type: ""
+          }
+      }); 
     },
     //关闭模板选择按钮的跳转界面弹窗并赋值
     modelShow() {
@@ -777,30 +807,36 @@ export default {
 
     // 新增或编辑页面
   async edit(row) {
-      //当为新增时
+      //当为新增时，重置表单 row ==0  操作全是重置表单
       if(row===0){
+        //row 等于0的时候令this.subFormData为默认值name等等
         this.subFormData = {
           name: null,
           nodeId: null,
           templateId: null,
-          tenantId: '',
+          tenantId: null,
           templateName:null,
         }
+        //令this.tableData为默认值为空数组
         this.tableData = [{}]
         this.transformNodedata={
-        MonAcoData:'',
+        MonAcoData:null,
+        //让外面的赋值操作获取当前的下标
         index:0,
         }
+        //制空任务列表里面所选表单的内容
         this.inNode={
+        index:0,//获取当前行数
         timingSettings: null, //定时设置
         IncrementalField: null, //增量标识字段
         dataSource: null, //增量标识字段
         }
         this.outNodeTypeData={
-          MonAcoData:'',
-          index:0,
-          IncrementalField: null, //访问路径
+        index:0,
+        MonAcoData:'',//提前给她占个坑蛤
+        IncrementalField: null, //访问路径
         },
+        //制空任务列表
         this.jobList=[  
         {
           inNode:{
@@ -820,9 +856,8 @@ export default {
             }
         }
         ]
-      this.dialogFormVisible = true;
-
-        return
+        this.dialogFormVisible = true;
+        return  
       }
     this.dialogFormVisible = true;
     const res = await api.getIdRow(row.id)
