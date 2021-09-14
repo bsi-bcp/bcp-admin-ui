@@ -13,6 +13,7 @@
 import * as monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
 import 'monaco-editor/esm/vs/basic-languages/javascript/javascript.contribution';
 import 'monaco-editor/esm/vs/editor/contrib/find/findController.js';
+import { setTimeout } from 'timers';
 
 export default {
     name: 'AcMonaco',
@@ -43,7 +44,6 @@ export default {
                 width: '',
                 height: ''
             }
-
         }
     },
     watch: {
@@ -58,29 +58,15 @@ export default {
         this.init()
     },
     methods: {
+        clearContent(){
+            this.monacoEditor.setValue('');
+        },
         setValue(data){
-             this.monacoEditor.setValue(data)
-            console.log('this.$refs.container')
+            if(this.monacoEditor){
+                this.monacoEditor.setValue(data);
+            }
         },
         init() {
-            self.MonacoEnvironment = {
-                getWorkerUrl: function (moduleId, label) {
-                    if (label === 'json') {
-                    return './json.worker.bundle.js';
-                    }
-                    if (label === 'css' || label === 'scss' || label === 'less') {
-                    return './css.worker.bundle.js';
-                    }
-                    if (label === 'html' || label === 'handlebars' || label === 'razor') {
-                    return './html.worker.bundle.js';
-                    }
-                    if (label === 'typescript' || label === 'javascript') {
-                    return './ts.worker.bundle.js';
-                    }
-                    return './editor.worker.bundle.js';
-                }
-            }
-
             // 初始化container的内容，销毁之前生成的编辑器
             this.$refs.container.innerHTML = ''
             

@@ -12,7 +12,7 @@
     </mod-filter>
     <!--新增/编辑界面-->
     <el-dialog :close-on-click-modal="false"  :close-on-press-escape="false" width="1200px" :title="subFormData.id?'编辑':'新增'" :visible.sync="dialogFormVisible">
-    <el-form ref="subFormData" :model="subFormData"  :rules="subFormDataRule" class="subFormData " label-width="100px" >
+    <el-form ref="configForm" :model="subFormData"  :rules="subFormDataRule" class="subFormData " label-width="100px" >
     <el-row>
 
       <el-col :span='12'>
@@ -60,13 +60,12 @@
             <el-table-column label="参数名称" align="center">
               <!-- slot-scope="scope"获取表格到当前行的数据 -->
               <template slot-scope="scope">
-                <el-input v-model="scope.row.parameterName" />
+                <el-input v-model="scope.row.key" />
               </template>
             </el-table-column>
             <el-table-column  label="参数数据" align="center">
               <template slot-scope="scope">
-                <!-- parameterValues 改为 cron （9月8日）-->
-                <el-input v-model="scope.row.cron" />
+                <el-input v-model="scope.row.value" />
               </template>
             </el-table-column>
             <el-table-column label="操作" align="center">
@@ -77,9 +76,9 @@
           </el-table>
           <!--参数的添加按钮-->
            <el-row>
-            <el-button style="width:100%;margin-top:10px;" @click="tableAdd" >添加</el-button>
+            <el-button style="width:100%;margin-top:10px;" @click="addParam" >添加</el-button>
           </el-row>
-          <!-- <div @click="tableAdd">添加</div> -->
+          <!-- <div @click="addParam">添加</div> -->
         </el-form-item>
         <!--新增界面的插件文件（暂不需）-->
         <!-- <el-form-item label="插件文件" prop="">
@@ -95,15 +94,15 @@
             <!--任务列表的名称-->
             <el-table-column prop="jobName" label="名称" align="center" width="150">
               <template slot-scope="scope">
-                <el-input v-model="jobList[scope.$index].jobName" />
+                <el-input v-model="scope.row['jobName']" />
               </template>
             </el-table-column>
             <!--任务列表的输入节点-->
-            <el-table-column  label="输入节点" align="center" width="230">
+            <el-table-column prop="inNode"  label="输入节点" align="center" width="230">
               <template slot-scope="scope">
                 <el-row>
                   <el-col :span='14'>
-                    <el-select v-model="jobList[scope.$index].valueInputName" placeholder="请选择">
+                    <el-select v-model="scope.row['inNode']['type']" placeholder="请选择">
                       <el-option
                         v-for="item in optionsInput"
                         :key="item.value"
@@ -113,17 +112,17 @@
                     </el-select>  
                   </el-col>
                   <el-col :span='10'>
-                    <el-button :disabled="jobList[scope.$index].valueInputName==undefined" @click="changeOptionsInput(scope)">配置</el-button>
+                    <el-button :disabled="scope.row['inNode']['type']==''" @click="changeOptionsInput(scope)">配置</el-button>
                   </el-col>
                 </el-row>
               </template>
             </el-table-column>
             <!--任务列表的转换节点-->
-            <el-table-column label="转换节点" align="center" width="230">
+            <el-table-column prop="transformNode" label="转换节点" align="center" width="230">
               <template slot-scope="scope">
                 <el-row>
                   <el-col :span='14'>
-                    <el-select v-model="jobList[scope.$index].valueTransformName" placeholder="请选择" >
+                    <el-select v-model="scope.row['transformNode']['type']" placeholder="请选择" >
                       <el-option
                         v-for="item in optionsTransform"
                         :key="item.value"
@@ -133,17 +132,17 @@
                     </el-select>  
                   </el-col>
                   <el-col :span='10'>
-                    <el-button :disabled="jobList[scope.$index].valueTransformName==undefined" @click="changeOptionsTransform(scope)">配置</el-button>
+                    <el-button :disabled="scope.row['transformNode']['type']==''" @click="changeOptionsTransform(scope)">配置</el-button>
                   </el-col>
                 </el-row>
               </template>
             </el-table-column>
             <!--任务列表的输出节点-->
-            <el-table-column label="输出节点" align="center" width="230">
+            <el-table-column prop="outNode" label="输出节点" align="center" width="230">
               <template slot-scope="scope">
                 <el-row>
                   <el-col :span="14">
-                    <el-select v-model="jobList[scope.$index].valueOutputName" placeholder="请选择">
+                    <el-select v-model="scope.row['outNode']['type']" placeholder="请选择">
                       <el-option
                         v-for="item in optionsOutput"
                         :key="item.value"
@@ -153,8 +152,8 @@
                     </el-select>
                   </el-col>
                   <el-col :span="10">
-                    <!-- 不选择则不能点击=>:disabled="jobList[scope.$index].valueOutputName==undefined" -->
-                    <el-button :disabled="jobList[scope.$index].valueOutputName==undefined" @click="changeOptionsOutput(scope)">配置</el-button>
+                    <!-- 不选择则不能点击=>:disabled="jobList[scope.$index].outputType==undefined" -->
+                    <el-button :disabled="scope.row['outNode']['type']==''" @click="changeOptionsOutput(scope)">配置</el-button>
                   </el-col>
                 </el-row>
               </template>
@@ -176,14 +175,14 @@
           </el-table>
           <!--任务列表的按钮-->
           <el-row>
-            <el-button style="width:100%;margin-top:10px;" @click="tableAddSecond" >添加</el-button>
+            <el-button style="width:100%;margin-top:10px;" @click="addJob" >添加</el-button>
           </el-row>
         </el-form-item>
       </el-form>
       <!--新增界面的确定取消-->
       <div slot="footer" class="dialog-footer">
         <el-button size="mini" @click="dialogFormVisible = false">取 消</el-button>
-        <el-button size="mini" type="primary" @click="subForm('subFormData')">确 定</el-button>
+        <el-button size="mini" type="primary" @click="subForm('configForm')">确 定</el-button>
         <el-button size="mini" :disabled="subFormData.id==undefined"  type="primary" @click="issue(subFormData.id)">下发</el-button>
       </div>
     </el-dialog>
@@ -201,19 +200,19 @@
     </el-dialog>
     <!--任务列表的输入节点-->
     <el-dialog width="50%" :title="ShowInput_title" :visible.sync="ShowInput_Database" :close-on-click-modal="false" :close-on-press-escape="false">
-      <el-form ref="inNode" :model="inNode"   label-width="100px" >
+      <el-form ref="inNode" :model="inNode" label-width="100px" >
         <el-form-item label="定时设置" v-if="ShowInput_title!='API上报'">
-          <el-input v-model="inNode.timingSettings" placeholder="请输入定时设置"></el-input>
+          <el-input v-model="inNode.cron" placeholder="请输入定时设置"></el-input>
         </el-form-item>
         <el-form-item label="数据源" >
           <el-select v-model="inNode.dataSource" placeholder="请选择">
-    <el-option
-      v-for="item in bcpDatasourceName"
-      :key="item.value"
-      :label="item.label"
-      :value="item.value">
-    </el-option>
-  </el-select>
+            <el-option
+              v-for="item in bcpDatasourceName"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
           <!-- <sxf-freelist v-model="inNode.dataSource" code="bcp.datasource.name" /> -->
         </el-form-item>
         <el-form-item label="增量标识字段" v-if="ShowInput_title=='数据库查询'">
@@ -232,10 +231,10 @@
       </div>
     </el-dialog>
     <!--任务列表的转换节点-->
-    <el-dialog width="50%" title="switchNode_title" :visible.sync="switchNode" :close-on-click-modal="false" :close-on-press-escape="false">
+    <el-dialog width="50%" :title="switchNode_title" :visible.sync="switchNode" :close-on-click-modal="false" :close-on-press-escape="false">
       <el-form ref="transformNode"   label-width="100px" >
         <el-form-item label="脚本" >
-          <MonAco1 ref='MonAcoTransformNode'></MonAco1>
+          <MonAco ref='MonAcoTransformNode'></MonAco>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -244,7 +243,7 @@
       </div>
     </el-dialog>
     <!--任务列表的输出节点-->
-    <el-dialog width="50%" title="Showoutput_title" :visible.sync="Showoutput_Transfer" :close-on-click-modal="false" :close-on-press-escape="false">
+    <el-dialog width="50%" :title="Showoutput_title" :visible.sync="Showoutput_Transfer" :close-on-click-modal="false" :close-on-press-escape="false">
       <el-form ref="outNode" :model="outNodeTypeData" label-width="100px" >
         </el-form-item>
           <el-form-item label="数据源" v-if="Showoutput_title=='API调用'||Showoutput_title=='数据库回写'">
@@ -254,7 +253,7 @@
           <el-input v-model="outNodeTypeData.IncrementalField" placeholder="增量标识字段"></el-input>
         </el-form-item>
         <el-form-item label="脚本" >
-          <MonAco2 ref='outNodeData'></MonAco2>
+          <MonAco ref='outMonAco'></MonAco>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -271,19 +270,17 @@ import * as sel from "@/api/select";
 import * as api from "@/api/IntegratedConfig";
 //引入组件
 import multipleTable from "./moudel/multipleTable";
-import MonAco1 from "./moudel/monaco";
-import MonAco2 from "./moudel/monaco";
 import MonAco from "./moudel/monaco";
+import { deepEqual } from 'assert';
 export default {
   //组件注册
   components: {
     multipleTable,
-    MonAco,
-    MonAco1,
-    MonAco2,
+    MonAco
   },
   data() {
     return {
+      currentRow: 0,
       bcpDatasourceName:[],
       bcpTenantName:[],
       value: "",
@@ -291,7 +288,7 @@ export default {
       switchNode_title: "",
       Showoutput_title: "",
       transformNodedata: {
-        MonAcoData:'',
+        scriptContent:'',
         index:0,
       },
       ShowInput_Reported: false, //“任务列表的输入节点=>API上报”模态窗的显示隐藏
@@ -304,55 +301,47 @@ export default {
       ShowMoule: false, //模态窗的显示隐藏
       Reported: false, //模态窗的显示隐藏
       inNode: {
-        timingSettings: null, //定时设置
+        cron: null, //定时设置
+        IncrementalField: null, //增量标识字段
+        dataSource: null, //增量标识字段
+
+      },
+      outNode: {
+        cron: null, //定时设置
+        IncrementalField: null, //增量标识字段
+        dataSource: null, //增量标识字段
+      },
+      transformNode: {
+        cron: null, //定时设置
         IncrementalField: null, //增量标识字段
         dataSource: null, //增量标识字段
       },
       outNodeTypeData: {
-        MonAcoData:'',
+        scriptContent:'',
         index:0,
         IncrementalField: null, //访问路径
       },
-      jobList: [  
-        {
-        inNode:{
-          //要什么就改成什么
-          classify:"in",
-          configValue:"",
-          type:""
-        },
-        outNode: {
-          classify: "out",
-          configValue: "",
-          type: ""
-        },      
-        transformNode: {
-          classify:"transform",
-          configValue: "",
-          type: ""
-        }
-        }
-       ],
+      jobList: [],
       tableData: [{}],//使打开新增窗口时参数新增行数不为空
       dialogFormVisible: false,
       subFormData: {
         name: null,
         nodeId: null,
         templateId: null,
-        tenantId: 419,
+        tenantId: '',
         templateName:null,
       },
       optionsInput: [
         {
-          value: 1,
+          value: "1",
           label: "数据库查询",
         },
         {
-          value: 2,
+          value: "2",
           label: "API查询",
         },
         {
-          value: 3,
+          value: "3",
           label: "API上报",
         },
       ],
@@ -381,44 +370,23 @@ export default {
           {
             required: true,
             message: "请填写名称",
+            trigger: 'blur'
           },
         ],
         code: [
           {
             required: true,
             message: "请填写编码",
-          },
-        ],
-        plan: [
-          {
-            required: true,
-            message: "请填写运行计划",
-          },
-        ],
-        execService: [
-          {
-            required: true,
-            message: "请填写绑定service",
-          },
-        ],
-        cron: [
-          {
-            required: true,
-            message: "请填写cron",
+            trigger: 'blur'
           },
         ],
         type: [
           {
             required: true,
             message: "请填写类型",
+            trigger: 'blur'
           },
-        ],
-        userCaseId: [
-          {
-            required: true,
-            message: "请填写绑定用户场景",
-          },
-        ],
+        ]
       },
 
       params: {
@@ -562,139 +530,69 @@ export default {
     },
     templateData(val){
       //这个获取模板id
-      console.log("val",val)
       this.temData = {...val}
     },
     affirmInNode() {
       //获取当前代码块的值
-      this.$nextTick(()=>{
-      this.inNode.MonAcoData = this.$refs.MonAco.getVal()
-      })
-      console.log(this.inNode.idnex)
-      this.jobList[this.inNode.idnex].inNode.type = this.jobList[this.inNode.idnex].valueInputName
-      let data = JSON.parse(JSON.stringify(this.inNode))
-      this.jobList[this.inNode.idnex].inNode.configValue = JSON.stringify(data)
+      this.inNode.scriptContent = this.$refs.MonAco.getVal()
+      this.jobList[this.currentRow].inNode.configValue = JSON.stringify(this.inNode)
+      this.$refs.MonAco.clearContent()
       this.ShowInput_Database = false
     },
     affirmTransformNode() {
-      //获取当前代码块的值      
-        this.$nextTick(()=>{
-    this.transformNodedata.MonAcoData = this.$refs.MonAcoTransformNode.getVal()
-      })
-       //赋值操作
-      this.joLbist[this.transformNodedata.index].transformNode.type = this.jobList[this.transformNodedata.index].valueTransformName
-     let data = JSON.parse(JSON.stringify(this.transformNodedata))
-    this.jobList[this.transformNodedata.index].transformNode.configValue = JSON.stringify(data)
-        //返回新增弹窗
-        this.switchNode = false
+      //赋值操作
+      this.transformNode.scriptContent = this.$refs.MonAcoTransformNode.getVal()   
+      this.jobList[this.currentRow].transformNode.configValue = JSON.stringify(this.transformNode)
+      this.$refs.MonAcoTransformNode.clearContent()
+      //返回新增弹窗
+      this.switchNode = false
     },
     affirmOutNode() {
-          this.$nextTick(()=>{
-    this.outNodeTypeData.MonAcoData =  this.$refs.outNodeData.getVal()
-      })
-
-    this.jobList[this.outNodeTypeData.index].transformNode.type = this.jobList[this.outNodeTypeData.index].valueOutputName
-     let data = JSON.parse(JSON.stringify(this.outNodeTypeData))
-     console.log(data)
-     console.log(JSON.stringify(data))
-    this.jobList[this.outNodeTypeData.index].outNode.configValue = JSON.stringify(data)
       //获取当前代码块的值
-    
-        //返回新增弹窗
-        this.Showoutput_Transfer = false
+      this.outNode.scriptContent = this.$refs.outMonAco.getVal()
+      this.jobList[this.currentRow].outNode.configValue = JSON.stringify(this.outNode)
+      //返回新增弹窗
+      this.$refs.outMonAco.clearContent()
+      this.Showoutput_Transfer = false
     },
-    //任务列表的输入节点的配置按钮方法
+    //输入节点配置按钮方法
     changeOptionsInput(data) {
-      console.log(data)
-      if(data.row.id!==undefined){
-        this.inNode = JSON.parse(data.row.inNode.configValue)
-        this.$nextTick(()=>{
-        this.$refs.MonAco.$data.defaultOpts.value = this.inNode.MonAcoData
-        this.$refs.MonAco.setValue(this.inNode.MonAcoData)
-      
-        })
-      }else{
-        this.inNode={
-            timingSettings: null, //定时设置
-          IncrementalField: null, //增量标识字段
-          dataSource: null, //增量标识字段
-          }
-      }
-      //声明
-      const map = {
-        1: () => {
-          this.ShowInput_title = "数据库查询";
-        },
-        2: () => {
-          this.ShowInput_title = "API查询";
-        },
-        3: () => {
-          this.ShowInput_title = "API上报";
-        },
-      };
-      //返回
-      this.inNode.idnex = data.$index
+      this.currentRow = data.$index
+      this.inNode = JSON.parse(data.row.inNode.configValue)
+      this.$nextTick(()=>{
+        if(this.$refs.MonAco){
+          this.$refs.MonAco.$data.defaultOpts.value = this.inNode.scriptContent
+          this.$refs.MonAco.setValue(this.inNode.scriptContent)
+        }
+      })
+      this.ShowInput_title = this.optionsInput.find(val=>val.value==data.row.inNode.type).label
       this.ShowInput_Database = true;
-      return map[Number(data.row.valueInputName)]();
     },
     //任务列表的转换节点的配置按钮方法
     changeOptionsTransform(data) {
-    console.log('data0',data)
-           if(data.row.id!==undefined){
-        this.inNode = JSON.parse(data.row.inNode.configValue)
-        this.$nextTick(()=>{
-        this.$refs.MonAcoTransformNode.$data.defaultOpts.value = this.inNode.MonAcoData
-        this.$refs.MonAcoTransformNode.setValue(this.inNode.MonAcoData)
-        })
-
-      }
-      //声明
-      const map = {
-        1: () => {
-          this.switchNode_title = "脚本转换";
-        },
-      };
-      console.log(data)
+      this.currentRow = data.$index
+      this.transformNode = JSON.parse(data.row.transformNode.configValue)
+      this.$nextTick(()=>{
+        if(this.$refs.MonAcoTransformNode){
+          this.$refs.MonAcoTransformNode.$data.defaultOpts.value = this.transformNode.scriptContent
+          this.$refs.MonAcoTransformNode.setValue(this.transformNode.scriptContent)
+        }
+      })
+      this.switchNode_title = this.optionsTransform.find(val=>val.value==data.row.transformNode.type).label
       //返回
-      this.transformNodedata.index = data.$index
       this.switchNode = true;
-      return map[Number(data.row.valueTransformName)]();
     },
     //任务列表的输出节点的配置按钮方法
     changeOptionsOutput(data) {
-        console.log(data)
-                 if(data.row.id!==undefined){
-         this.outNodeTypeData = JSON.parse(data.row.outNode.configValue)
-         console.log(  this.outNodeTypeData)
-        this.$nextTick(()=>{
-        // this.$refs.MonAco.$data.defaultOpts.value = this.inNode.MonAcoData
-        // this.$refs.MonAco.setValue(this.inNode.MonAcoData)
-        // console.log('this.$refs.MonAco',this.$refs.MonAco.setValue(this.inNode.MonAcoData))
-        // this.$refs.MonAco.init()
-        })
-
-      }else{
-        this.outNodeTypeData ={
-            MonAcoData:'',
-        index:0,
-        IncrementalField: null, //访问路径
-        }
+      this.currentRow = data.$index
+      this.outNode = JSON.parse(data.row.outNode.configValue)
+      if(this.$refs.outMonAco){
+        this.$refs.outMonAco.$data.defaultOpts.value = this.outNode.scriptContent
+        this.$refs.outMonAco.setValue(this.outNode.scriptContent)
       }
-      const map = {
-        1: () => {
-          this.Showoutput_title = "API调用";
-        },
-        2: () => {
-          this.Showoutput_title = "数据库回写";
-        },
-        3: () => {
-          this.Showoutput_title = "自定义脚本";
-        },
-      };
-       this.outNodeTypeData.index = data.$index
+      this.Showoutput_title = this.optionsOutput.find(val=>val.value==data.row.outNode.type).label
       //返回
       this.Showoutput_Transfer = true;
-      return map[Number(data.row.valueOutputName)]();
     },
     //参数的删除
     delTableData(index) {
@@ -705,44 +603,26 @@ export default {
       this.jobList.splice(data.$index, 1);
     },
     //参数的添加
-    tableAdd() {
-      this.tableData.push({
-
-        inNode:{
-          //要什么就改成什么
-          classify:"in",
-          configValue:"",
-          type:""
-        },
-          outNode: {
-          classify: "out",
-          configValue: "",
-          type: ""
-          },      
-        transformNode: {
-            classify:"transform",
-            configValue: "",
-            type: ""
-          }
-      });
+    addParam() {
+      this.tableData.push({'key':'','value':''});
     },
     //任务列表的添加
-    tableAddSecond() {
+    addJob() {
       this.jobList.push({ valueName: "", 
       inNode:{
           //要什么就改成什么
           classify:"in",
-          configValue:"",
+          configValue:"{}",
           type:""
         },
           outNode: {
           classify: "out",
-          configValue: "",
+          configValue: "{}",
           type: ""
           },      
         transformNode: {
             classify:"transform",
-            configValue: "",
+            configValue: "{}",
             type: ""
           }
       }); 
@@ -750,7 +630,7 @@ export default {
     //关闭模板选择按钮的跳转界面弹窗并赋值
     modelShow() {
       this.subFormData.templateName = this.temData.name
-        this.subFormData.templateId = this.temData.id
+      this.subFormData.templateId = this.temData.id
       this.ShowMoule = false;
     },
 
@@ -778,29 +658,24 @@ export default {
     
     //新增&编辑的确认方法
     subForm(formData) {
-      let  obj  ={
+      let obj = {
         ...this.subFormData,
         jobList:this.jobList
       }
-      obj.configValue={
-          tableData:JSON.stringify(this.tableData),
-          subFormData:JSON.stringify(this.subFormData),
-          jobList:JSON.stringify(this.jobList)
-        },
+      obj.configValue = this.tableData
       this.$refs[formData].validate((valid) => {
         if (valid) {
-          console.log(this[formData]);
+          console.log(this[formData])
           api
             .submitForm(obj)
             .then((res) => {
-              this.$message.success("保存成功");
-              this.getData(this.datas);
+              this.$message.success("保存成功")
+              this.getData(this.datas)
               console.log('res==>',res)
-              // this.dialogFormVisible = false;
             })
-            .catch(() => {});
+            .catch(() => {})
         } else {
-          return false;
+          return false
         }
       });
     },
@@ -809,94 +684,43 @@ export default {
   async edit(row) {
       //当为新增时，重置表单 row ==0  操作全是重置表单
       if(row===0){
-        //row 等于0的时候令this.subFormData为默认值name等等
-        this.subFormData = {
-          name: null,
-          nodeId: null,
-          templateId: null,
-          tenantId: null,
-          templateName:null,
-        }
-        //令this.tableData为默认值为空数组
-        this.tableData = [{}]
-        this.transformNodedata={
-        MonAcoData:null,
-        //让外面的赋值操作获取当前的下标
-        index:0,
-        }
-        //制空任务列表里面所选表单的内容
-        this.inNode={
-        index:0,//获取当前行数
-        timingSettings: null, //定时设置
-        IncrementalField: null, //增量标识字段
-        dataSource: null, //增量标识字段
-        }
-        this.outNodeTypeData={
-        index:0,
-        MonAcoData:'',//提前给她占个坑蛤
-        IncrementalField: null, //访问路径
-        },
-        //制空任务列表
-        this.jobList=[  
-        {
-          inNode:{
-              classify:"in",
-              configValue:"",
-              type:""
-            },
-            outNode: {
-              classify: "out",
-              configValue: "",
-              type: ""
-            },      
-            transformNode: {
-              classify:"transform",
-              configValue: "",
-              type: ""
-            }
-        }
-        ]
-        this.dialogFormVisible = true;
+        //初始化数据
+        Object.keys(this.subFormData).forEach((key) => (this.subFormData[key] = null))
+        this.tableData = []
+        Object.keys(this.transformNodedata).forEach((key) => (this.transformNodedata[key] = null))
+        Object.keys(this.inNode).forEach((key) => (this.inNode[key] = null))
+        Object.keys(this.outNodeTypeData).forEach((key) => (this.outNodeTypeData[key] = null))
+        this.jobList=[]
+        //显示窗口
+        this.dialogFormVisible = true
         return  
       }
-    this.dialogFormVisible = true;
-    const res = await api.getIdRow(row.id)
-    let data =JSON.parse(res.model)
-    console.log('data=>',data.jobList)
-    let configValue =  JSON.parse(data.configValue)
-
-    this.jobList = JSON.parse(configValue.jobList)
-    data.jobList.forEach(item=>{
-      this.jobList.forEach(it=>{
-        if(item.jobName==it.jobName){
-          it.id = item.id
-        }
-      })
-    })
-    console.log('data=>1111',this.jobList )
-
-    this.tableData = JSON.parse(configValue.tableData)
-    this.subFormData = JSON.parse(configValue.subFormData)
-    let {id} = data
-    this.subFormData.id = id
+      //编辑
+      const res = await api.getIdRow(row.id)
+      let data =JSON.parse(res.model)
+      this.jobList = data.jobList
+      this.tableData = JSON.parse(data.configValue)
+      let {id,name,nodeId,templateId,tenantId,templateName} = data
+      this.subFormData = {id,name,nodeId,templateId,templateName}
+      //客户的key是字符串的
+      this.subFormData.tenantId = tenantId + ""
+      this.dialogFormVisible = true
     },
-
     getData(datas = this.datas) {
-      this.$set(this, "datas", datas);
-      this.$set(this, "params", datas.params);
-      this.$set(this.datas.table, "loading", true);
-      this.$set(this.params, "orgId", this.params.orgName);
+      this.$set(this, "datas", datas)
+      this.$set(this, "params", datas.params)
+      this.$set(this.datas.table, "loading", true)
+      this.$set(this.params, "orgId", this.params.orgName)
       api.getPage({...this.params}).then((res) => {
-        this.$set(this.datas.resData, "rows", res.model);
-        this.$set(this.datas.params, "currentPage", res.currentPage);
-        this.$set(this.datas.params, "pageSize", res.pageSize);
-        this.$set(this.datas.resData, "totalCount", res.totalCount);
-        this.$set(this.datas.table, "loading", false);
-      });
-    },
-
-  },
-};
+        this.$set(this.datas.resData, "rows", res.model)
+        this.$set(this.datas.params, "currentPage", res.currentPage)
+        this.$set(this.datas.params, "pageSize", res.pageSize)
+        this.$set(this.datas.resData, "totalCount", res.totalCount)
+        this.$set(this.datas.table, "loading", false)
+      })
+    }
+  }
+}
 </script>
 
 <style lang="scss" scoped>
