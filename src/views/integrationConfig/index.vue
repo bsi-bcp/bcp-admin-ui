@@ -12,7 +12,7 @@
     </mod-filter>
     <!--新增/编辑界面-->
     <el-dialog :close-on-click-modal="false"  :close-on-press-escape="false" width="1100px" :title="subFormData.id?'编辑':'新增'" :visible.sync="dialogFormVisible">
-    <el-form label-position="top" size="mini" ref="configForm" :model="subFormData"  :rules="subFormDataRule" class="subFormData " label-width="100px">
+    <el-form label-position="top" inline-message size="mini" ref="configForm" :model="subFormData"  :rules="subFormDataRule" class="subFormData " label-width="100px">
         <!--新增界面的集成名称项-->
     <el-form-item label="集成名称" prop="name">
         <el-input class="baseinfo" v-model="subFormData.name" placeholder="集成名称"  maxlength="20" size="mini" auto-complete="off" />
@@ -29,13 +29,13 @@
           </el-select>
           <!-- <sxf-freelist v-model="subFormData.tenantId"   code="bcp.tenant.name" size="mini" placeholder="请选择客户项" /> -->
      </el-form-item>
-        <!--新增界面的集成节点-->
-      <el-form-item label="集成节点" prop="nodeId">
-        <el-input class="baseinfo" v-model="subFormData.nodeId" placeholder="集成节点" maxlength="20" size="mini" auto-complete="off" width="300px"></el-input>
-      </el-form-item>
         <!--新增界面的模板选择-->
       <el-form-item label="模板选择" prop="templateId">
         <el-input class="baseinfo" v-model="subFormData.templateName" disabled placeholder="模板选择" maxlength="20" size="mini" ></el-input><el-button style="margin-left:5px" size="mini" @click="ShowMoule=true">选择模板</el-button>
+      </el-form-item>
+      <!--新增界面的集成节点-->
+      <el-form-item label="集成节点" prop="nodeId">
+        <el-input class="baseinfo" v-model="subFormData.nodeId" placeholder="集成节点" maxlength="20" size="mini" auto-complete="off" width="300px"></el-input>
       </el-form-item>
         <!--新增界面的参数-->
         <el-form-item label="参数" prop="parameter" style="margin-top:20px;">
@@ -353,14 +353,19 @@ export default {
             required: true,
             message: "请填写名称",
             trigger: 'blur'
-          },
+          }
         ],
         tenantId: [
           {
             required: true,
-            message: "请选择客户",
-            trigger: 'blur'
-          },
+            message: "请选择客户"
+          }
+        ],
+        templateId: [
+          {
+            required: true,
+            message: "请选择模板"
+          }
         ]
       },
 

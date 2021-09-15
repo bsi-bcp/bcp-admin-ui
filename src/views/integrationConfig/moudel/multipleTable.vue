@@ -41,7 +41,7 @@ export default {
       setData: {
         currentPage: 1,
         pageSize: 10,
-      },
+      }
     };
   },
   mounted() {
@@ -50,35 +50,35 @@ export default {
   methods: {
     getList() {
       api.getPage({ ...this.setData }).then((res) => {
-        this.tableData = res.model;
-        this.total = res.totalPage;
+        this.tableData = res.model
+        this.total = res.totalPage
       });
     },
     handleSelectionChange(selection) {
       if (selection.length == 1) {
-        this.modelData = selection[0];
+        this.modelData = selection[0]
         //发送出去的
-        this.$emit("templateData", this.modelData);
+        this.$emit("templateData", this.modelData)
       }
       if (selection.length > 1) {
-        let arr = selection;
-        let del_row = arr.shift();
-        this.modelData = arr[0];
-        this.$emit("templateData", this.modelData);
-        this.$refs.multipleTable.toggleRowSelection(del_row, false);
+        let arr = selection
+        let del_row = arr.shift()
+        this.modelData = arr[0]
+        this.$emit("templateData", this.modelData)
+        this.$refs.multipleTable.toggleRowSelection(del_row, false)
       }
     },
     handleSizeChange(val) {
-      this.setData.pageSize = val;
-      this.setData.currentPage = 1;
-      this.getList();
+      this.setData.pageSize = val
+      this.setData.currentPage = 1
+      this.getList()
     },
     handleCurrentChange(val) {
-      this.setData.currentPage = val;
-      this.getList();
-    },
-  },
-};
+      this.setData.currentPage = val
+      this.getList()
+    }
+  }
+}
 </script>
 
 <style lang="scss" scoped>

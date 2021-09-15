@@ -90,9 +90,7 @@ export default {
                 width: dom.clientWidth,
                 height: dom.clientHeight
             }
-            console.log(JSON.stringify(this.originSize))
             dom.classList.add('editor-fullscreen')
-            console.log("h:"+window.screen.height+",w:"+document.body.clientWidth)
             this.monacoEditor.layout({
                 height: window.screen.height,
                 width: document.body.clientWidth
@@ -103,7 +101,6 @@ export default {
             this.isMaximum = false
             let dom = this.$refs.mEditor
             dom.classList.remove('editor-fullscreen')
-            console.log(JSON.stringify(this.originSize))
             this.monacoEditor.layout({
                 height: this.originSize.height,
                 width: this.originSize.width
