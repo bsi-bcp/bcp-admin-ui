@@ -112,7 +112,7 @@
                     </el-select>  
                   </el-col>
                   <el-col :span='10'>
-                    <el-button :disabled="scope.row['inNode']['type']==''" @click="changeOptionsInput(scope)">配置</el-button>
+                    <el-button type="text" :disabled="scope.row['inNode']['type']==''" @click="changeOptionsInput(scope)">配置</el-button>
                   </el-col>
                 </el-row>
               </template>
@@ -132,7 +132,7 @@
                     </el-select>  
                   </el-col>
                   <el-col :span='10'>
-                    <el-button :disabled="scope.row['transformNode']['type']==''" @click="changeOptionsTransform(scope)">配置</el-button>
+                    <el-button type="text" :disabled="scope.row['transformNode']['type']==''" @click="changeOptionsTransform(scope)">配置</el-button>
                   </el-col>
                 </el-row>
               </template>
@@ -153,15 +153,14 @@
                   </el-col>
                   <el-col :span="10">
                     <!-- 不选择则不能点击=>:disabled="jobList[scope.$index].outputType==undefined" -->
-                    <el-button :disabled="scope.row['outNode']['type']==''" @click="changeOptionsOutput(scope)">配置</el-button>
+                    <el-button type="text" :disabled="scope.row['outNode']['type']==''" @click="changeOptionsOutput(scope)">配置</el-button>
                   </el-col>
                 </el-row>
               </template>
             </el-table-column>
             <!--任务列表的状态-->
-            <el-table-column prop="status" label="状态" align="center" width="80">
-              <!-- 9月8日更新=> 值为未配置-->
-            </el-table-column>
+            <!-- <el-table-column prop="status" label="状态" align="center" width="80"> -->
+            <!-- </el-table-column> -->
             <!--任务列表的操作-->
             <el-table-column prop="oper" label="操作" align="center" width="80">
               <template slot-scope="scope">
