@@ -387,7 +387,7 @@ export default {
           rows: [],
           pageSize: 10,
           currentPage: 1,
-          totalCount: 0,
+          totalCount: 0
         },
         filterList: [
              {
@@ -397,7 +397,7 @@ export default {
             filedShow: false,
             label: "名称",
             placeholder: "关键词",
-            optList: [],
+            optList: []
           },
           {
             type: "input",
@@ -406,7 +406,7 @@ export default {
             filedShow: true,
             label: "名称",
             placeholder: "名称",
-            optList: [],
+            optList: []
           },
           {
             type: "input",
@@ -415,7 +415,7 @@ export default {
             filedShow: true,
             label: "客户",
             placeholder: "客户",
-            optList: [],
+            optList: []
           },
           {
             type: "input",
@@ -424,7 +424,7 @@ export default {
             filedShow: true,
             label: "模板",
             placeholder: "模板",
-            optList: [],
+            optList: []
           },
           {
             type: "input",
@@ -433,7 +433,7 @@ export default {
             filedShow: true,
             label: "修改时间",
             placeholder: "修改时间",
-            optList: [],
+            optList: []
           },
           {
             type: "input",
@@ -442,7 +442,7 @@ export default {
             filedShow: true,
             label: "状态",
             placeholder: "状态",
-            optList: [],
+            optList: []
           },
           {
             type: "input",
@@ -453,11 +453,11 @@ export default {
             slot: true,
             label: "操作",
             placeholder: "操作",
-            optList: [],
-          },
+            optList: []
+          }
         ],
       },
-      temData:{},
+      temData:{}
     };
   },
   created() {
@@ -666,6 +666,9 @@ export default {
 
     // 新增或编辑页面
   async edit(row) {
+      if( !!this.$refs.configForm ){
+        this.$refs.configForm.clearValidate()
+      }
       //当为新增时，重置表单 row ==0  操作全是重置表单
       if(row===0){
         //初始化数据
