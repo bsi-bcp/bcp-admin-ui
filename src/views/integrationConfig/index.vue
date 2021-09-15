@@ -11,51 +11,35 @@
       </template>
     </mod-filter>
     <!--新增/编辑界面-->
-    <el-dialog :close-on-click-modal="false"  :close-on-press-escape="false" width="1200px" :title="subFormData.id?'编辑':'新增'" :visible.sync="dialogFormVisible">
-    <el-form ref="configForm" :model="subFormData"  :rules="subFormDataRule" class="subFormData " label-width="100px" >
-    <el-row>
-
-      <el-col :span='12'>
+    <el-dialog :close-on-click-modal="false"  :close-on-press-escape="false" width="1100px" :title="subFormData.id?'编辑':'新增'" :visible.sync="dialogFormVisible">
+    <el-form label-position="top" size="mini" ref="configForm" :model="subFormData"  :rules="subFormDataRule" class="subFormData " label-width="100px">
         <!--新增界面的集成名称项-->
-        <el-form-item label="集成名称" prop="name" >
-          <el-input v-model="subFormData.name" placeholder="集成名称"  maxlength="20" size="large" auto-complete="off" /></el-form-item>
-      </el-col>
-      <el-col :span='12'>
+    <el-form-item label="集成名称" prop="name">
+        <el-input class="baseinfo" v-model="subFormData.name" placeholder="集成名称"  maxlength="20" size="mini" auto-complete="off" />
+    </el-form-item>
         <!--新增界面的客户项-->
-        <el-form-item label="客户" prop="tenantId">
-          <el-select v-model="subFormData.tenantId" placeholder="请选择">
-            <el-option
+     <el-form-item label="客户" prop="tenantId">
+        <el-select class="baseinfo" v-model="subFormData.tenantId" placeholder="请选择" size="mini">
+          <el-option
               v-for="item in bcpTenantName"
               :key="item.value"
               :label="item.label"
               :value="item.value">
             </el-option>
           </el-select>
-          <!-- <sxf-freelist v-model="subFormData.tenantId"   code="bcp.tenant.name" size="large" placeholder="请选择客户项" /> -->
-        </el-form-item>
-      </el-col>
-      </el-row> 
+          <!-- <sxf-freelist v-model="subFormData.tenantId"   code="bcp.tenant.name" size="mini" placeholder="请选择客户项" /> -->
+     </el-form-item>
         <!--新增界面的集成节点-->
-        <el-form-item label="集成节点" prop="nodeId">
-          <el-input v-model="subFormData.nodeId" placeholder="集成节点" maxlength="20" size="large" auto-complete="off"  ></el-input>
-        </el-form-item>
+      <el-form-item label="集成节点" prop="nodeId">
+        <el-input class="baseinfo" v-model="subFormData.nodeId" placeholder="集成节点" maxlength="20" size="mini" auto-complete="off" width="300px"></el-input>
+      </el-form-item>
         <!--新增界面的模板选择-->
-      <el-row>
-        <el-col :span="22">
-          <el-form-item label="模板选择" prop="templateId">
-            <!-- 布局的一行（el-row）的宽度分为24等份，通过span属性来确定每一个列el-col的宽度，占了24份中的几份 -->
-            <el-input v-model="subFormData.templateName" disabled placeholder="模板选择" maxlength="20" size="large"   ></el-input>
-          </el-form-item>
-        </el-col>
-          <el-col :span="2">
-            <el-button @click="ShowMoule=true">选择模板</el-button>
-          </el-col>
-      </el-row>
-
+      <el-form-item label="模板选择" prop="templateId">
+        <el-input class="baseinfo" v-model="subFormData.templateName" disabled placeholder="模板选择" maxlength="20" size="mini" ></el-input><el-button style="margin-left:5px" size="mini" @click="ShowMoule=true">选择模板</el-button>
+      </el-form-item>
         <!--新增界面的参数-->
-        <el-form-item label="参数" prop="parameter">
-          <!-- border=>使表格带边框 -->
-          <el-table :data="tableData" class="mt10" :cell-style="{padding:'10px 0px'}" :header-cell-style="{background:'#fafafa',color:'#606266',padding:'12px 0px'}" fit highlight-current-row style="width: 100%" @select="handleSelectionChange">
+        <el-form-item label="参数" prop="parameter" style="margin-top:20px;">
+          <el-table :data="tableData" class="mt10" :cell-style="{padding:'10px 0px'}" :header-cell-style="{background:'#fafafa',color:'#606266',padding:'0px 0px'}" fit highlight-current-row style="width: 100%" @select="handleSelectionChange">
             <!-- align="center"使内容居中 -->
             <el-table-column label="参数名称" align="center">
               <!-- slot-scope="scope"获取表格到当前行的数据 -->
@@ -75,9 +59,7 @@
             </el-table-column>
           </el-table>
           <!--参数的添加按钮-->
-           <el-row>
-             <el-button type="text" @click="addParam" >添加</el-button>
-          </el-row>
+          <el-button type="text" @click="addParam" style="margin-top:5px">添加</el-button>
           <!-- <div @click="addParam">添加</div> -->
         </el-form-item>
         <!--新增界面的插件文件（暂不需）-->
@@ -85,20 +67,19 @@
           <el-button type="primary">上传插件<i class="el-icon-upload el-icon--right"></i></el-button>
         </el-form-item> -->
         <!--新增界面的任务列表-->
-        <el-form-item label="任务列表" >
-          <!-- border=>使表格带边框 -->
-          <el-table :data="jobList" class="mt10" :cell-style="{padding:'10px 0px'}" :header-cell-style="{background:'#fafafa',color:'#606266',padding:'12px 0px'}" fit highlight-current-row style="width: 100%" @select="handleSelectionChange">
+        <el-form-item label="任务列表" style="margin-top:20px;">
+          <el-table :data="jobList" class="mt10" :cell-style="{padding:'5px 0px'}" :header-cell-style="{background:'#fafafa',color:'#606266',padding:'0px 0px'}" fit highlight-current-row style="width: 100%" @select="handleSelectionChange">
             <!--任务列表的选择点击按钮-->
-            <el-table-column type="selection"  width="55">
+            <el-table-column type="selection"  width="45">
             </el-table-column>
             <!--任务列表的名称-->
-            <el-table-column prop="jobName" label="名称" align="center" width="150">
+            <el-table-column prop="jobName" label="名称" align="center" width="120">
               <template slot-scope="scope">
                 <el-input v-model="scope.row['jobName']" />
               </template>
             </el-table-column>
             <!--任务列表的输入节点-->
-            <el-table-column prop="inNode"  label="输入节点" align="center" width="230">
+            <el-table-column prop="inNode"  label="输入节点" align="center" width="220">
               <template slot-scope="scope">
                 <el-row>
                   <el-col :span='14'>
@@ -118,7 +99,7 @@
               </template>
             </el-table-column>
             <!--任务列表的转换节点-->
-            <el-table-column prop="transformNode" label="转换节点" align="center" width="230">
+            <el-table-column prop="transformNode" label="转换节点" align="center" width="220">
               <template slot-scope="scope">
                 <el-row>
                   <el-col :span='14'>
@@ -138,7 +119,7 @@
               </template>
             </el-table-column>
             <!--任务列表的输出节点-->
-            <el-table-column prop="outNode" label="输出节点" align="center" width="230">
+            <el-table-column prop="outNode" label="输出节点" align="center" width="220">
               <template slot-scope="scope">
                 <el-row>
                   <el-col :span="14">
@@ -162,27 +143,29 @@
             <!-- <el-table-column prop="status" label="状态" align="center" width="80"> -->
             <!-- </el-table-column> -->
             <!--任务列表的操作-->
-            <el-table-column prop="oper" label="操作" align="center" width="80">
+            <el-table-column prop="oper" label="操作" align="center" width="300">
               <template slot-scope="scope">
-              <el-row>
-                <el-col :span="8">  
-                <el-button type="text" @click="deljobList(scope)">删除</el-button>
-                </el-col>
-              </el-row>
+               <div style="text-align:left">
+                  <el-button type="text" disabled width="30">复制</el-button>
+                  <el-button type="text" @click="deljobList(scope)" width="30">删除</el-button>
+                  <el-button type="text" disabled>调试</el-button>
+                  <el-button type="text" disabled>全量</el-button>
+                  <el-button type="text" disabled>日志</el-button>
+                </div>
               </template>
             </el-table-column>
           </el-table>
           <!--任务列表的按钮-->
           <el-row>
-            <el-button type="text" @click="addJob" >添加</el-button>
+            <el-button type="text" @click="addJob" style="margin-top:5px">添加</el-button>
           </el-row>
         </el-form-item>
       </el-form>
       <!--新增界面的确定取消-->
       <div slot="footer" class="dialog-footer">
-        <el-button size="mini" @click="dialogFormVisible = false">取 消</el-button>
         <el-button size="mini" type="primary" @click="subForm('configForm')">确 定</el-button>
         <el-button size="mini" :disabled="subFormData.id==undefined"  type="primary" @click="issue(subFormData.id)">下发</el-button>
+        <el-button size="mini" @click="dialogFormVisible = false">取 消</el-button>
       </div>
     </el-dialog>
 <!-----------------------------------------------跳转的界面--------------------------------------------------------->
@@ -372,17 +355,10 @@ export default {
             trigger: 'blur'
           },
         ],
-        code: [
+        tenantId: [
           {
             required: true,
-            message: "请填写编码",
-            trigger: 'blur'
-          },
-        ],
-        type: [
-          {
-            required: true,
-            message: "请填写类型",
+            message: "请选择客户",
             trigger: 'blur'
           },
         ]
@@ -724,8 +700,27 @@ export default {
 
 <style lang="scss" scoped>
 // lang ==>告诉webpack当前用的是什么预编译器
-// scoped   当前下面写的样式只在当前的页面生效=>解决样式混乱的问题
-/deep/ .el-table__header-wrapper .el-checkbox {
-  display: none;
+// scoped   当前下面写的样式只在当前的页面生效
+
+.baseinfo {
+  width: 400px;
+}
+
+.el-form-item {
+  margin-bottom: 5px;
+}
+
+/deep/ .el-dialog__body {
+    padding: 10px 20px;
+    color: #606266;
+    font-size: 14px;
+    word-break: break-all;
+}
+
+/deep/ .el-form--label-top .el-form-item__label {
+    float: none;
+    display: inline-block;
+    text-align: left;
+    padding: 0 0 1px;
 }
 </style>
