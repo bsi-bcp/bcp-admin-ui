@@ -580,7 +580,7 @@ export default {
       //加载模板内容
       api.getTemplateContent(this.temData.id).then(res=>{
         this.jobList = res.jobList
-        this.tableData = JSON.parse(res.configValue)
+        this.tableData = res.configValue!=null?JSON.parse(res.configValue):[]
       })
       this.ShowMoule = false;
     },
@@ -644,6 +644,9 @@ export default {
         Object.keys(this.inNode).forEach((key) => (this.inNode[key] = null))
         Object.keys(this.outNode).forEach((key) => (this.outNode[key] = null))
         this.jobList=[]
+        //默认自定义模板
+        this.subFormData.templateName = '自定义'
+        this.subFormData.templateId = 0
         this.clearValidate()
         //显示窗口
         this.dialogFormVisible = true
@@ -652,7 +655,6 @@ export default {
       //编辑
       const res = await api.getIdRow(row.id)
       let data =JSON.parse(res.model)
-      debugger
       this.jobList = data.jobList
       this.tableData = JSON.parse(data.configValue)
       let {id,name,nodeId,templateId,tenantId,templateName} = data
