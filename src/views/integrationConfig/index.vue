@@ -635,6 +635,8 @@ export default {
   },
     // 新增或编辑页面
   async edit(row) {
+      //重置验证
+      this.clearValidate()
       //当为新增时，重置表单 row ==0  操作全是重置表单
       if(row===0){
         //初始化数据
@@ -647,7 +649,8 @@ export default {
         //默认自定义模板
         this.subFormData.templateName = '自定义'
         this.subFormData.templateId = 0
-        this.clearValidate()
+        //客户默认第一个
+        this.subFormData.tenantId = Object.keys(this.bcpTenantName)[0]
         //显示窗口
         this.dialogFormVisible = true
         return  
@@ -660,7 +663,6 @@ export default {
       let {id,name,nodeId,templateId,tenantId,templateName} = data
       tenantId = tenantId + ""
       this.subFormData = {id,name,nodeId,templateId,tenantId,templateName}
-      this.clearValidate()
       this.dialogFormVisible = true
     },
     getData(datas = this.datas) {
