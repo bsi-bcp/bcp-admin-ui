@@ -25,7 +25,7 @@
      </el-form-item>
         <!--新增界面的模板选择-->
       <el-form-item label="模板选择" prop="templateId">
-        <el-input class="baseinfo" v-model="subFormData.templateName" disabled placeholder="模板选择" maxlength="20" size="mini" ></el-input><el-button style="margin-left:5px" size="mini" @click="ShowMoule=true">选择模板</el-button>
+        <el-input class="baseinfo" v-model="subFormData.templateName" disabled placeholder="模板选择" maxlength="20" size="mini" ></el-input><el-button style="margin-left:5px" size="mini" @click="ShowMoule=true" :disabled="!!subFormData.id">选择模板</el-button>
       </el-form-item>
       <!--新增界面的集成节点-->
       <el-form-item label="集成节点" prop="nodeId">
@@ -229,7 +229,6 @@ import multipleTable from "./moudel/multipleTable";
 import MonAco from "./moudel/monaco";
 import { deepEqual } from 'assert';
 import { connect } from 'tls';
-import { preventRepeatClick } from "@/utils/directive.js"
 
 export default {
   //组件注册
@@ -281,6 +280,7 @@ export default {
       tableData: [{}],//使打开新增窗口时参数新增行数不为空
       dialogFormVisible: false,
       subFormData: {
+        id: null,
         name: null,
         nodeId: null,
         templateId: null,
@@ -574,8 +574,14 @@ export default {
     },
     //关闭模板选择按钮的跳转界面弹窗并赋值
     modelShow() {
+      //设置模板名称和模板id
       this.subFormData.templateName = this.temData.name
       this.subFormData.templateId = this.temData.id
+      //加载模板内容
+      api.getTemplateContent(this.temData.id).then(res=>{
+        this.jobList = res.jobList
+        this.tableData = JSON.parse(res.configValue)
+      })
       this.ShowMoule = false;
     },
 
@@ -622,12 +628,13 @@ export default {
         }
       })
     },
-
+  clearValidate(){
+    if( !!this.$refs.configForm ){
+      this.$refs.configForm.clearValidate()
+    }
+  },
     // 新增或编辑页面
   async edit(row) {
-      if( !!this.$refs.configForm ){
-        this.$refs.configForm.clearValidate()
-      }
       //当为新增时，重置表单 row ==0  操作全是重置表单
       if(row===0){
         //初始化数据
@@ -637,6 +644,7 @@ export default {
         Object.keys(this.inNode).forEach((key) => (this.inNode[key] = null))
         Object.keys(this.outNode).forEach((key) => (this.outNode[key] = null))
         this.jobList=[]
+        this.clearValidate()
         //显示窗口
         this.dialogFormVisible = true
         return  
@@ -644,11 +652,13 @@ export default {
       //编辑
       const res = await api.getIdRow(row.id)
       let data =JSON.parse(res.model)
+      debugger
       this.jobList = data.jobList
       this.tableData = JSON.parse(data.configValue)
       let {id,name,nodeId,templateId,tenantId,templateName} = data
       tenantId = tenantId + ""
       this.subFormData = {id,name,nodeId,templateId,tenantId,templateName}
+      this.clearValidate()
       this.dialogFormVisible = true
     },
     getData(datas = this.datas) {

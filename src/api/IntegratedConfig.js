@@ -96,3 +96,9 @@ export function issueType(param) {
   })
 }
  
+export function getTemplateContent(id) {
+  return request({
+    url:  `/services/fwcore/template/down/${id}`,
+    method: 'GET'
+  })
+}

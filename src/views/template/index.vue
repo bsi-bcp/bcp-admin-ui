@@ -12,7 +12,7 @@
   <el-button size="mini" type="text" @click="disableType(scope.value)">
     {{scope.value.enable ? "禁用" : "启用"}}
   </el-button>
-  <el-button size="mini" type="text" @click="remove(scope.value)">删除</el-button>
+  <!-- <el-button size="mini" type="text" @click="remove(scope.value)">删除</el-button> -->
   <el-button size="mini" type="text" @click="download(scope.value)">下载</el-button>
 </template>
     </mod-filter>
