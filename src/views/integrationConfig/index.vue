@@ -224,6 +224,7 @@
 import * as sel from "@/api/select";
 import * as api from "@/api/IntegratedConfig";
 import * as menuApi from '@/api/menu'
+
 //引入组件
 import multipleTable from "./moudel/multipleTable";
 import MonAco from "./moudel/monaco";
@@ -242,6 +243,7 @@ export default {
       currentRow: 0,
       bcpDatasourceName:[],
       bcpTenantName:[],
+      exampleData:[], //示例数据
       value: "",
       ShowInput_title: "",
       switchNode_title: "",
@@ -405,6 +407,9 @@ export default {
       sel.getFreelist({ code: 'bcp.datasource.name'}).then((res) => {
         this.bcpDatasourceName = res.model
       })
+      sel.getFreelist({ code: 'bcp.example.data'}).then((res) => {
+        this.exampleData = res.model
+      })
       menuApi.getSourceTypeOptions('md.bcp.input.type').then(res => {
         this.optionsInput = res.model
       })
@@ -482,6 +487,9 @@ export default {
     changeOptionsInput(data) {
       this.currentRow = data.$index
       this.inNode = JSON.parse(data.row.inNode.configValue)
+      if(!this.subFormData.id){
+        this.inNode.scriptContent = this.exampleData["in"]
+      }
       setTimeout(()=>{
         this.showEditor=1
         this.$nextTick(()=>{
@@ -497,6 +505,9 @@ export default {
     changeOptionsTransform(data) {
       this.currentRow = data.$index
       this.transformNode = JSON.parse(data.row.transformNode.configValue)
+      if(!this.subFormData.id){
+        this.transformNode.scriptContent = this.exampleData["transform"]
+      }
       setTimeout(()=>{
         this.showEditor=2
         this.$nextTick(()=>{
@@ -514,6 +525,9 @@ export default {
     changeOptionsOutput(data) {
       this.currentRow = data.$index
       this.outNode = JSON.parse(data.row.outNode.configValue)
+      if(!this.subFormData.id){
+        this.outNode.scriptContent = this.exampleData["out"]
+      }
       setTimeout(()=>{
         this.showEditor=3
         this.$nextTick(()=>{
@@ -574,10 +588,6 @@ export default {
         this.tableData = res.configValue!=null?JSON.parse(res.configValue):[]
       })
       this.ShowMoule = false;
-    },
-
-    handleSelectionChange(selection) {
-     
     },
     // 删除
     remove(row) {
@@ -644,6 +654,7 @@ export default {
         this.subFormData.templateId = 0
         //客户默认第一个
         this.subFormData.tenantId = Object.keys(this.bcpTenantName)[0]
+        
         //显示窗口
         this.dialogFormVisible = true
         return  
