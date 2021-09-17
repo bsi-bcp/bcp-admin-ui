@@ -42,7 +42,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button size="mini" @click="dialogFormVisible = false;showCronBox=false">取 消</el-button>
-        <el-button size="mini" type="primary" @click="subForm('subFormData')">确 定</el-button>
+        <el-button size="mini" type="primary" @click="subForm('subFormData')" v-prevent-repeat-click>确 定</el-button>
       </div>
     </el-dialog>
   </div>
