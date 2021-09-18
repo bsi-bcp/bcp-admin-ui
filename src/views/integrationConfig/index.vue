@@ -492,7 +492,7 @@ export default {
     changeOptionsInput(data) {
       this.currentRow = data.$index
       this.inNode = JSON.parse(data.row.inNode.configValue)
-      if(!this.subFormData.id){
+      if(this.inNode.scriptContent===undefined){
         this.inNode.scriptContent = this.exampleData["in"]
       }
       setTimeout(()=>{
@@ -510,7 +510,7 @@ export default {
     changeOptionsTransform(data) {
       this.currentRow = data.$index
       this.transformNode = JSON.parse(data.row.transformNode.configValue)
-      if(!this.subFormData.id){
+      if(this.transformNode.scriptContent===undefined){
         this.transformNode.scriptContent = this.exampleData["transform"]
       }
       setTimeout(()=>{
@@ -530,7 +530,7 @@ export default {
     changeOptionsOutput(data) {
       this.currentRow = data.$index
       this.outNode = JSON.parse(data.row.outNode.configValue)
-      if(!this.subFormData.id){
+      if(this.outNode.scriptContent===undefined){
         this.outNode.scriptContent = this.exampleData["out"]
       }
       setTimeout(()=>{
