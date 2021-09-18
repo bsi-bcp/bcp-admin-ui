@@ -16,7 +16,7 @@
     <!-- todo1 -->
     <el-dialog width="50%" :title="subFormData.id?'编辑':'新增'" :visible.sync="dialogFormVisible">
       <el-form ref="subFormData" :model="subFormData" :rules="subFormDataRule" class="subFormData" label-width="100px">
-        <el-form-item label="客户" prop="tenantId">
+        <el-form-item label="客户" prop="tenantId" v-if="cur_user.userType=='admin'">
             <el-select v-model="subFormData.tenantId" placeholder="请选择" >
                 <el-option v-for="(optItem,optindex) in customerOptions" :key="optindex" :label="optItem" :value="optindex" />
               </el-select>
@@ -140,6 +140,8 @@
 import * as api from '@/api/datasource'
 import * as menuApi from '@/api/menu'
 import * as sel from '@/api/select'
+import { mapGetters } from 'vuex'
+
 export default {
   data() {
     return {
@@ -300,6 +302,11 @@ export default {
   },
   mounted() {
   },
+  computed: {
+    ...mapGetters([
+      'cur_user'
+    ])
+  },
   methods: {
     input(data){
       console.log('data===>',data)
@@ -341,6 +348,8 @@ export default {
       if (row===0) {
         //清空属性值
         Object.keys(this.subFormData).forEach((key) => (this.subFormData[key] = null));
+              //客户默认当前用户所属租户
+        this.subFormData.tenantId = this.cur_user.tenantId+'';
         return
       }
       //如果是更新

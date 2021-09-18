@@ -18,7 +18,7 @@
         <el-input class="baseinfo" v-model="subFormData.name" placeholder="集成名称"  maxlength="20" size="mini" auto-complete="off" />
     </el-form-item>
         <!--新增界面的客户项-->
-     <el-form-item label="客户" prop="tenantId">
+     <el-form-item label="客户" prop="tenantId" v-if="cur_user.userType=='admin'">
         <el-select class="baseinfo" v-model="subFormData.tenantId" placeholder="请选择" size="mini">
           <el-option v-for="(optItem,optindex) in bcpTenantName" :key="optindex" :label="optItem" :value="optindex" />
         </el-select>
@@ -33,7 +33,7 @@
       </el-form-item>
         <!--新增界面的参数-->
         <el-form-item label="参数" prop="parameter" style="margin-top:20px;">
-          <el-table :data="tableData" class="mt10" :cell-style="{padding:'10px 0px'}" :header-cell-style="{background:'#fafafa',color:'#606266',padding:'0px 0px'}" fit highlight-current-row style="width: 100%" @select="handleSelectionChange">
+          <el-table :data="tableData" class="mt10" :cell-style="{padding:'10px 0px'}" :header-cell-style="{background:'#fafafa',color:'#606266',padding:'0px 0px'}" fit highlight-current-row style="width: 100%">
             <!-- align="center"使内容居中 -->
             <el-table-column label="参数名称" align="center">
               <!-- slot-scope="scope"获取表格到当前行的数据 -->
@@ -62,7 +62,7 @@
         </el-form-item> -->
         <!--新增界面的任务列表-->
         <el-form-item label="任务列表" style="margin-top:20px;">
-          <el-table :data="jobList" class="mt10" :cell-style="{padding:'5px 0px'}" :header-cell-style="{background:'#fafafa',color:'#606266',padding:'0px 0px'}" fit highlight-current-row style="width: 100%" @select="handleSelectionChange">
+          <el-table :data="jobList" class="mt10" :cell-style="{padding:'5px 0px'}" :header-cell-style="{background:'#fafafa',color:'#606266',padding:'0px 0px'}" fit highlight-current-row style="width: 100%">
             <!--任务列表的选择点击按钮-->
             <el-table-column type="selection"  width="45">
             </el-table-column>
@@ -230,6 +230,7 @@ import multipleTable from "./moudel/multipleTable";
 import MonAco from "./moudel/monaco";
 import { deepEqual } from 'assert';
 import { connect } from 'tls';
+import { mapGetters } from 'vuex'
 
 export default {
   //组件注册
@@ -313,7 +314,6 @@ export default {
           }
         ]
       },
-
       params: {
         currentPage: 1,
         pageSize: 10,
@@ -399,12 +399,17 @@ export default {
   async created() {
     this.initOptions()
   },
+  computed: {
+    ...mapGetters([
+      'cur_user'
+    ])
+  },
   methods: {
     initOptions() {
       sel.getFreelist({ code: 'bcp.tenant.name'}).then((res) => {
         this.bcpTenantName = res.model
       })
-      sel.getFreelist({ code: 'bcp.datasource.name'}).then((res) => {
+      sel.getFreelist({ code: 'bcp.datasource.name',params:this.cur_user.tenantId}).then((res) => {
         this.bcpDatasourceName = res.model
       })
       sel.getFreelist({ code: 'bcp.example.data'}).then((res) => {
@@ -652,9 +657,11 @@ export default {
         //默认自定义模板
         this.subFormData.templateName = '自定义'
         this.subFormData.templateId = 0
-        //客户默认第一个
-        this.subFormData.tenantId = Object.keys(this.bcpTenantName)[0]
+        //客户默认当前用户所属租户
+        this.subFormData.tenantId = this.cur_user.tenantId+'';
+        // this.subFormData.tenantId = Object.keys(this.bcpTenantName)[0]
         
+             
         //显示窗口
         this.dialogFormVisible = true
         return  
