@@ -7,7 +7,7 @@
           <el-row v-for="(page,index) in filterConditions" :key="index" :gutter="20" type="flex">
             <el-col v-for="(item) of page" :key="item.prop" :span="datas.listRowSize">
               <el-row type="flex">
-                <el-form-item :label="item.label" :prop="item.prop" style="white-space:nowrap" />
+                <el-form-item :label="item.queryName||item.label" :prop="item.prop" style="white-space:nowrap" />
                 <el-col>
                   <el-form-item>
                     <el-input v-if="item.type=='input'" :id="item.prop" v-model="item[item.prop]" :placeholder="item.placeholder" :clearable="true" />
@@ -34,7 +34,7 @@
             <template v-if="!datas.noresetForm">
               <el-button v-if="searchCon.length>0" size="mini" type="primary" @click="resetForm('datas')">重置</el-button>
             </template>
-            <el-dropdown :hide-on-click="false" :show-timeout="100" trigger="click" style="padding-left:10px;">
+            <el-dropdown :hide-on-click="false" :show-timeout="100" trigger="click" style="padding-left:10px;" v-show="false">
               <el-button type="primary" size="mini">
                 设置
                 <i class="el-icon-caret-bottom el-icon--right" />

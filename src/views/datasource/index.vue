@@ -242,6 +242,7 @@ export default {
             isHiddenSearchLabel: true,
             label: '名称',
             placeholder: '关键词',
+            queryName: '关键词',
             optList: [],
             name: ''
           },

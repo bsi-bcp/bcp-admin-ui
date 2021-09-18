@@ -137,7 +137,8 @@ export default {
             // 控制搜索框的label显示与否
             isHiddenSearchLabel: true,
             label: '名称',
-            placeholder: '关键词'
+            placeholder: '关键词',
+            queryName: '关键词'
           },
           {
             prop: "code",

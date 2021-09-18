@@ -337,11 +337,12 @@ export default {
         filterList: [
           {
             type: "input",
+            queryName: '关键词',
             prop: "name",
             conditionshow: true,
             filedShow: true,
             label: "名称",
-            placeholder: "名称",
+            placeholder: "关键词",
             optList: []
           },
           {
