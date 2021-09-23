@@ -1,50 +1,66 @@
 <template>
   <div class="login-container">
+    <div class="background">
+      <img :src="imgSrc" width="100%" height="100%" alt="" />
+    </div>
+    <div class="title-container">
+        <div class="title">
+          BCP Cloud后台管理
+        </div>
+    </div>
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
-      <div class="title-container">
-        <h3 class="title">
-          BCP Cloud
-        </h3>
-      </div>
+      <el-row :gutter="20" style="margin-top:5px;">
+      <el-col :span="12">
+        <!-- 公司图标 -->
+        <div class="CompanyLogos">
+          <img :src="imgSrc2" width="100%" height="100%" alt="" />
+        </div>
+      </el-col>
+      <el-col :span="12"  style="padding-top: 145px;">
+        <el-form-item prop="uname">
+          <!-- 用户名 -->
+          <span class="svg-container">
+            <svg-icon icon-class="user" class="svgstyle" />
+          </span>
+          <el-input
+            ref="uname"
+            v-model="loginForm.uname"
+            placeholder="用户名"
+            name="uname"
+            type="text"
+            tabindex="1"
+            auto-complete="on"
+            class="unamestyle"
+          />
+        </el-form-item>
 
-      <el-form-item prop="uname">
-        <span class="svg-container">
-          <svg-icon icon-class="user" />
-        </span>
-        <el-input
-          ref="uname"
-          v-model="loginForm.uname"
-          placeholder="用户名"
-          name="uname"
-          type="text"
-          tabindex="1"
-          auto-complete="on"
-        />
-      </el-form-item>
+        <el-form-item prop="password">
+          <span class="svg-container">
+            <svg-icon icon-class="password" class="svgstyle"/>
+          </span>
+          <el-input
+            :key="passwordType"
+            ref="password"
+            v-model="loginForm.password"
+            :type="passwordType"
+            placeholder="密码"
+            name="password"
+            tabindex="2"
+            auto-complete="on"
+            @keyup.enter.native="handleLogin"
+            class="unamestyle"
+          />
+          <span class="show-pwd" @click="showPwd">
+            <svg-icon  :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" class="showPwdstyle"/>
+          </span>
+        </el-form-item>
 
-      <el-form-item prop="password">
-        <span class="svg-container">
-          <svg-icon icon-class="password" />
-        </span>
-        <el-input
-          :key="passwordType"
-          ref="password"
-          v-model="loginForm.password"
-          :type="passwordType"
-          placeholder="密码"
-          name="password"
-          tabindex="2"
-          auto-complete="on"
-          @keyup.enter.native="handleLogin"
-        />
-        <span class="show-pwd" @click="showPwd">
-          <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
-        </span>
-      </el-form-item>
+        <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">
+          登录
+        </el-button>
+      </el-col>
+      </el-row>
 
-      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">
-        登录
-      </el-button>
     </el-form>
 
     <el-dialog width="30%" title="修改密码" :visible.sync="dialogFormVisible">
@@ -133,6 +149,8 @@ export default {
       }
     }
     return {
+      imgSrc: require('../../img/bgcImage.jpg'),
+      imgSrc2: require('../../img/bgcImage1.jpg'),
       passwordStrategy: {
         strongFlag: null,
         chars: null,
@@ -246,9 +264,11 @@ export default {
 
 <style lang="scss">
 
-$bg:#283443;
+// $bg:#283443;
 $light_gray:#fff;
 $cursor: #fff;
+
+
 
 @supports (-webkit-mask: none) and (not (cater-color: $cursor)) {
   .login-container .login-form .el-input input {
@@ -256,12 +276,21 @@ $cursor: #fff;
   }
 }
 
+.background{
+    width:100%;
+    height:100%;
+    z-index:-1;
+    position: absolute;
+}
+
 /* reset element-ui css */
 .login-container {
+  background: url('../../img/bgcImage.jpg') no-repeat;
+  background-size: cover;
   .login-form .el-input {
     display: inline-block;
     height: 47px;
-    width: 85%;
+    width: 84%;
 
     input {
       background: transparent;
@@ -274,13 +303,14 @@ $cursor: #fff;
       caret-color: $cursor;
 
       &:-webkit-autofill {
-        box-shadow: 0 0 0px 1000px $bg inset !important;
+        // box-shadow: 0 0 0px 1000px $bg inset !important;
         -webkit-text-fill-color: $cursor !important;
       }
     }
   }
 
   .login-form .el-form-item {
+    
     border: 1px solid rgba(255, 255, 255, 0.1);
     background: rgba(0, 0, 0, 0.1);
     border-radius: 5px;
@@ -294,6 +324,15 @@ $bg:#2d3a4b;
 $dark_gray:#889aa4;
 $light_gray:#eee;
 
+
+.unamestyle{
+      display: inline-block;
+      height: 56px;
+      width: 83%;
+      padding-left: 22px;
+      padding-top: 5px;     
+  } 
+
 .login-container {
   min-height: 100%;
   width: 100%;
@@ -304,9 +343,12 @@ $light_gray:#eee;
     position: relative;
     width: 520px;
     max-width: 100%;
-    padding: 160px 35px 0;
+    padding: 50px;
     margin: 0 auto;
     overflow: hidden;
+    background-color: #FFFFFF;
+    width: 1280px;
+    height: 603px;
   }
 
   .tips {
@@ -320,7 +362,14 @@ $light_gray:#eee;
       }
     }
   }
-
+  .svgstyle{
+    width: 2em;
+  }
+  .showPwdstyle{
+    width: 30px;
+    margin-top: 15px;
+    margin-right: 5px;
+  }
   .svg-container {
     padding: 6px 5px 6px 15px;
     color: $dark_gray;
@@ -333,11 +382,10 @@ $light_gray:#eee;
     position: relative;
 
     .title {
-      font-size: 26px;
-      color: $light_gray;
-      margin: 0px auto 40px auto;
-      text-align: center;
-      font-weight: bold;
+    font-size: 45px;
+    color: #fff;
+    margin: 55px auto 70px auto;
+    text-align: center;
     }
   }
 
