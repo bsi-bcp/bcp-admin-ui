@@ -271,7 +271,7 @@ export default {
 
 // $bg:#283443;
 $light_gray:#fff;
-$cursor: #403434;
+$cursor: #000000;
 
 
 
