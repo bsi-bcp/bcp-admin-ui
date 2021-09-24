@@ -15,7 +15,7 @@
     <el-form label-position="top" inline-message size="mini" ref="configForm" :model="subFormData"  :rules="subFormDataRule" class="subFormData " label-width="100px">
         <!--新增界面的集成名称项-->
     <el-form-item label="集成名称" prop="name">
-        <el-input class="baseinfo" v-model="subFormData.name" placeholder="集成名称"  maxlength="20" size="mini" auto-complete="off" />
+        <el-input class="baseinfo" v-model="subFormData.name" placeholder="集成名称"  maxlength="200" size="mini" auto-complete="off" />
     </el-form-item>
         <!--新增界面的客户项-->
      <el-form-item label="客户" prop="tenantId" v-if="cur_user.userType=='admin'">
