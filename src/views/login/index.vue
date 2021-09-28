@@ -268,9 +268,7 @@ export default {
 </script>
 
 <style lang="scss">
-
-// $bg:#283443;
-$light_gray:#000;
+$light_gray:rgb(0, 0, 0);
 $cursor: #000000;
 
 
@@ -326,7 +324,9 @@ $cursor: #000000;
 }
 </style>
 
+
 <style lang="scss" scoped>
+
 $bg:#2d3a4b;
 $dark_gray:#889aa4;
 $light_gray:#eee;
