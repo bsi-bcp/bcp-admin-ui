@@ -23,10 +23,10 @@
           <el-input v-model="subFormData.code" maxlength="200" size="mini" auto-complete="off"/>
         </el-form-item>
         <el-form-item label="名称" prop="name">
-          <el-input v-model="subFormData.name" maxlength="100" size="mini" auto-complete="off"/>
+          <el-input v-model="subFormData.name" maxlength="100" size="mini"  />
         </el-form-item>
         <el-form-item label="备注" prop="remark">
-          <el-input v-model="subFormData.remark" maxlength="500" size="mini" auto-complete="off"/>
+          <el-input v-model="subFormData.remark" maxlength="500" size="mini" type="textarea" autosize auto-complete="off"/>
         </el-form-item>
         <el-form-item label="模板" prop="fileUrl" v-if="!subFormData.id">
           <el-input v-model="subFormData.fileUrl" v-show="false"  size="mini" auto-complete="off"/>

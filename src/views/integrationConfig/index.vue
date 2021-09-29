@@ -11,7 +11,7 @@
       </template>
     </mod-filter>
     <!--新增/编辑界面-->
-    <el-dialog    :close-on-click-modal="false"  :close-on-press-escape="false" width="1100px" :title="subFormData.id?'编辑':'新增'" :visible.sync="dialogFormVisible">
+    <el-dialog  class="pub_dialog"  :close-on-click-modal="false"  :close-on-press-escape="false" width="1100px"   :title="subFormData.id?'编辑':'新增'" :visible.sync="dialogFormVisible">
     <el-form label-position="top" inline-message size="mini" ref="configForm" :model="subFormData"  :rules="subFormDataRule" class="subFormData " label-width="100px">
         <!--新增界面的集成名称项-->
     <el-form-item label="集成名称" prop="name">
@@ -792,13 +792,7 @@ export default {
 .el-form-item {
   margin-bottom: 5px;
 }
-//设置弹出窗口内容样式
-/deep/ .el-dialog__body {
-    padding: 10px 20px;
-    color: #606266;
-    font-size: 14px;
-    word-break: break-all;
-}
+
 
 //设置form-item中lable的样式
 /deep/ .el-form--label-top .el-form-item__label {
@@ -807,24 +801,35 @@ export default {
     text-align: left;
     padding: 0 0 1px;
 }
-// //滚动条全局样式
-// ::v-deep .el-scrollbar__wrap{
-//   overflow-x: hidden;
-// }
-// // 滚动条的宽度
-// .el-table__body-wrapper::-webkit-scrollbar {
-//   width: 0px; // 横向滚动条
-//   height: 0px; // 纵向滚动条 必写
-// }
-//   // 滚动条的滑块
-// .el-table__body-wrapper::-webkit-scrollbar-thumb {
-//   background-color: #ddd;
-//   border-radius: 3px;
-// }
-// .gutter{
-//   background-color: rgb(232, 232, 232);   // 这里是填充上未被填充的右侧表头空白
-// }
-// .el-table__body{
-//   width: 100% !important;        // 这里一定要!important哦，来覆盖掉之前的宽度
-// }
+//设置弹出窗口内容样式
+/deep/ .el-dialog__body {
+    padding: 10px 20px;
+    color: #606266;
+    font-size: 14px;
+    word-break: break-all;
+}
+
+
+.pub_dialog {
+    display: flex;
+    justify-content: center;
+    align-items: Center;
+    overflow: hidden;
+    .el-dialog {
+        margin: 0 auto !important;
+        height: 90% !important;
+        overflow: hidden;
+        .el-dialog__body {
+            position: absolute;
+            left: 0;
+            top: 54px;
+            bottom: 0;
+            right: 0;
+            padding: 0;
+            z-index: 1;
+            overflow: hidden;
+            overflow-y: auto;
+        }
+    }
+}
 </style>
