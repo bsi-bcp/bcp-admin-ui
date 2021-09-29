@@ -78,7 +78,7 @@ export default {
           {
             required: true,
             message: "请填写名称",
-            trigger: 'blur'
+            trigger: 'blur',
           }
         ],
         code: [
@@ -138,7 +138,8 @@ export default {
             isHiddenSearchLabel: true,
             label: '名称',
             placeholder: '关键词',
-            queryName: '关键词'
+            queryName: '关键词',
+            align:"left",
           },
           {
             prop: "code",

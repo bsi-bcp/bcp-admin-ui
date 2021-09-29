@@ -11,18 +11,18 @@
       </template>
     </mod-filter>
     <!--新增/编辑界面-->
-    <el-dialog :close-on-click-modal="false"  :close-on-press-escape="false" width="1100px" :title="subFormData.id?'编辑':'新增'" :visible.sync="dialogFormVisible">
+    <el-dialog    :close-on-click-modal="false"  :close-on-press-escape="false" width="1100px" :title="subFormData.id?'编辑':'新增'" :visible.sync="dialogFormVisible">
     <el-form label-position="top" inline-message size="mini" ref="configForm" :model="subFormData"  :rules="subFormDataRule" class="subFormData " label-width="100px">
         <!--新增界面的集成名称项-->
     <el-form-item label="集成名称" prop="name">
         <el-input class="baseinfo" v-model="subFormData.name" placeholder="集成名称"  maxlength="200" size="mini" auto-complete="off" />
     </el-form-item>
         <!--新增界面的客户项-->
-     <el-form-item label="客户" prop="tenantId" v-if="cur_user.userType=='admin'">
+    <el-form-item label="客户" prop="tenantId" v-if="cur_user.userType=='admin'">
         <el-select class="baseinfo" v-model="subFormData.tenantId" placeholder="请选择" size="mini">
           <el-option v-for="(optItem,optindex) in bcpTenantName" :key="optindex" :label="optItem" :value="optindex" />
         </el-select>
-     </el-form-item>
+    </el-form-item>
         <!--新增界面的模板选择-->
       <el-form-item label="模板选择" prop="templateId">
         <el-input class="baseinfo" v-model="subFormData.templateName" disabled placeholder="模板选择" maxlength="20" size="mini" ></el-input><el-button style="margin-left:5px" size="mini" @click="ShowMoule=true" :disabled="!!subFormData.id">选择模板</el-button>
@@ -125,7 +125,7 @@
             <!--任务列表的操作-->
             <el-table-column prop="oper" label="操作" align="center" width="230">
               <template slot-scope="scope">
-               <div style="text-align:left">
+              <div style="text-align:left">
                   <el-button type="text" disabled width="30">复制</el-button>
                   <el-button type="text" @click="deljobList(scope)" width="30">删除</el-button>
                   <el-button type="text" disabled>调试</el-button>
@@ -393,7 +393,8 @@ export default {
             filedShow: true,
             label: "名称",
             placeholder: "关键词",
-            optList: []
+            optList: [],
+            align:"left",
           },
           {
             type: "input",
@@ -782,8 +783,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-// lang ==>告诉webpack当前用的是什么预编译器
-// scoped   当前下面写的样式只在当前的页面生效
+
+
+}
+
+
 
 .baseinfo {
   width: 400px;

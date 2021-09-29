@@ -244,7 +244,8 @@ export default {
             placeholder: '关键词',
             queryName: '关键词',
             optList: [],
-            name: ''
+            name: '',
+            align:"left",
           },
           {
             type: 'input',

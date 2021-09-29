@@ -68,10 +68,10 @@
         <slot name="lastBtn" />
       </div>
 
-      <el-table ref="table" v-loading="datas.table.loading" max-height="600px" class="mt10" :cell-style="{padding:'10px 0px'}" :header-cell-style="{background:'#fafafa',color:'#606266',padding:'12px 0px'}" :data="datas.resData.rows" fit highlight-current-row @selection-change="handleSelectionChange" @row-click="rowClick" @cell-click="cellClick">
+      <el-table ref="table" v-loading="datas.table.loading"  max-height="600px" class="mt10" :cell-style="{padding:'10px 0px'}" :header-cell-style="{background:'#fafafa',color:'#606266',padding:'12px 0px','text-align':'center'}" :data="datas.resData.rows" fit highlight-current-row @selection-change="handleSelectionChange" @row-click="rowClick" @cell-click="cellClick">
         <el-table-column v-if="datas.table.selection" type="selection" width="55" />
         <el-table-column v-if="datas.table.orderNo" type="index" width="50" label="序号" align="center" />
-        <el-table-column v-for="(rowItem ,rowIdx ) in tableField" :key="rowIdx" :prop="rowItem.prop" :label="rowItem.label" :type="rowItem.type" :align="rowItem.align==null?'center':rowItem.align" :show-overflow-tooltip="true" :min-width="rowItem.minWidth">
+        <el-table-column v-for="(rowItem ,rowIdx ) in tableField" :key="rowIdx" :align="rowItem.align==null?'center':rowItem.align" :prop="rowItem.prop" :label="rowItem.label" :type="rowItem.type"  :show-overflow-tooltip="true" :min-width="rowItem.minWidth">
           <template slot-scope="scope">
             <slot v-if="rowItem.slot==true" :name="rowItem.prop" :value="scope.row" />
             <span v-else-if="!!rowItem.image"><img :src="scope.row[rowItem.prop]"></span>
