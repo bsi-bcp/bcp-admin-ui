@@ -1,10 +1,15 @@
 <template lang="html">
   <div class="app-container">
+    
     <el-table
       :data="tableData"
       style="width: 100%"
       :header-cell-style="{background:'rgb(250 250 250)'}"
       header-align="center">
+      <el-table-column align="center">
+        <template slot="header">
+          <a @click="seeDetail" >查看详情</a>
+        </template>
       <el-table-column
         prop="code"
         label="序号"
@@ -15,6 +20,9 @@
         prop="name"
         label="名称"
         width="500px">
+        <template slot-scope="scope">
+          <a :href="scope.row.url" target="_blank" class="buttonText" >{{scope.row.name}}</a>
+        </template>
       </el-table-column>
       <el-table-column
         prop="operation"
@@ -25,6 +33,7 @@
         align="center">
           <el-button @click="handleClick(scope.row)" type="text" size="small">查看详情</el-button>
         </template>
+      </el-table-column>
       </el-table-column>
     </el-table>
   </div>
@@ -66,9 +75,20 @@ export default {
   mounted() {},
   methods: {
     handleClick(row) {
-
-        location.href = row.url;
-        
+      var el = document.createElement("a");
+      document.body.appendChild(el);
+      el.href = row.url; //url 
+      el.target = '_new'; //指定在新窗口打开
+      el.click();
+      document.body.removeChild(el);
+    },
+    seeDetail(){
+      var el = document.createElement("a");
+      document.body.appendChild(el);
+      el.href = "https://docs.qq.com/sheet/DVXRqaVZhSHJpclJJ?tab=BB08J2"; //url 是你得到的连接
+      el.target = '_blank'; //指定在新窗口打开
+      el.click();
+      document.body.removeChild(el);
     }
   },
 };
