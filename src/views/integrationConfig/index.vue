@@ -169,7 +169,7 @@
       </div>
     </el-dialog>
     <!--任务列表的输入节点-->
-    <el-dialog width="60%" :title="ShowInput_title" :visible.sync="ShowInput_Database" :close-on-click-modal="false" :close-on-press-escape="false">
+    <el-dialog class="dialog-skip" width="60%" :title="ShowInput_title" :visible.sync="ShowInput_Database" :close-on-click-modal="false" :close-on-press-escape="false">
       <el-form ref="inNodeForm" :model="inNode" label-width="100px" size="mini" :rules="inNodeFormRule" inline-message label-position="top">
         <el-form-item prop="cron" label="定时设置" v-if="ShowInput_title!='API上报'" >
           <el-input v-model="inNode.cron" placeholder="请输入" class="baseinfo"></el-input>
@@ -195,7 +195,7 @@
       </div>
     </el-dialog>
     <!--任务列表的转换节点-->
-    <el-dialog width="60%" :title="switchNode_title" :visible.sync="switchNode" :close-on-click-modal="false" :close-on-press-escape="false">
+    <el-dialog class="dialog-skip" width="60%" :title="switchNode_title" :visible.sync="switchNode" :close-on-click-modal="false" :close-on-press-escape="false">
       <el-form ref="transformNodeForm" label-width="100px" size="mini" inline-message label-position="top">
         <el-form-item label="脚本" required>
           <MonAco ref='MonAcoTransformNode'></MonAco>
@@ -207,7 +207,7 @@
       </div>
     </el-dialog>
     <!--任务列表的输出节点-->
-    <el-dialog width="60%" :title="Showoutput_title" :visible.sync="Showoutput_Transfer" :close-on-click-modal="false" :close-on-press-escape="false">
+    <el-dialog class="dialog-skip" width="60%" :title="Showoutput_title" :visible.sync="Showoutput_Transfer" :close-on-click-modal="false" :close-on-press-escape="false">
       <el-form ref="outNodeForm" :rules="outNodeFormRule" :model="outNode" label-width="100px" size="mini" inline-message label-position="top">
         </el-form-item>
           <el-form-item prop="dataSource" label="数据源" v-if="Showoutput_title=='API调用'||Showoutput_title=='数据库回写'">
@@ -847,7 +847,8 @@ margin-left: 0px;
     word-break: break-all;
 }
 
-/deep/.el-dialog {
+//新增弹窗样式
+/deep/ .pub_dialog .el-dialog {
   margin-top: 10vh !important;
   position: relative;
   margin: 0 auto 0px;
@@ -861,8 +862,11 @@ margin-left: 0px;
   height: 80%;
 }
 
-/deep/.el-dialog .el-dialog__body {
+//新增弹窗样式，设置拉拽
+/deep/ .pub_dialog .el-dialog .el-dialog__body {
   max-height:80%  !important;
   overflow-y: auto;
 }
+
+
 </style>
