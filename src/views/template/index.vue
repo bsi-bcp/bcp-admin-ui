@@ -34,7 +34,7 @@
           <el-upload 
             :on-exceed="exceedFile"
             :file-list="fileList"
-            :limit="1"
+            :limit="3"
             :http-request="handleUpload"
             action='undefined'
             :beforeUpload="beforeUpload">
@@ -62,7 +62,7 @@ import {
 export default {
   data() {
     return {
-      fileList:[],
+      fileList:[{name: 'food.jpeg', url: 'bcp-template#custom.txt'}],
       typeOptions: [],
       nameOptions: [],
       dialogFormVisible: false,
@@ -98,7 +98,7 @@ export default {
         ],
         fileUrl: [
           {
-            required: false,
+            required: true,
             message: "请上传模板文件",
             trigger: 'change'
           }
@@ -269,11 +269,12 @@ export default {
     // 新增或编辑页面
     edit(row) {
       this.dialogFormVisible = true
-      this.fileList = []
+      // this.fileList = []
       //如果是新增
       if (row===0) {
         //清空属性值
         Object.keys(this.subFormData).forEach((key) => (this.subFormData[key] = null));
+        this.subFormData.fileUrl = "bcp-template#custom.txt";
         return
       }
       //如果是更新

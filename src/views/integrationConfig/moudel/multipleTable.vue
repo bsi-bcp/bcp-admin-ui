@@ -4,8 +4,12 @@
     <el-table
       ref="multipleTable"
       :data="tableData"
-      class="mt10" :cell-style="{padding:'5px 0px'}" :header-cell-style="{background:'#fafafa',color:'#606266',padding:'0px 0px'}" fit highlight-current-row style="width: 100%"
+      class="mt10"
+      :cell-style="{padding:'5px 0px'}" 
+      :header-cell-style="{background:'#fafafa',color:'#606266',padding:'0px 0px'}" 
+      fit highlight-current-row style="width: 100%"
       @select="handleSelectionChange"
+      :header-cell-class-name="cellClass"
     >
       <el-table-column type="selection" width="55"> </el-table-column>
       <el-table-column type="index" width="55"> </el-table-column>
@@ -48,6 +52,11 @@ export default {
     this.getList()
   },
   methods: {
+    cellClass(row){     
+      if (row.columnIndex === 0) {           
+        return 'disabledCheck'     
+      } 
+    },
     getList() {
       api.getPage({ ...this.setData }).then((res) => {
         this.tableData = res.model
@@ -84,5 +93,16 @@ export default {
 <style lang="scss" scoped>
 .pagination {
   text-align: right;
+}
+//去掉全选按钮
+::v-deep .el-table .disabledCheck .cell .el-checkbox__inner {
+  display: none !important;
+}
+
+// 修改全选框文本内容，目前忽略
+::v-deep .el-table .disabledCheck .cell::before {
+  content: '';
+  text-align: center;
+  line-height: 37px;
 }
 </style>

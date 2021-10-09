@@ -10,7 +10,7 @@
         <el-button size="mini" type="text" @click="derive(scope.value)">导出</el-button>
       </template>
     </mod-filter>
-    <!--新增/编辑界面-->
+    <!--新增/编辑界面  -->
     <el-dialog  class="pub_dialog"  :close-on-click-modal="false"  :close-on-press-escape="false" width="1120px"   :title="subFormData.id?'编辑':'新增'" :visible.sync="dialogFormVisible">
     <el-form label-position="top" inline-message size="mini" ref="configForm" :model="subFormData"  :rules="subFormDataRule" class="subFormData " label-width="100px">
         <!--新增界面的集成名称项-->
@@ -161,8 +161,8 @@
     <!--:visible.sync="ShowMoule"的功能为控制当前模态窗的显示和隐藏-->
     <!-- :close-on-click-modal="false"和:close-on-press-escape="false"的功能为控制窗口不会被点击或是ESC按键关闭 -->
     <el-dialog :close-on-click-modal="false" :close-on-press-escape="false" width="50%" title="选择模板" :visible.sync="ShowMoule">
-     <multipleTable @templateData="templateData" >
-     </multipleTable>
+      <multipleTable @templateData="templateData" >
+      </multipleTable>
       <div slot="footer" class="dialog-footer">
         <el-button size="mini" type="primary" @click="modelShow">确 定</el-button>
         <el-button size="mini" @click="ShowMoule = false">取 消</el-button>
@@ -183,7 +183,7 @@
           <el-input v-model="inNode.IncrementalField" placeholder="请输入" class="baseinfo"></el-input>
         </el-form-item>
         <el-form-item prop="path" label="访问路径" v-if="ShowInput_title=='API查询'||ShowInput_title=='API上报'">
-          <el-input v-model="inNode.path" placeholder="请输入" class="baseinfo"></el-input>
+          <el-input v-model="inNode.path" placeholder="请输入" class="baseinfo" style="width:500px"></el-input>
         </el-form-item>
         <el-form-item required label="脚本" v-if="ShowInput_title!='API上报'" >
           <MonAco ref='MonAco'></MonAco>
@@ -227,7 +227,6 @@
         <el-button size="mini" @click="Showoutput_Transfer = false">取 消</el-button>
       </div>
     </el-dialog>
-<!-------------------------------------------------------------------------------------------------------->
   </div>
 </template>
 
@@ -812,29 +811,13 @@ export default {
   }
 }
 </script>
+<style lang="scss">
 
+
+
+</style>
 
 <style lang="scss" scoped>
-
-//新增窗口样式
-.app-container .el-dialog {
-  margin-top: 10vh !important;
-  position: relative;
-  margin: 0 auto 0px;
-  background: #FFFFFF;
-  border-radius: 2px;
-  -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-  -webkit-box-sizing: border-box;
-  box-sizing: border-box;
-  width: 50%;
-  height: 80%;
-}
-.app-container .el-dialog .el-dialog__body {
-  max-height:80%  !important;
-  overflow-y: auto;
-}
-
 
 .baseinfo {
   width: 400px;
@@ -864,5 +847,22 @@ margin-left: 0px;
     word-break: break-all;
 }
 
+/deep/.el-dialog {
+  margin-top: 10vh !important;
+  position: relative;
+  margin: 0 auto 0px;
+  background: #FFFFFF;
+  border-radius: 2px;
+  -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  width: 50%;
+  height: 80%;
+}
 
+/deep/.el-dialog .el-dialog__body {
+  max-height:80%  !important;
+  overflow-y: auto;
+}
 </style>
