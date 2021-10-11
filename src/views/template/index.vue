@@ -98,7 +98,7 @@ export default {
         ],
         fileUrl: [
           {
-            required: true,
+            required: false,
             message: "请上传模板文件",
             trigger: 'change'
           }

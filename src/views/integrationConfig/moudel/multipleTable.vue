@@ -6,12 +6,12 @@
       :data="tableData"
       class="mt10"
       :cell-style="{padding:'5px 0px'}" 
-      :header-cell-style="{background:'#fafafa',color:'#606266',padding:'0px 0px'}" 
-      fit highlight-current-row style="width: 100%"
-      @select="handleSelectionChange"
-      :header-cell-class-name="cellClass"
+      highlight-current-row
+      fit 
+      style="width: 100%"
+      @current-change="handleSelectionChange"
     >
-      <el-table-column type="selection" width="55"> </el-table-column>
+      <!-- <el-table-column type="selection" width="55"> </el-table-column> -->
       <el-table-column type="index" width="55"> </el-table-column>
       <el-table-column prop="name" align="center" label="模板名称">
       </el-table-column>
@@ -52,30 +52,31 @@ export default {
     this.getList()
   },
   methods: {
-    cellClass(row){     
-      if (row.columnIndex === 0) {           
-        return 'disabledCheck'     
-      } 
-    },
+    // 去除表头全选选项
+    // cellClass(row){     
+    //   if (row.columnIndex === 0) {           
+    //     return 'disabledCheck'     
+    //   } 
+    // },
     getList() {
       api.getPage({ ...this.setData }).then((res) => {
         this.tableData = res.model
         this.total = res.totalPage
       })
     },
-    handleSelectionChange(selection) {
-      if (selection.length === 1) {
-        this.modelData = selection[0]
+    handleSelectionChange(val) {
+      // if (selection.length === 1) {
+        // this.modelData = selection[0]
         // 发送出去的
-        this.$emit('templateData', this.modelData)
-      }
-      if (selection.length > 1) {
-        const arr = selection
-        const del_row = arr.shift()
-        this.modelData = arr[0]
-        this.$emit('templateData', this.modelData)
-        this.$refs.multipleTable.toggleRowSelection(del_row, false)
-      }
+        this.$emit('templateData', val)
+      // }
+    //   if (selection.length > 1) {
+    //     const arr = selection
+    //     const del_row = arr.shift()
+    //     this.modelData = arr[0]
+    //     this.$emit('templateData', this.modelData)
+    //     this.$refs.multipleTable.toggleRowSelection(del_row, false)
+    //   }
     },
     handleSizeChange(val) {
       this.setData.pageSize = val
@@ -94,15 +95,15 @@ export default {
 .pagination {
   text-align: right;
 }
-//去掉全选按钮
-::v-deep .el-table .disabledCheck .cell .el-checkbox__inner {
-  display: none !important;
-}
+// //去掉全选按钮
+// ::v-deep .el-table .disabledCheck .cell .el-checkbox__inner {
+//   display: none !important;
+// }
 
-// 修改全选框文本内容，目前忽略
-::v-deep .el-table .disabledCheck .cell::before {
-  content: '';
-  text-align: center;
-  line-height: 37px;
-}
+// // 修改全选框文本内容，目前忽略
+// ::v-deep .el-table .disabledCheck .cell::before {
+//   content: '';
+//   text-align: center;
+//   line-height: 37px;
+// }
 </style>

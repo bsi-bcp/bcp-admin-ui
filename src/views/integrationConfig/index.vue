@@ -183,7 +183,7 @@
           <el-input v-model="inNode.IncrementalField" placeholder="请输入" class="baseinfo"></el-input>
         </el-form-item>
         <el-form-item prop="path" label="访问路径" v-if="ShowInput_title=='API查询'||ShowInput_title=='API上报'">
-          <el-input v-model="inNode.path" placeholder="请输入" class="baseinfo" style="width:500px"></el-input>
+          <el-input v-model="inNode.path" placeholder="请输入" class="baseinfo" :title="inNode.path"></el-input>
         </el-form-item>
         <el-form-item required label="脚本" v-if="ShowInput_title!='API上报'" >
           <MonAco ref='MonAco'></MonAco>
@@ -811,11 +811,6 @@ export default {
   }
 }
 </script>
-<style lang="scss">
-
-
-
-</style>
 
 <style lang="scss" scoped>
 
