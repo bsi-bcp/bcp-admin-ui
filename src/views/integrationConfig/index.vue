@@ -541,9 +541,12 @@ export default {
         that.jobList.splice(index, 0, downDate);
       }
     },
-    templateData(val){
-      //这个获取模板id
+    
+    templateData(val,type){
       this.temData = {...val}
+      if(type==2){
+        this.modelShow()
+      }
     },
     affirmInNode() {
       this.$refs.inNodeForm.validate((valid) => {

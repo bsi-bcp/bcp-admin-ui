@@ -9,9 +9,9 @@
       highlight-current-row
       fit 
       style="width: 100%"
+      @row-click = "rowClick"
       @current-change="handleSelectionChange"
-      @row-click="rowClick"
-      @row-dblclick="handleSelectionChange"
+      @row-dblclick = "handleSelection"
     >
       <!-- <el-table-column type="selection" width="55"> </el-table-column> -->
       <el-table-column  width="55">
@@ -48,6 +48,8 @@ export default {
     return {
       tableData: [],
       modelData: null,
+      FromData:{},
+      radioId:'',
       total: null,
       setData: {
         currentPage: 1,
@@ -78,11 +80,15 @@ export default {
         this.total = res.totalPage
       })
     },
+    handleSelection(val){
+    console.log('this.FromData',val)
+       this.$emit('templateData', val,2)
+    },
     handleSelectionChange(val) {
       // if (selection.length === 1) {
         // this.modelData = selection[0]
         // 发送出去的
-        this.$emit('templateData', val)
+        this.$emit('templateData', val,1)
       // }
     //   if (selection.length > 1) {
     //     const arr = selection
