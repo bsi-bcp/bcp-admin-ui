@@ -25,7 +25,8 @@
     </el-form-item>
         <!--新增界面的模板选择-->
       <el-form-item label="模板选择" prop="templateId">
-        <el-input class="baseinfo" v-model="subFormData.templateName" disabled placeholder="模板选择" maxlength="20" size="mini" ></el-input><el-button style="margin-left:5px" size="mini" @click="ShowMoule=true" :disabled="!!subFormData.id">选择模板</el-button>
+        <el-input class="baseinfo" v-model="subFormData.templateName" disabled placeholder="模板选择" maxlength="20" size="mini" ></el-input>
+        <el-button style="margin-left:5px" size="mini" @click="ShowMoule=true" :disabled="!!subFormData.id">选择模板</el-button>
       </el-form-item>
       <!--新增界面的集成节点-->
       <el-form-item label="集成节点" prop="nodeId">
@@ -496,7 +497,7 @@ export default {
       })
       console.log(row)
     },
-    //下发（问题：前端这边已向后台发送id，但是后台报500的错误）
+    //下发（存在前端这边已向后台发送id，但是后台报500的错误）
     issue(row){
       api.issueType(row).then(res=>{
         if(res.model.code==200){
@@ -713,8 +714,10 @@ export default {
       this.subFormData.templateId = this.temData.id
       //加载模板内容
       api.getTemplateContent(this.temData.id).then(res=>{
-        this.jobList = res.jobList
+        // this.jobList = res.jobList
+        this.jobList = res.jobList!=null?JSON.parse(res.jobList):[]
         this.tableData = res.configValue!=null?JSON.parse(res.configValue):[]
+        console.log(this.res);
       })
       this.ShowMoule = false;
     },
