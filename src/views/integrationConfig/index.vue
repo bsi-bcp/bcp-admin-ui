@@ -716,7 +716,6 @@ export default {
       api.getTemplateContent(this.temData.id).then(res=>{
         this.jobList = res.jobList
         this.tableData = res.configValue!=null?JSON.parse(res.configValue):[]
-        console.log(this.res);
       })
       this.ShowMoule = false;
     },
