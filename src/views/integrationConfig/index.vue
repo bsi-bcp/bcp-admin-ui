@@ -702,8 +702,7 @@ export default {
       this.jobList.splice(data.$index, 1)
     },
     copyJob(data){
-      let copyRow = {}
-      Object.assign(copyRow,data.row)
+      let copyRow = JSON.parse( JSON.stringify(data.row) )
       copyRow.jobName = copyRow.jobName+"_COPY"
       copyRow.id = ""
       copyRow.inNode.id=""
