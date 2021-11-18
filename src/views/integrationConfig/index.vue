@@ -148,7 +148,7 @@
                 <div style="text-align:left">
                   <el-button type="text" @click="copyJob(scope)" width="30">复制</el-button>
                   <el-button type="text" @click="deljobList(scope)" width="30">删除</el-button>     
-                  <el-button type="text" disabled width="30">调试</el-button>
+                  <el-button type="text" @click="runAgain(scope)" width="30">补数</el-button>
                   <el-button type="text" disabled width="30">全量</el-button>
                   <el-button type="text" disabled width="30">日志</el-button>
                 </div>
@@ -239,6 +239,29 @@
         <el-button size="mini" @click="Showoutput_Transfer = false">取 消</el-button>
       </div>
     </el-dialog>
+    <!--补数界面-->
+    <el-dialog class="dialog-skip" width="60%" title="补数" :visible.sync="rerun_falg" :close-on-click-modal="false" :close-on-press-escape="false">
+      <el-form ref="reRunForm" :model="reRun" label-width="100px" size="mini" inline-message label-position="top">
+        </el-form-item>
+          <el-form-item prop="runTime" label="运行时间">
+            <el-date-picker
+              v-model="reRun.runTime"
+              type="datetimerange"
+              range-separator="至"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期"
+              align="right">
+            </el-date-picker>
+        </el-form-item>
+        <el-form-item label="运行参数" prop="runParams">
+          <el-input type="textarea" :rows="3" v-model="reRun.runParams" placeholder="请输入" class="baseinfo" maxlength="2000"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button size="mini" type="primary" @click="runTask">确 定</el-button>
+        <el-button size="mini" @click="rerun_falg = false">取 消</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -275,6 +298,7 @@ export default {
         scriptContent:'',
         index:0,
       },
+      rerun_falg: false, //补数页面
       ShowInput_Reported: false, //“任务列表的输入节点=>API上报”模态窗的显示隐藏
       ShowInput_Database: false, //“                =>数据库查询”模态窗的显示隐藏
       ShowInput_Inquire: false, //“                 =>API查询”模态窗的显示隐藏
@@ -284,6 +308,11 @@ export default {
       Showoutput_Script: false, //“         =>自定义脚本”模态窗的显示隐藏
       ShowMoule: false, //模态窗的显示隐藏
       Reported: false, //模态窗的显示隐藏
+      reRun: {
+        taskId: "", //任务id
+        runTime: "", //允许时间段
+        runParams: "" //允许参数
+      },
       inNode: {
         cron: null, //定时设置
         IncrementalField: null, //增量标识字段
@@ -515,6 +544,27 @@ export default {
           link.click();
           link.remove();
       })
+    },
+    runAgain(data){
+      this.reRun = {}
+      this.reRun.taskId = data.row.id
+      this.reRun.configId = this.subFormData.id
+      this.rerun_falg = true
+    },
+    runTask(){
+      api.runTask(this.reRun).then(res=>{
+        this.$message({
+          showClose: true,
+          message: '任务执行完毕',
+          type: 'success'
+        })
+        console.log(res)
+      })
+      this.$message({
+          showClose: true,
+          message: '任务执行中，请等待...',
+          type: 'success'
+        })
     },
     //下发（存在前端这边已向后台发送id，但是后台报500的错误）
     issue(row){

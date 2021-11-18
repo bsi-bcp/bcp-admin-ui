@@ -97,6 +97,13 @@ export function expForIot(param) {
     responseType:'blob'//必须是blob 否则导出的excel打不开
   })
 }
+export function runTask(param) {
+  return request({
+    url: `${URL.role}/run-task`,
+    method: 'post',
+    data: param
+  })
+}
 
 // 下发集成配置
 export function issueType(param) {
