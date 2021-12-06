@@ -52,8 +52,8 @@ router.beforeEach(async(to, from, next) => {
       }
     }
   } else {
-    /* has no token*/
-    if (whiteList.indexOf(to.path) !== -1) {
+    /* has no token /bcp-api是后端的链接，前端不鉴权 */
+    if (whiteList.indexOf(to.path) !== -1 || to.path.indexOf("/bcp-api")>-1 ) {
       // in the free login whitelist, go directly
       next()
     } else {
