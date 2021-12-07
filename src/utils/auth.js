@@ -8,6 +8,7 @@ export function getToken() {
 
 export function setToken(token) {
   //return Cookies.set(TokenKey, token)
+  //解决https跨域问题
   return Cookies.set(TokenKey, token, { secure: true,sameSite: 'None' })
 }
 
