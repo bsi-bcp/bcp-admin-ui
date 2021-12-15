@@ -196,6 +196,15 @@
             </el-form-item> 
           </div>
 
+          <!--类型是API上报-->
+          <div v-if="subFormData.type === 'apiUp'">
+            <el-form-item label="访问id" prop="ak" >
+              <el-input v-model="subFormData.ak" placeholder="请填写"  maxlength="100" size="mini" auto-complete="off"></el-input>
+            </el-form-item> 
+            <el-form-item label="访问密钥" prop="sk" >
+              <el-input v-model="subFormData.sk" placeholder="请填写"  maxlength="100" size="mini" auto-complete="off"></el-input>
+            </el-form-item> 
+          </div>
 
 
       </el-form>
@@ -476,6 +485,10 @@ export default {
         if (valid) {
           if(this.subFormData.type =='api'){
             this.subFormData.classify=this.subFormData.type
+          }
+          //如果说类型位api上报，分类暂时设置成边缘网关，后续可支持roma、apig等
+          if(this.subFormData.type =='apiUp'){
+            this.subFormData.classify='gateway'
           }
           let dataVale = JSON.stringify(this.subFormData)
           let obj = {

@@ -191,13 +191,27 @@
             <el-option v-for="(optItem,optindex) in bcpDatasourceName" :key="optindex" :label="optItem" :value="optindex" />
           </el-select>
         </el-form-item>
+        <div v-if="ShowInput_title=='API上报'">
+          <el-form-item prop="protocol" label="协议" >
+            <el-select v-model="inNode.protocol" class="baseinfo">
+              <el-option label="http" value="http"></el-option>
+              <!-- <el-option label="https" value="https"></el-option> -->
+            </el-select>
+          </el-form-item>
+          <el-form-item prop="authFlag" label="是否认证" >
+            <el-select v-model="inNode.authFlag" class="baseinfo">
+              <el-option label="是" value="y"></el-option>
+              <el-option label="否" value="n"></el-option>
+            </el-select>
+          </el-form-item>
+        </div>
         <el-form-item label="增量标识字段" v-if="ShowInput_title=='数据库查询'">
           <el-input v-model="inNode.IncrementalField" placeholder="请输入" class="baseinfo"></el-input>
         </el-form-item>
         <el-form-item prop="path" label="访问路径" v-if="ShowInput_title=='API查询'||ShowInput_title=='API上报'">
           <el-input v-model="inNode.path" placeholder="请输入" class="baseinfo" :title="inNode.path"></el-input>
         </el-form-item>
-        <el-form-item required label="脚本" v-if="ShowInput_title!='API上报'" >
+        <el-form-item required label="脚本">
           <MonAco ref='MonAco'></MonAco>
         </el-form-item>
       </el-form>
@@ -318,7 +332,8 @@ export default {
         cron: null, //定时设置
         IncrementalField: null, //增量标识字段
         dataSource: null, //增量标识字段
-
+        protocol: 'http', //协议
+        authFlag: 'Y' //是否认证
       },
       outNode: {
         cron: null, //定时设置
@@ -693,6 +708,12 @@ export default {
         })
       },50)
       this.ShowInput_title = this.optionsInput.find(val=>val.propkey==data.row.inNode.type).propvalue
+      //设置默认值
+      //api上报设置默认值
+      if('apiUp' === data.row.inNode.type){
+        this.inNode.protocol=!!this.inNode.protocol?this.inNode.protocol:this.$set(this.inNode, "protocol", 'http')
+        this.inNode.authFlag=!!this.inNode.authFlag?this.inNode.authFlag:this.$set(this.inNode, "authFlag", 'y')
+      }
       this.ShowInput_Database = true;
     },
     //任务列表的转换节点的配置按钮方法
