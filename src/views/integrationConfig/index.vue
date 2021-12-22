@@ -290,6 +290,7 @@ import MonAco from "./moudel/monaco";
 import { deepEqual } from 'assert';
 import { connect } from 'tls';
 import { mapGetters } from 'vuex'
+import path from 'path';
 
 export default {
   //组件注册
@@ -303,6 +304,7 @@ export default {
       currentRow: 0,
       bcpDatasourceName:[],
       bcpTenantName:[],
+      pathSet: new Set(),
       exampleData:[], //示例数据
       value: "",
       ShowInput_title: "",
@@ -637,6 +639,18 @@ export default {
     affirmInNode() {
       this.$refs.inNodeForm.validate((valid) => {
         if (valid) {
+          //如果是api上报类型，则需要判断访问路径是否唯一
+          if("apiUp"===this.jobList[this.currentRow].inNode.type){
+             if(this.pathSet.has(this.inNode.path)){
+                this.$message.error({
+                  message: this.inNode.path+'已存在，请重新输入访问路径'
+                })
+               return
+             }else{
+               this.pathSet.add(this.inNode.path)
+             }
+             
+          }
           //获取当前代码块的值
           if(this.$refs.MonAco){
             this.inNode.scriptContent = this.$refs.MonAco.getVal()
@@ -893,7 +907,15 @@ export default {
       //编辑
       const res = await api.getIdRow(row.id)
       let data =JSON.parse(res.model)
+      //把访问路径加到集合中,用来判断是否存在重复的访问路径
       this.jobList = data.jobList
+      this.jobList.forEach(job=>{
+         if("apiUp"===job.inNode.type){
+            let conf = JSON.parse(job.inNode.configValue)
+            this.pathSet.add(conf.path)
+         }
+      })
+      console.log(this.pathSet)
       this.tableData = JSON.parse(data.configValue)
       let {id,name,nodeId,templateId,tenantId,templateName} = data
       tenantId = tenantId + ""
