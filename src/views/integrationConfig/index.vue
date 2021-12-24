@@ -304,7 +304,7 @@ export default {
       currentRow: 0,
       bcpDatasourceName:[],
       bcpTenantName:[],
-      pathSet: new Set(),
+      pathMap: new Map(),
       exampleData:[], //示例数据
       value: "",
       ShowInput_title: "",
@@ -641,13 +641,17 @@ export default {
         if (valid) {
           //如果是api上报类型，则需要判断访问路径是否唯一
           if("apiUp"===this.jobList[this.currentRow].inNode.type){
-             if(this.pathSet.has(this.inNode.path)){
+             let nodeId = this.pathMap.get(this.inNode.path)
+             console.log(this.pathMap)
+             console.log(nodeId)
+             if( nodeId!=undefined && nodeId!=this.jobList[this.currentRow].inNode.id){
                 this.$message.error({
                   message: this.inNode.path+'已存在，请重新输入访问路径'
                 })
                return
              }else{
-               this.pathSet.add(this.inNode.path)
+               nodeId = nodeId===undefined ? -99 : nodeId
+               this.pathMap.set(this.inNode.path,nodeId)
              }
              
           }
@@ -909,13 +913,13 @@ export default {
       let data =JSON.parse(res.model)
       //把访问路径加到集合中,用来判断是否存在重复的访问路径
       this.jobList = data.jobList
+      this.pathMap.clear()
       this.jobList.forEach(job=>{
          if("apiUp"===job.inNode.type){
             let conf = JSON.parse(job.inNode.configValue)
-            this.pathSet.add(conf.path)
+            this.pathMap.set(conf.path,job.inNode.id)
          }
       })
-      console.log(this.pathSet)
       this.tableData = JSON.parse(data.configValue)
       let {id,name,nodeId,templateId,tenantId,templateName} = data
       tenantId = tenantId + ""
