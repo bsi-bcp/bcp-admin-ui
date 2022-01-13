@@ -104,7 +104,7 @@
       <div style="width: 100%;">
         <!-- //table 表格 -->
         <el-table
-          max-height="250"
+          max-height="380"
           ref="templateTable"
           :data="templateData"
           class="mt10"

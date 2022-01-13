@@ -4,6 +4,7 @@
     <el-table
       ref="multipleTable"
       :data="tableData"
+      max-height="380"
       class="mt10"
       :cell-style="{padding:'5px 0px'}" 
       highlight-current-row
