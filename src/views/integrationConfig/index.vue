@@ -310,6 +310,7 @@ export default {
       ShowInput_title: "",
       switchNode_title: "",
       Showoutput_title: "",
+      curTenantId:null,
       transformNodedata: {
         scriptContent:'',
         index:0,

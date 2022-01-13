@@ -11,6 +11,7 @@
       <template slot="oper" slot-scope="scope">
         <el-button size="mini" type="text" @click="edit(scope.value)">编辑</el-button>
         <el-button size="mini" type="text" @click="editConfig(scope.value.id)">配置</el-button>
+         <el-button size="mini" type="text" @click="templateConfig(scope.value.id)">模板</el-button>
         <el-button size="mini" type="text" @click="remove(scope.value)">删除</el-button>
       </template>
     </mod-filter>
@@ -97,6 +98,33 @@
         <el-button size="mini" type="primary" @click="subConfigForm('subConfigFormData')">确 定</el-button>
       </div>
     </el-dialog>
+ 
+    <!-- 模板选择 -->
+    <el-dialog :close-on-click-modal="false" :close-on-press-escape="false" width="50%" title="选择模板" :visible.sync="templateDialogFormVisible">
+      <div style="width: 100%;">
+        <!-- //table 表格 -->
+        <el-table
+          max-height="250"
+          ref="templateTable"
+          :data="templateData"
+          class="mt10"
+          @selection-change="handleSelectionChange"
+          :cell-style="{padding:'5px 0px'}" 
+          highlight-current-row
+          fit 
+          style="width: 100%;"
+        >
+          <el-table-column type="selection" width="55"> </el-table-column>
+          <el-table-column type="index" width="55"> </el-table-column>
+          <el-table-column prop="templateName" align="center" label="模板名称">
+          </el-table-column>
+        </el-table>
+      </div>
+      <div slot="footer" class="dialog-footer">
+        <el-button size="mini" type="primary" @click="saveTemplateList">确 定</el-button>
+        <el-button size="mini" @click="templateDialogFormVisible = false">取 消</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -109,8 +137,11 @@ export default {
       typeOptions: [], 
       dialogFormVisible: false,
       configDialogFormVisible: false,
+      templateDialogFormVisible: false,
       dialogRowTitle: null,
       selectionPropList: [],
+      selectionTemplateList: [],
+      selectionTenantId:null,
       rowData: {
         id: null,
         name: null,
@@ -205,6 +236,7 @@ export default {
         }]
       },
       tableData: [],
+      templateData: [],
       params: {
         currentPage: 1,
         pageSize: 10
@@ -298,6 +330,7 @@ export default {
             filedShow: true,
             isSearchHide: true,
             slot: true,
+            minWidth: '120px',
             label: '操作',
             placeholder: '操作',
             optList: []
@@ -416,6 +449,40 @@ export default {
         this.getConfigData(id)
         this.$set(this.subConfigFormData, 'tenantId', id)
       }
+    },
+    // 配置模板页面
+    templateConfig(id) {
+      this.templateDialogFormVisible = true
+      this.selectionTenantId = id
+      var params = {"tenantId":id}
+      api.getTemplate(params).then( res=>{
+        this.templateData = res
+      }).then(a=>{
+        this.templateData.forEach(
+          row =>{
+            if(row.checked==='1'){
+              this.$refs.templateTable.toggleRowSelection(row, true)
+            }
+          }
+        )
+      })
+    },
+    handleSelectionChange(val) {
+      this.selectionTemplateList = []
+       //val是选中的数据的数组
+       val.forEach(item => {
+           const id = item.templateId
+           const obj = {"tenantId":this.selectionTenantId,"templateId":item.templateId}
+           this.selectionTemplateList.push(obj)
+       })
+    },
+    saveTemplateList(){
+      api.saveTemplate(this.selectionTemplateList).then(
+        res=>{
+          this.$message.success('保存成功')
+        }
+      )
+      this.templateDialogFormVisible = false;
     },
     resetConfigValue() {
       this.$set(this, 'subConfigFormData', {

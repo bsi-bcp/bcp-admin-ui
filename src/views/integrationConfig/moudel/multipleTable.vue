@@ -23,21 +23,6 @@
       <el-table-column prop="name" align="center" label="模板名称">
       </el-table-column>
     </el-table>
-    <!-- //slot  name  ==>typeData  具名插槽-->
-    <slot name="typeData" />
-    <div class="pagination">
-      <el-pagination
-        background
-        @size-change="handleSizeChange"
-        :total="total"
-        layout="total, sizes, prev, pager, next"
-        @current-change="handleCurrentChange"
-        :current-page="setData.currentPage"
-        :page-sizes="[10, 20, 30]"
-        :page-size="setData.pageSize"
-      >
-      </el-pagination>
-    </div>
   </div>
 </template>
 
@@ -75,9 +60,8 @@ export default {
     //   } 
     // },
     getList() {
-      api.getPage({ ...this.setData }).then((res) => {
-        this.tableData = res.model
-        this.total = res.totalPage
+      api.getPage({"tenantId":this.$parent.$parent.cur_user.tenantId}).then((res) => {
+        this.tableData = res
       })
     },
     handleSelection(val){

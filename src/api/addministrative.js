@@ -2,7 +2,7 @@ import request from '@/utils/request'
 import qs from 'qs'
 
 const URL = {
-  role: 'services/fwcore/template'
+  role: 'services/fwcore/template-auth'
 }
 
 // 2、新增/编辑
