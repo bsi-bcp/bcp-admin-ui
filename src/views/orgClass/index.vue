@@ -477,7 +477,7 @@ export default {
        })
     },
     saveTemplateList(){
-      api.saveTemplate(this.selectionTemplateList).then(
+      api.saveTemplate(this.selectionTenantId,this.selectionTemplateList).then(
         res=>{
           this.$message.success('保存成功')
         }

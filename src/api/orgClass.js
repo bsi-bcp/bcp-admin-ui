@@ -3,8 +3,7 @@ import * as common from '@/api/common.js'
 
 const URL = {
   orgClass: '/services/fwcore/orgClasses',
-  listTempates: '/services/fwcore/orgClasses/templates',
-  saveTemplates: '/services/fwcore/orgClasses/template'
+  listTempates: '/services/fwcore/orgClasses/templates'
 }
 
 const ConfigURL = {
@@ -47,9 +46,9 @@ export function getTemplate(params) {
 }
 
 // 保存租户模板授权数据
-export function saveTemplate(params) {
+export function saveTemplate(tenantId,params) {
   return request({
-    url: URL.saveTemplates,
+    url: `/services/fwcore/orgClasses/${tenantId}/template`,
     method: 'post',
     data:params
   })
