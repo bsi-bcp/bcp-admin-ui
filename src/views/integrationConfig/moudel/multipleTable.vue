@@ -61,7 +61,7 @@ export default {
     //   } 
     // },
     getList() {
-      api.getPage({"tenantId":this.$parent.$parent.cur_user.tenantId}).then((res) => {
+      api.getPageAuth({"tenantId":this.$parent.$parent.cur_user.tenantId}).then((res) => {
         this.tableData = res
       })
     },

@@ -2,7 +2,7 @@ import request from '@/utils/request'
 import qs from 'qs'
 
 const URL = {
-  role: 'services/fwcore/template-auth'
+  role: 'services/fwcore/template'
 }
 
 // 2、新增/编辑
@@ -57,6 +57,15 @@ export function getName(params) {
 export function getPage(params) {
   return request({
     url: URL.role,
+    method: 'get',
+    params
+  })
+}
+
+// 1、角色列表
+export function getPageAuth(params) {
+  return request({
+    url: 'services/fwcore/template-auth',
     method: 'get',
     params
   })
