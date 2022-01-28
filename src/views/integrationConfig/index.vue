@@ -72,8 +72,8 @@
           </div>
           <el-table :data="jobList"  class="mt10" :cell-style="{padding:'5px 0px'}" :header-cell-style="{background:'#fafafa',color:'#606266',padding:'0px 0px'}" fit highlight-current-row style="width: 100%">
             <!--任务列表的选择点击按钮-->
-            <el-table-column type="selection"  width="45">
-            </el-table-column>
+            <!-- <el-table-column type="selection"  width="45">
+            </el-table-column> -->
             <!--任务列表的名称-->
             <el-table-column prop="jobName" label="名称" align="center" width="210">
               <template slot-scope="scope">
