@@ -5,7 +5,7 @@ const defaultSettings = require('./src/settings.js')
 function resolve(dir) {
   return path.join(__dirname, dir)
 }
-
+const Timestamp = new Date().getTime()
 const name = defaultSettings.title || 'BCP Cloud' // page title
 
 // If your port is set to 80,
@@ -57,6 +57,10 @@ module.exports = {
       alias: {
         '@': resolve('src')
       }
+    },
+    output: { // 输出重构  打包编译后的 文件名称  【模块名称.版本号.时间戳】
+      filename: `static/js/[name].${Timestamp}.js`,
+      chunkFilename: `static/js/[name].${Timestamp}.js`
     }
   },
   chainWebpack(config) {
