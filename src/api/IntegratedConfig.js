@@ -105,6 +105,14 @@ export function runTask(param) {
   })
 }
 
+export function getTaskLog(param) {
+  return request({
+    url: `${URL.role}/task/log`,
+    method: 'post',
+    data: param
+  })
+}
+
 // 下发集成配置
 export function issueType(param) {
   return request({

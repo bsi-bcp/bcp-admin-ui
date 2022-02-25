@@ -156,7 +156,7 @@
                   <el-button type="text" @click="deljobList(scope)" width="30">删除</el-button>     
                   <el-button type="text" @click="runAgain(scope)" width="30">补数</el-button>
                   <!-- <el-button type="text" disabled width="30">全量</el-button> -->
-                  <el-button type="text" disabled width="30">日志</el-button>
+                  <el-button type="text" @click="logSearch(scope)" width="30">日志</el-button>
                 </div>
               </template>
             </el-table-column>
@@ -336,6 +336,53 @@
           </el-upload>
         </div>
     </el-dialog>
+
+    <!--日志查询界面-->
+    <el-dialog class="dialog-skip" width="1120px" title="日志" :visible.sync="log_flag" :close-on-click-modal="false" :close-on-press-escape="false">
+      <el-form ref="logForm" :model="log" label-width="100px" size="mini" inline-message label-position="top">
+         <el-form-item>
+            <el-date-picker
+              v-model="log.runTime"
+              type="datetimerange"
+              range-separator="至"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期"
+              align="right">
+            </el-date-picker>
+          <el-input v-model="log.message" placeholder="请输入要搜索的日志内容" class="baseinfo" maxlength="50"></el-input>
+          <el-button size="mini" @click="getTaskLog">搜索</el-button>
+        </el-form-item>
+      </el-form>
+      <br>
+      <div>
+        <el-table :data="logList" :height="650+'px'"  class="mt10" :cell-style="{padding:'5px 0px'}" :header-cell-style="{background:'#fafafa',color:'#606266',padding:'0px 0px'}" fit highlight-current-row style="width: 100%">
+          <el-table-column prop="sourceType" align="center" label="时间" width="200">
+            <template slot-scope="scope">
+              <span>{{ scope.row.timestamp }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column align="left" label="内容">
+            <template slot-scope="scope">
+              <span>{{ scope.row.message }}</span>
+            </template>
+          </el-table-column>
+        </el-table>
+        <div v-if="this.log.totalCount>0" class="mod-pagination mt10">
+            <el-pagination
+              background
+              prev-text="上一页"
+              next-text="下一页"
+              :current-page.sync="log.currentPage"
+              :page-sizes="[20,50,100]"
+              :page-size="log.pageSize"
+              layout="slot,total, sizes, prev, pager, next, jumper"
+              :total="log.totalCount"
+              @size-change="handleSizeChange"
+              @current-change="handleCurrentChange">
+            </el-pagination>
+          </div>
+        </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -382,6 +429,7 @@ export default {
       rerun_falg: false, //补数页面
       batch_falg: false, //批量设置
       import_flag: false, //导入标识
+      log_flag: false, //日志标识
       ShowInput_Reported: false, //“任务列表的输入节点=>API上报”模态窗的显示隐藏
       ShowInput_Database: false, //“                =>数据库查询”模态窗的显示隐藏
       ShowInput_Inquire: false, //“                 =>API查询”模态窗的显示隐藏
@@ -396,6 +444,15 @@ export default {
         runTime: "", //允许时间段
         runParams: "" //允许参数
       },
+      log: {
+        taskId: "", //任务id
+        runTime: [], //允许时间段
+        message: "", //日志内容
+        pageSize: 20, //每页条数
+        currentPage: 0, //当前页数
+        totalCount: 0, //总条数
+      },
+      logList: [],
       inNode: {
         cron: null, //定时设置
         IncrementalField: null, //增量标识字段
@@ -581,7 +638,14 @@ export default {
     };
   },
   async created() {
+    //初始化下拉框
     this.initOptions()
+    //初始化日期默认值，默认当天
+    var curDate = new Date()
+    var startDate = curDate.format('yyyy-MM-dd 00:00:00')
+    var endDate = curDate.format('yyyy-MM-dd 23:59:59')
+    this.log.runTime.push(startDate)
+    this.log.runTime.push(endDate)
   },
   computed: {
     ...mapGetters([
@@ -636,6 +700,29 @@ export default {
       this.reRun.taskId = data.row.id
       this.reRun.configId = this.subFormData.id
       this.rerun_falg = true
+    },
+    logSearch(data){
+      this.logList = []
+      this.log.totalCount = 0
+      this.log.message = ""
+      this.log.taskId = data.row.id
+      this.log_flag = true
+    },
+    getTaskLog() {
+      api.getTaskLog(this.log).then((res) => {
+        this.logList = res.model
+        this.log.totalCount = res.totalCount
+      })
+    },
+    handleSizeChange(val) {
+      // 切换每页显示数量
+      this.log.pageSize = val
+      this.getTaskLog()
+    },
+    handleCurrentChange(val) {
+      // 切换页码
+      this.log.currentPage = val
+      this.getTaskLog()
     },
     runTask(){
       api.runTask(this.reRun).then(res=>{
@@ -709,8 +796,6 @@ export default {
           //如果是api上报类型，则需要判断访问路径是否唯一
           if("apiUp"===this.jobList[this.currentRow].inNode.type){
              let nodeId = this.pathMap.get(this.inNode.path)
-             console.log(this.pathMap)
-             console.log(nodeId)
              if( nodeId!=undefined && nodeId!=this.jobList[this.currentRow].inNode.id){
                 this.$message.error({
                   message: this.inNode.path+'已存在，请重新输入访问路径'

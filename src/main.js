@@ -20,6 +20,7 @@ import MODFilter from '@/components/ModFilter/index.vue'
 import EXPORTExcel from '@/components/ExportExcel/index.vue'
 import SXFFreelist from '@/components/Freelist/index.vue'
 import { preventRepeatClick } from "@/utils/directive.js"
+import * as dateUtils from "@/utils/date.js"
 
 Vue.component('sxf-proplist', SXFProplist)
 Vue.component('mod-filter', MODFilter)
