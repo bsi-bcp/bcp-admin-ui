@@ -65,7 +65,7 @@
     </el-form>
     <div class="copyright-container">
         <div class="copyright">
-          Copyright@2017-2021 深圳市商软信息科技有限公司 版权所有
+          Copyright@2017-2022 深圳市商软信息科技有限公司 版权所有
         </div>
     </div>
 
