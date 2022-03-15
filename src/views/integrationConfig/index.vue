@@ -984,7 +984,17 @@ export default {
     },
     //任务列表的删除
     deljobList(data) {
-      this.jobList.splice(data.$index, 1)
+      this.$confirm('是否删除?删除之后点击保存才会生效', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+       .then(() => {
+          this.jobList.splice(data.$index, 1)
+        })
+        .catch(() => {
+        })
+      
     },
     copyJob(data){
       let copyRow = JSON.parse( JSON.stringify(data.row) )
