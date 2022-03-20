@@ -59,9 +59,20 @@
           <!-- <div @click="addParam">添加</div> -->
         </el-form-item>
         <!--新增界面的插件文件（暂不需）-->
-        <!-- <el-form-item label="插件文件" prop="">
-          <el-button type="primary">上传插件<i class="el-icon-upload el-icon--right"></i></el-button>
-        </el-form-item> -->
+        <el-form-item label="插件文件" v-if="subFormData.id">
+          <!--on-exceed文件超出个数；:limit最大允许上传个数；http-request实现自定义上传；	action必选参数，上传的地址；before-upload 限制用户上传的图片格式和大小-->
+          <el-upload 
+            ref="pluginsUpload"
+            :on-preview="handlePreview"
+            :on-exceed="exceedFile"
+            :file-list="fileList"
+            :limit="5"
+            :http-request="handleUpload"
+            action='undefined'
+            :beforeUpload="beforeUpload">
+              <el-button size="small" type="text">上传插件<i class="el-icon-upload el-icon--right"></i></el-button>
+          </el-upload>
+        </el-form-item>
         <!--新增界面的任务列表-->
         <el-form-item label="任务列表" style="margin-top:20px;">
           <!-- 任务列表的滚动条 -->
@@ -422,6 +433,7 @@ export default {
   },
   data() {
     return {
+      fileList: [],
       logLoading: null,
       queryLogTask: null,
       logFlag: false,
@@ -1133,7 +1145,30 @@ export default {
         .catch(() => {
         })
     },
-    
+    exceedFile(files, fileList) {
+      this.$notify.warning({
+        title: '警告',
+        message: `只能选择5个文件，当前共选择了 ${files.length + fileList.length} 个`
+      });
+    },
+    handlePreview(file){
+      location.href = `${process.env.VUE_APP_BASE_API}/services/fwcore/config/down-plugins/${this.subFormData.id}/${file.name}`
+    },
+    beforeUpload(file) {
+      if (file.size / (1024 * 1024) > 5) {
+          this.$notify.warning({
+            title: '警告',
+            message: `文件大小不得超过2M`
+          });
+      }else{
+        const formData = new FormData();
+        formData.append("file", file);
+        api.upload(formData,this.subFormData.id).then((res) => {
+        });
+      }
+    },
+    handleUpload(file, fileList) {
+    },
     //新增&编辑的确认方法
     subForm(formData) {
       let obj = {
@@ -1141,6 +1176,20 @@ export default {
         jobList:this.jobList
       }
       obj.configValue = this.tableData
+      //如果上传了插件则把插件保存到数据库
+      if( this.$refs.pluginsUpload.uploadFiles.length>0 ){
+         obj.pluginsList = []
+        this.$refs.pluginsUpload.uploadFiles.forEach(a=>{
+          let file = {
+            name:a.name,
+            configId:this.subFormData.id,
+            fileUrl:`%s#${this.subFormData.id}/${a.name}`
+          }
+          obj.pluginsList.push(file)
+        })
+      }
+      
+      
       this.$refs[formData].validate((valid) => {
         if (valid) {
           api
@@ -1196,6 +1245,16 @@ export default {
             this.pathMap.set(conf.path,job.inNode.id)
          }
       })
+      debugger
+      this.fileList = []
+      if(data.pluginsList){
+        data.pluginsList.forEach(ps=>{
+          let pluginFile = {
+            name:ps.name
+          }
+          this.fileList.push(pluginFile)
+        })
+      }
       this.tableData = JSON.parse(data.configValue)
       let {id,name,nodeId,templateId,tenantId,templateName} = data
       tenantId = tenantId + ""

@@ -127,3 +127,11 @@ export function getTemplateContent(id) {
     method: 'GET'
   })
 }
+
+export function upload(params,configId) {
+  return request({
+    url: `/services/fwcore/upload-plugins/${configId}`,
+    method: 'post',
+    data: params
+  })
+}
