@@ -1237,6 +1237,8 @@ export default {
   async edit(row) {
       //重置验证
       this.clearValidate()
+      this.fileMap = {}
+      this.fileList = []
       //当为新增时，重置表单 row ==0  操作全是重置表单
       if(row===0){
         //初始化数据
@@ -1268,8 +1270,6 @@ export default {
             this.pathMap.set(conf.path,job.inNode.id)
          }
       })
-      this.fileMap = {}
-      this.fileList = []
       if(data.pluginsList){
         data.pluginsList.forEach(ps=>{
           let pluginFile = {
