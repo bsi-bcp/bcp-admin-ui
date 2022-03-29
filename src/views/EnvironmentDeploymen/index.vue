@@ -9,7 +9,7 @@
       header-align="center">
       <el-table-column align="left">
         <template slot="header">
-          <a @click="seeDetail" class="digitalFactory">bcp环境部署</a>
+          <span class="digitalFactory">BCP环境部署</span>
         </template>
       <el-table-column
         prop="type"
@@ -82,14 +82,6 @@ export default {
       document.body.appendChild(el);
       el.href = row.link; //url 
       el.target = '_new'; //指定在新窗口打开
-      el.click();
-      document.body.removeChild(el);
-    },
-    seeDetail(){
-      var el = document.createElement("a");
-      document.body.appendChild(el);
-      el.href = "https://docs.qq.com/sheet/DVXRqaVZhSHJpclJJ?tab=BB08J2"; //url 是你得到的连接
-      el.target = '_blank'; //指定在新窗口打开
       el.click();
       document.body.removeChild(el);
     },

@@ -3,12 +3,13 @@
       <el-table
       :data="tableData"
       style="width: 100%"
+      max-height="1024px"
       :header-cell-style="{background:'rgb(250 250 250)'}"
       :span-method="objectSpanMethod"
       header-align="center">
       <el-table-column align="left">
         <template slot="header">
-          <a @click="seeDetail" class="digitalFactory">集成场景需求</a>
+          <span class="digitalFactory">集成场景需求</span>
         </template>
       <el-table-column
         prop="type"
@@ -176,14 +177,6 @@ export default {
       document.body.appendChild(el);
       el.href = row.link; //url 
       el.target = '_new'; //指定在新窗口打开
-      el.click();
-      document.body.removeChild(el);
-    },
-    seeDetail(){
-      var el = document.createElement("a");
-      document.body.appendChild(el);
-      el.href = "https://docs.qq.com/sheet/DVXRqaVZhSHJpclJJ?tab=BB08J2"; //url 是你得到的连接
-      el.target = '_blank'; //指定在新窗口打开
       el.click();
       document.body.removeChild(el);
     },
