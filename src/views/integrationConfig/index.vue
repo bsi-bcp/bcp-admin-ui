@@ -88,17 +88,21 @@
             <!-- <el-table-column type="selection"  width="45">
             </el-table-column> -->
             <!--任务列表的名称-->
-            <el-table-column prop="jobName" label="名称" align="center" width="210">
+            <el-table-column prop="jobName" label="名称" align="center" width="210" >
               <template slot-scope="scope">
+                <el-popover  placement="left-start" trigger="hover" :ref="`popover-${scope.$index}`" :content="scope.row['jobName']" >
+                </el-popover>
                 <el-col :span='20'>
-                  <el-input v-model="scope.row['jobName']" />
+                  <el-input v-model="scope.row['jobName']" v-popover="`popover-${scope.$index}`"/>
+                </el-col>
+
+                <el-col :span='2'>
+                  <el-button type="text" width="30" @click="moveUp(scope.$index,scope.row)" icon="el-icon-top"></el-button>
                 </el-col>
                 <el-col :span='2'>
-                <el-button type="text" width="30" @click="moveUp(scope.$index,scope.row)" icon="el-icon-top"></el-button>
+                  <el-button type="text"  width="30" @click="moveDown(scope.$index,scope.row)" icon="el-icon-bottom"></el-button>
                 </el-col>
-                <el-col :span='2'>
-                <el-button type="text"  width="30" @click="moveDown(scope.$index,scope.row)" icon="el-icon-bottom"></el-button>
-                </el-col>
+
               </template>
             </el-table-column>
             <!--任务列表的输入节点-->
@@ -1297,6 +1301,10 @@ export default {
         this.$set(this.datas.resData, "totalCount", res.totalCount)
         this.$set(this.datas.table, "loading", false)
       })
+    },
+    cellMouseEnter(row,column,cell,enter){
+      alert("row...")
+
     }
   }
 }
