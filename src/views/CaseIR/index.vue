@@ -9,7 +9,7 @@
       header-align="center">
       <el-table-column align="left">
         <template slot="header">
-          <span class="digitalFactory">集成场景需求</span>
+          <span class="digitalFactory">集成场景模板</span>
         </template>
       <el-table-column
         prop="type"
