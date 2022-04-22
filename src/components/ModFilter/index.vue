@@ -1,8 +1,8 @@
-<template>
+<template >
   <div style="background: #fff;">
     <div style="padding:20px">
       <div v-if="!datas.noFilter" class="mod-filter">
-        <el-form ref="datas" size="mini" :model="datas" style="border:0">
+        <el-form ref="datas" size="mini" :model="datas" style="border:0" @keyup.enter.native="onSubmit();" @submit.native.prevent>
           <slot name="manyBtn" />
           <el-row v-for="(page,index) in filterConditions" :key="index" :gutter="20" type="flex">
             <el-col v-for="(item) of page" :key="item.prop" :span="datas.listRowSize">
@@ -239,6 +239,7 @@ export default {
     },
     onSubmit() {
       this.$emit('query', this.datas, getReqModel(this.datas))
+      console.log(this.datas)
     },
     resetForm(formName) {
       this.$refs[formName].model.filterList.forEach((item, index, ary) => {
