@@ -37,18 +37,25 @@
         <el-form-item label="参数" prop="parameter" style="margin-top:20px;">
           <el-table :data="tableData" class="mt10" :cell-style="{padding:'10px 0px'}" :header-cell-style="{background:'#fafafa',color:'#606266',padding:'0px 0px'}" fit highlight-current-row style="width: 100%">
             <!-- align="center"使内容居中 -->
-            <el-table-column label="参数名称" align="center">
+            <el-table-column label="参数名称" align="center" width="300">
               <!-- slot-scope="scope"获取表格到当前行的数据 -->
               <template slot-scope="scope">
                 <el-input v-model="scope.row.key" />
               </template>
             </el-table-column>
+
             <el-table-column  label="参数数据" align="center">
               <template slot-scope="scope">
-                <el-input v-model="scope.row.value" />
+                <el-tooltip  placement="right-start">
+                  <!-- :content="" -->
+                  <div slot="content" ><pre style="max-width: 300px;white-space: pre-wrap;word-wrap: break-word;"><code>{{formatContent(scope.row.value)}}</code></pre></div>
+                  <el-input v-model="scope.row.value"/>
+                </el-tooltip>
+                
               </template>
             </el-table-column>
-            <el-table-column label="操作" align="center">
+            
+            <el-table-column label="操作" align="center" width="200">
               <template slot-scope="scope">
               <el-button type="text" @click="delTableData(scope)">删除</el-button>
               </template>
@@ -683,6 +690,31 @@ export default {
     ])
   },
   methods: {
+    formatContent(content){
+      var stack = []; //栈-用于括号匹配
+      var tmpStr = '';    //新格式化JSON字符串
+      var len = Object.keys(content).length;   //原始JSON长度
+      //遍历每一个字符
+      for (let i = 0; i < len; i++) {
+        if (content[i] == '{' || content[i] === '[') {
+          tmpStr += content[i] + "\n";
+          stack.push(content[i]);
+          tmpStr += " ".repeat(stack.length);
+        }
+        else if (content[i] == ']' || content[i] === '}') {
+          stack.pop();
+          tmpStr += "\n"+" ".repeat(stack.length) + content[i];
+        }
+        else if (content[i] == ',') {
+          tmpStr += content[i] + "\n" + " ".repeat(stack.length);
+        }
+        else {
+          tmpStr += content[i];
+        }
+      }
+      return tmpStr;
+    },
+
     initOptions() {
       sel.getFreelist({ code: 'bcp.tenant.name'}).then((res) => {
         this.bcpTenantName = res.model
