@@ -415,6 +415,7 @@ export default {
     border: 1px solid rgba(3, 3, 3, 0.1);
     margin-right: 20px;
     height: 800px;
+    overflow-y: scroll;
     // margin-bottom: 100px;
   }
   .tree-title {
@@ -422,4 +423,4 @@ export default {
     height:50px;
     background:#EEEEEE;
   }
-</style>
+  </style>

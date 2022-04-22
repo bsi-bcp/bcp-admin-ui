@@ -1,5 +1,5 @@
 <template lang="html">
-  <div class="app-container">
+  <div ref="contain" class="app-container">
     <el-row>
       <el-col :span="6">
         <div class="tree-div">
@@ -268,7 +268,7 @@ export default {
       this.clickTree.parentName = data.name
     },
     isLeaf(data, node) {
-    }
+    },
   }
 }
 </script>
@@ -280,10 +280,20 @@ export default {
     border: 1px solid #DCDCDC;
     margin-right: 20px;
     height: 800px;
+    overflow-y: scroll;
   }
   .tree-title {
     width:100%;
     height:50px;
     background:#EEEEEE;
   }
+
+  .contain .left::-webkit-scrollbar {
+    /* 隐藏滚轮 */
+    display: none
+  }
+  el-tree{
+    overflow-y: scroll;
+  }
+
 </style>
