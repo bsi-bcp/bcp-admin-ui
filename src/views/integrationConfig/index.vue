@@ -174,8 +174,18 @@
             <!--任务列表的操作-->
             <el-table-column prop="oper" label="操作" align="center" width="210">
               <template slot-scope="scope">
-                <div style="text-align:left">
-                  <el-button type="text" @click="copyJob(scope)" width="30">复制</el-button>
+                <div style="text-align:left;">
+                  <el-popconfirm
+                    confirm-button-text='复制一行'
+                    cancel-button-text='复制到内存'
+                    icon="el-icon-info"
+                    icon-color="red"
+                    title="请选择复制方式"
+                    @confirm="copyJob(scope)"
+                    @cancel="copyJobJson(scope)"
+                  >
+                    <el-button style="margin-right:10px;" type="text" slot="reference" width="30">复制</el-button>
+                  </el-popconfirm>
                   <el-button type="text" @click="deljobList(scope)" width="30">删除</el-button>     
                   <el-button type="text" @click="runAgain(scope)" width="30">补数</el-button>
                   <!-- <el-button type="text" disabled width="30">全量</el-button> -->
@@ -186,7 +196,17 @@
           </el-table>
           <!--任务列表的按钮-->
           <el-row>
-            <el-button type="text" @click="addJob" style="margin-top:5px">添加</el-button>
+            <el-popconfirm
+                confirm-button-text='添加空行'
+                cancel-button-text='通过Json添加'
+                icon="el-icon-info"
+                icon-color="red"
+                title="请选择添加方式"
+                @confirm="addJob()"
+                @cancel="addByJson()"
+              >
+              <el-button type="text" slot="reference" style="margin-top:5px">添加</el-button>
+            </el-popconfirm>
           </el-row>
         </el-form-item>
       </el-form>
@@ -373,6 +393,20 @@
         </div>
     </el-dialog>
 
+    <!-- 从json字符串新增数据 -->
+    <el-dialog class="dialog-skip" width="650px" title="" :visible.sync="new_flag" :close-on-click-modal="false" :close-on-press-escape="false">
+      <el-form ref="newTaskForm" :model="jsonTask" label-width="100px" size="mini" inline-message label-position="top">
+        <el-form-item label="JSON串">
+          <el-input type="textarea" :rows="5" v-model="jsonTask.newJson" placeholder="请输入" style="width:550px"></el-input>
+        </el-form-item>
+      </el-form>
+      <br>
+      <div>
+        <el-button size="mini" type="primary" v-prevent-repeat-click @click="addJobJson">确 定</el-button>
+        <el-button size="mini" @click="new_flag = false">取 消</el-button>
+      </div>
+    </el-dialog>
+
     <!--日志查询界面-->
     <el-dialog class="dialog-skip" width="1120px" title="日志" :visible.sync="log_flag" :close-on-click-modal="false" :close-on-press-escape="false">
       <el-form ref="logForm" :model="log" label-width="100px" size="mini" inline-message label-position="top">
@@ -427,7 +461,6 @@ import * as sel from "@/api/select";
 import * as api from "@/api/IntegratedConfig";
 import * as menuApi from '@/api/menu'
 import { Loading } from 'element-ui'
-
 //引入组件
 import multipleTable from "./moudel/multipleTable";
 import MonAco from "./moudel/monaco";
@@ -470,6 +503,10 @@ export default {
       rerun_falg: false, //补数页面
       batch_falg: false, //批量设置
       import_flag: false, //导入标识
+      new_flag: false, //新增标识 json
+      jsonTask:{
+        newJson:""  //新增的json串
+      },
       log_flag: false, //日志标识
       ShowInput_Reported: false, //“任务列表的输入节点=>API上报”模态窗的显示隐藏
       ShowInput_Database: false, //“                =>数据库查询”模态窗的显示隐藏
@@ -1060,6 +1097,30 @@ export default {
         a.enable = flag
       })
     },
+    copyJobJson(data){
+      let copyRow = JSON.parse( JSON.stringify(data.row) )
+      copyRow.jobName = copyRow.jobName+"_COPY_J"
+      copyRow.id = ""
+      copyRow.inNode.id=""
+      copyRow.outNode.id=""
+      copyRow.transformNode.id=""
+
+      let transfer = document.createElement('input')
+      document.body.appendChild(transfer)
+      transfer.value = JSON.stringify(copyRow)
+      transfer.focus();
+      transfer.select();
+      if (document.execCommand('copy')) {
+          document.execCommand('copy')
+      }
+      transfer.blur();
+      document.body.removeChild(transfer);
+      this.$message({
+        showClose: true,
+        message: '复制成功!',
+        type: 'success'
+      })
+    },
     //参数的添加
     addParam() {
       this.tableData.push({ 'key':'', 'value':'' })
@@ -1131,6 +1192,10 @@ export default {
         }, 1000)
       }
     },
+    addByJson(){
+      this.new_flag = true 
+      this.jsonTask.newJson = ""
+    },
     //任务列表的添加
     addJob() {
       this.jobList.push({ valueName: "", 
@@ -1152,6 +1217,28 @@ export default {
             type: ""
           }
       }); 
+    },
+    addJobJson(){
+      if(this.jsonTask.newJson===""){
+        this.$message.error("json串格式不能为空，请填写")
+        return
+      }
+      let jsonObj = null ;
+      let flag = false
+      try {
+          jsonObj = JSON.parse(this.jsonTask.newJson)
+          if( !(jsonObj.inNode&&jsonObj.transformNode&&jsonObj.outNode) ){
+            flag=true
+          }
+      } catch (e) {
+        flag=true
+      }
+      if(flag){
+        this.$message.error("json串格式不正确,请检查")
+        return
+      }
+      this.jobList.push(jsonObj)
+      this.new_flag = false
     },
     //关闭模板选择按钮的跳转界面弹窗并赋值
     modelShow() {
