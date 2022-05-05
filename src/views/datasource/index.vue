@@ -272,6 +272,9 @@ export default {
       },{
         value: 'postgresql',
         label: 'postgresql'
+      },{
+        value: 'mysql',
+        label: 'mysql'
       }],
       rowData: {
         id: null,
