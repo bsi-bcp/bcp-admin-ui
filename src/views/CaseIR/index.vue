@@ -129,6 +129,20 @@ export default {
           link: "https://kdocs.cn/l/cdmVewGi27d0",
           guide: "https://kdocs.cn/l/cqmLcetxU9uu",
         },
+         {
+          type: "MES",
+          business: "鼎捷",
+          system: "K3C",
+          link: "https://kdocs.cn/l/cdisF3opU7TZ",
+          guide: "https://kdocs.cn/l/ciCKCt0LerK0",
+        },
+         {
+          type: "MES",
+          business: "鼎捷",
+          system: "K3Wise",
+          link: "https://kdocs.cn/l/ct0Td4RFj3kL",
+          guide: "https://kdocs.cn/l/crBz7ncHWGTB",
+        },
         {
           type: "MES",
           business: "甄一",
