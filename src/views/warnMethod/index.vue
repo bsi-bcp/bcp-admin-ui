@@ -270,9 +270,15 @@ export default {
       })
         .then(() => {
           api.singleDelete(row.id).then(res => {
-            this.$message.success({
-              message: res.msg
-            })
+            if (res.code === 500) {
+              this.$message.warning({
+                message: res.msg
+              })
+            } else {
+              this.$message.success({
+                message: res.msg
+              })
+            }
             this.getData()
             // this.dialogFormVisible = false
           })
