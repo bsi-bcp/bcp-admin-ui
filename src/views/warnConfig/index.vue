@@ -25,12 +25,11 @@
                      label-width="120px" size="mini">
                 <el-form-item label="集成配置" prop="tenantId">
                     <template>
-                        <el-select id="config_id" v-model="subFormData.configId" placeholder="请选择">
+                        <el-select id="config_id" v-model="subFormData.configId" @change="subFormData.taskId = null" placeholder="请选择">
                             <el-option v-for="item in integrationConfigs" :label="item.name" :value="item.id"/>
                         </el-select>
                     </template>
                 </el-form-item>
-
                 <el-form-item label="任务" prop="tenantId">
                     <template>
                         <el-select id="task_id" value-key="id" v-model="subFormData.taskId" placeholder="请选择">
