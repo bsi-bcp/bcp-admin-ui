@@ -48,14 +48,11 @@
             <el-form-item label="邮件标题" prop="title">
               <el-input v-model="subFormData_email.title" placeholder="单行输入" maxlength="100" size="mini" auto-complete="off" />
             </el-form-item>
-            <el-form-item label="发件人" prop="sender">
-              <el-input v-model="subFormData_email.sender" placeholder="单行输入" maxlength="100" size="mini" auto-complete="off" />
-            </el-form-item>
             <el-form-item label="收件人" prop="receiver">
               <el-input v-model="subFormData_email.receiver" placeholder="单行输入" maxlength="100" size="mini" auto-complete="off" />
             </el-form-item>
             <el-form-item label="内容" prop="content">
-              <el-input v-model="subFormData_email.content" placeholder="单行输入" maxlength="100" size="mini" auto-complete="off" />
+              <el-input v-model="subFormData_email.content" type="textarea" placeholder="单行输入" maxlength="1000" size="mini" auto-complete="off" />
             </el-form-item>
           </el-form>
         </div>
@@ -113,7 +110,6 @@ export default {
         userName: null,
         password: null,
         title: null,
-        sender: null,
         receiver: null,
         content: null
       },
@@ -126,10 +122,6 @@ export default {
           message: '请填写名称',
           trigger: 'blur'
         }],
-        // 'code': [{
-        //   required: true,
-        //   message: '请填写编码'
-        // }],
         'type': [{
           required: true,
           message: '请填写类型',
@@ -156,14 +148,14 @@ export default {
           message: '请填写标题',
           trigger: 'blur'
         }],
-        'sender': [{
-          required: true,
-          message: '请填写发件人'
-        }],
         'receiver': [{
           required: true,
           message: '请填写收件人',
           trigger: 'blur'
+        }],
+        'content': [{
+          required: true,
+          message: '请填写内容'
         }]
       },
       tableData: [],
@@ -215,15 +207,6 @@ export default {
             placeholder: '类型',
             optList: []
           },
-          // {
-          //   type: 'input',
-          //   prop: 'classify',
-          //   conditionshow: false,
-          //   filedShow: true,
-          //   label: '分类',
-          //   placeholder: '分类',
-          //   optList: []
-          // },
           {
             type: 'input',
             prop: 'createTime',
@@ -288,7 +271,7 @@ export default {
         .then(() => {
           api.singleDelete(row.id).then(res => {
             this.$message.success({
-              message: '删除成功'
+              message: res.msg
             })
             this.getData()
             // this.dialogFormVisible = false
@@ -298,7 +281,7 @@ export default {
         })
     },
     // 新增或编辑页面
-    edit(row) {
+    async edit(row) {
       // 清空验证信息
       if (this.$refs.subFormData) {
         this.$refs.subFormData.clearValidate()
@@ -315,10 +298,13 @@ export default {
         return
       }
       // 如果是更新
-      const data = JSON.parse(row.configValue)
+      // eslint-disable-next-line no-unused-vars
+      const queryObj = await api.getId(row.id)
+      const data = JSON.parse(queryObj.model.configValue)
       const tmp = {}
-      Object.assign(tmp, row)
+      Object.assign(tmp, queryObj.model)
       delete tmp.configValue
+      tmp.tenantId = tmp.tenantId + ''
       this.subFormData = {
         ...tmp
       }
@@ -347,15 +333,6 @@ export default {
       this.showCronBox = false
       this.$refs.subFormData.validate((valid) => {
         if (valid) {
-          // eslint-disable-next-line eqeqeq
-          // if (this.subFormData.type == 'api') {
-          //   this.subFormData.classify = this.subFormData.type
-          // }
-          // // 如果说类型位api上报，分类暂时设置成边缘网关，后续可支持roma、apig等
-          // // eslint-disable-next-line eqeqeq
-          // if (this.subFormData.type == 'apiUp') {
-          //   this.subFormData.classify = 'gateway'
-          // }
           const subObj = 'subFormData_' + this.subFormData.type + ''
           const dataVale = JSON.stringify(this[subObj])
           const obj = {
@@ -378,11 +355,6 @@ export default {
       }).catch(e => {
         return false
       })
-      // menuApi.getSourceTypeOptions('md.bcp.datasource.authmode').then(res => {
-      //   this.authOptions = res.model
-      // }).catch(e => {
-      //   return false
-      // })
       sel.getFreelist({ code: 'bcp.tenant.name', params: '' }).then(res => {
         this.customerOptions = res.model
       })

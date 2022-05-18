@@ -4,7 +4,7 @@ import qs from 'qs'
 const URL = {
   role: '/services/fwcore/warnMethod'
 }
-export function getId(id) {
+export async function getId(id) {
   return request({
     url: URL.role + '/' + id,
     method: 'get'
