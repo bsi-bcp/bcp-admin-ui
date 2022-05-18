@@ -25,12 +25,11 @@
                      label-width="120px" size="mini">
                 <el-form-item label="集成配置" prop="tenantId">
                     <template>
-                        <el-select id="config_id" v-model="subFormData.configId" placeholder="请选择">
+                        <el-select id="config_id" v-model="subFormData.configId" @change="subFormData.taskId = null" placeholder="请选择">
                             <el-option v-for="item in integrationConfigs" :label="item.name" :value="item.id"/>
                         </el-select>
                     </template>
                 </el-form-item>
-
                 <el-form-item label="任务" prop="tenantId">
                     <template>
                         <el-select id="task_id" value-key="id" v-model="subFormData.taskId" placeholder="请选择">
@@ -67,7 +66,6 @@
 
 <script>
 import * as commonApi from '@/api/common'
-import * as sel from '@/api/select'
 import { mapGetters } from 'vuex'
 import * as api from '@/api/warnConfig'
 
@@ -148,7 +146,7 @@ export default {
                 filterList: [
                     {
                         type: 'input',
-                        prop: 'key',
+                        prop: 'name',
                         // 控制设置内部 复选框勾选的默认值
                         conditionshow: true,
                         // 控制该字段是否出现在表格里
@@ -253,15 +251,15 @@ export default {
                         optList: []
                     },
                     {
-                        type: 'input',
+                        type: 'select',
                         prop: 'enable',
-                        conditionshow: false,
+                        conditionshow: true,
                         filedShow: true,
                         isSearchHide: true,
                         slot: true,
                         label: '状态',
                         placeholder: '状态',
-                        optList: []
+                        optList: [{ label: '启用', value: true }, { label: '禁用', value: false }]
                     },
                     {
                         type: 'input',
@@ -331,7 +329,10 @@ export default {
                 enable: !row.enable
             }
             api.submitForm(obj).then(
-                res => row.enable = !(row.enable)
+                res => {
+                  row.enable = !(row.enable)
+                  this.getData(this.datas)
+                }
             ).catch(
                 e => console.log(e.message)
             )
@@ -380,6 +381,7 @@ export default {
             this.$set(this, 'params', datas.params)
             this.$set(this.datas.table, 'loading', true)
             this.$set(this.params, 'orgId', this.params.orgName)
+            this.params[this.datas.filterList[0].prop] = undefined;
             api.getPage({ ...this.params, key: this.datas.filterList[0].name }).then(res => {
                     this.$set(this.datas.resData, 'rows', res.model)
                     this.$set(this.datas.params, 'currentPage', res.currentPage)
