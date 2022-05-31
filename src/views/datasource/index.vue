@@ -204,6 +204,9 @@
             <el-form-item label="访问密钥" prop="sk" >
               <el-input v-model="subFormData.sk" placeholder="请填写"  maxlength="100" size="mini" auto-complete="off"></el-input>
             </el-form-item> 
+            <el-form-item label="集成节点" prop="nodeId" >
+              <el-input v-model="subFormData.nodeId" placeholder="节点ID"  maxlength="50" size="mini" auto-complete="off"></el-input>
+            </el-form-item>
           </div>
 
 
