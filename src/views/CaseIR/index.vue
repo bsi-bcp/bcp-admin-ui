@@ -200,6 +200,13 @@ export default {
           guide: "https://kdocs.cn/l/cbLV5y5uhSlE",
         },
         {
+          type: "OA",
+          business: "泛微",
+          system: "甄云",
+          link: "https://www.kdocs.cn/l/cgbchnUzU3b6",
+          guide: "https://www.kdocs.cn/l/chX87BQzDlPm",
+        },
+        {
           type: "CRM",
           business: "纷享销客",
           system: "K3C",
