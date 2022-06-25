@@ -165,6 +165,9 @@
             <el-form-item label="密码" prop="password" >
               <el-input type="password" v-model="subFormData.password" placeholder="请填写"  maxlength="20" size="mini" auto-complete="off"></el-input>
             </el-form-item> 
+            <el-form-item label="集成节点" prop="nodeId" >
+              <el-input v-model="subFormData.nodeId" placeholder="节点ID"  maxlength="50" size="mini" auto-complete="off"></el-input>
+            </el-form-item>
           </div>
           <!--类型是消息队列  （临时待完善）-->
           <div v-if="subFormData.type === 'mq'">
@@ -492,7 +495,7 @@ export default {
       this.showCronBox = false
       this.$refs.subFormData.validate((valid) => {
         if (valid) {
-          if(this.subFormData.type =='api'){
+          if(this.subFormData.type =='api' || this.subFormData.type =='sapRFC'){
             this.subFormData.classify=this.subFormData.type
           }
           //如果说类型位api上报，分类暂时设置成边缘网关，后续可支持roma、apig等
