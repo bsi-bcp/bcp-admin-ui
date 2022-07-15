@@ -215,6 +215,41 @@
             </el-form-item>
           </div>
 
+       <!--新增界面的参数-->
+        <el-form-item label="全局参数" prop="parameter" style="margin-top:20px;">
+          <el-table :data="tableData" class="mt10" :cell-style="{padding:'10px 0px'}" :header-cell-style="{background:'#fafafa',color:'#606266',padding:'0px 0px'}" fit highlight-current-row style="width: 100%">
+            <!-- align="center"使内容居中 -->
+             <el-table-column label="加密" align="center" width="50">
+              <!-- slot-scope="scope"获取表格到当前行的数据 -->
+              <template slot-scope="scope">
+                <el-switch
+                  v-model="scope.row.secret">
+                </el-switch>
+              </template>
+            </el-table-column>
+
+            <el-table-column label="参数名称" align="center">
+              <!-- slot-scope="scope"获取表格到当前行的数据 -->
+              <template slot-scope="scope">
+                <el-input v-model="scope.row.key" />
+              </template>
+            </el-table-column>
+
+            <el-table-column  label="参数数据" align="center" width="300">
+              <template slot-scope="scope">
+                <el-input :type="scope.row.secret?'password':'text'" v-model="scope.row.value"/>
+              </template>
+            </el-table-column>
+            
+            <el-table-column label="操作" align="center" width="200">
+              <template slot-scope="scope">
+             <el-button type="text" @click="delTableData(scope)">删除</el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+          <!--参数的添加按钮-->
+          <el-button type="text" @click="addParam" style="margin-top:5px">添加</el-button>
+        </el-form-item>
 
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -458,6 +493,7 @@ export default {
       if( !!this.$refs.subFormData ){
         this.$refs.subFormData.clearValidate()
       }
+      this.tableData = []
       this.dialogFormVisible = true
       //如果是新增
       if (row===0) {
@@ -474,7 +510,7 @@ export default {
       delete tmp.configValue
       delete tmp.tenantId
       delete tmp.type
-
+      this.tableData = data.globalParams?data.globalParams:[]
       this.subFormData = {
         ...data,
         ...tmp
@@ -505,6 +541,9 @@ export default {
           if(this.subFormData.type =='apiUp'){
             this.subFormData.classify='gateway'
           }
+          if(this.tableData.length>0){
+            this.subFormData.globalParams = this.tableData
+          }
           let dataVale = JSON.stringify(this.subFormData)
           let obj = {
             configValue:dataVale,
@@ -519,6 +558,14 @@ export default {
             return false
         }
       })
+    },
+    //参数的删除
+    delTableData(index) {
+      this.tableData.splice(index.$index, 1)
+    },
+    //参数的添加
+    addParam() {
+      this.tableData.push( {'secret':false,'key':'', 'value':'' })
     },
     getSourceTypeOptions() {
       menuApi.getSourceTypeOptions('md.bcp.datasource.type').then(res => {
