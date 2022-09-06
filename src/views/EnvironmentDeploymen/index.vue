@@ -7,13 +7,13 @@
       :header-cell-style="{background:'rgb(250 250 250)'}"
       :span-method="objectSpanMethod"
       header-align="center">
-      <el-table-column align="left">
+      <el-table-column align="center">
         <template slot="header">
-          <span class="digitalFactory">BCP环境部署</span>
+          <span class="digitalFactory">文档</span>
         </template>
       <el-table-column
         prop="type"
-        label="部署分类"
+        label="文档类型"
         width="300px"
         align="center">
       </el-table-column>
@@ -67,6 +67,10 @@ export default {
           type: "日志部署",
           explain: "无IoT",
           link: "https://kdocs.cn/l/ckMb7POnjk2h",
+        },{
+          type: "开发文档",
+          explain: "开发指导文档",
+          link: "https://kdocs.cn/l/cd4WRME4V9cc",
         },
       ],
       arr: [],
