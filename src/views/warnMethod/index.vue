@@ -49,7 +49,7 @@
               <el-input v-model="subFormData_email.title" placeholder="单行输入" maxlength="100" size="mini" auto-complete="off" />
             </el-form-item>
             <el-form-item label="收件人" prop="receiver">
-              <el-input v-model="subFormData_email.receiver" placeholder="单行输入" maxlength="100" size="mini" auto-complete="off" />
+              <el-input v-model="subFormData_email.receiver" placeholder="单行输入" maxlength="500" size="mini" auto-complete="off" />
             </el-form-item>
             <el-form-item label="内容" prop="content">
               <el-input v-model="subFormData_email.content" type="textarea" rows = "6" placeholder="单行输入" maxlength="1000" size="mini" auto-complete="off" />
