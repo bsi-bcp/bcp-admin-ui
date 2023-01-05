@@ -174,32 +174,38 @@
           </div>
           <!--类型是消息队列  （临时待完善）-->
           <div v-if="subFormData.type === 'mq'">
-            <el-form-item label="分类" prop="xxxxx1">
+            <el-form-item label="分类" prop="classify">
               <template>
-                <el-select id="xxxxx1_id" v-model="subFormData.xxxxx1" placeholder="请选择" >
-                  <el-option v-for="item in xxxxx1Options" :label="item.label" :value="item.value" />
+                <el-select v-model="subFormData.classify" placeholder="请选择" >
+                  <el-option label="kafka" value="kafka" />
                 </el-select>
               </template>
             </el-form-item> 
             <!-- 认证方式为BAsic Auth -->
-            <div id="xxxxx1Token" v-if="subFormData.xxxxx1 === 'mqtt'">
-              <el-form-item label="实例ID" prop="xxxxx2" >
-                <el-input v-model="subFormData.xxxxx2" placeholder="请填写"  maxlength="100" size="mini" auto-complete="off"></el-input>
-              </el-form-item> 
-            </div>
-            <el-form-item label="broker" prop="xxxxx3" >
-              <el-input v-model="subFormData.xxxxx3" placeholder="请填写"  maxlength="100" size="mini" auto-complete="off"></el-input>
+            <el-form-item label="Broker Servers" prop="servers" >
+              <el-input v-model="subFormData.servers" placeholder="请填写"  maxlength="100" size="mini" auto-complete="off"></el-input>
             </el-form-item> 
-            <el-form-item label="是否SSL" prop="xxxxx4" >
-              <el-radio v-model="subFormData.xxxxx4" label="1">是</el-radio>
-              <el-radio v-model="subFormData.xxxxx4" label="2">否</el-radio>
+           <!-- <el-form-item label="是否SSL" prop="enableSSL" >
+              <el-radio v-model="subFormData.enableSSL" label="1">是</el-radio>
+              <el-radio v-model="subFormData.enableSSL" label="2">否</el-radio>
+            </el-form-item>  -->
+             <!-- <el-form-item label="SSL用户名" prop="sslUname" >
+              <el-input v-model="subFormData.sslUname" placeholder="请填写"  maxlength="200" size="mini" auto-complete="off"></el-input>
             </el-form-item> 
-            <el-form-item label="SSL用户名" prop="xxxxx5" >
-              <el-input v-model="subFormData.xxxxx5" placeholder="请填写"  maxlength="100" size="mini" auto-complete="off"></el-input>
+             -->
+              <!-- <el-form-item label="SSL密码" prop="sslPwd" >
+              <el-input v-model="subFormData.sslPwd" placeholder="请填写"  maxlength="200" size="mini" auto-complete="off"></el-input>
             </el-form-item> 
-            <el-form-item label="SSL密码" prop="xxxxx6" >
-              <el-input v-model="subFormData.xxxxx6" placeholder="请填写"  maxlength="100" size="mini" auto-complete="off"></el-input>
+             -->
+            <el-form-item label="分组id" prop="groupId" >
+              <el-input v-model="subFormData.groupId" placeholder="请填写"  maxlength="100" size="mini" auto-complete="off"></el-input>
             </el-form-item> 
+            <el-form-item label="其他参数" prop="otherParam" >
+             <el-input type="textarea" :rows="3" v-model="subFormData.otherParam" placeholder="请输入" class="baseinfo" maxlength="2000"></el-input>
+            </el-form-item> 
+            <el-form-item label="集成节点" prop="nodeId" >
+              <el-input v-model="subFormData.nodeId" placeholder="节点ID"  maxlength="50" size="mini" auto-complete="off"></el-input>
+            </el-form-item>
           </div>
 
           <!--类型是API上报-->
@@ -519,6 +525,7 @@ export default {
         this.subFormData.tenantId = this.cur_user.tenantId+'';
         return
       }
+
       //如果是更新
       let data =JSON.parse(row.configValue)
       let tmp = {};
