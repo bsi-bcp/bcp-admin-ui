@@ -1,6 +1,6 @@
 <template lang="html">
   <div class="app-container">
-    
+
     <el-table
       :data="tableData"
       style="width: 100%"
@@ -67,10 +67,16 @@ export default {
           type: "日志部署",
           explain: "无IoT",
           link: "https://kdocs.cn/l/ckMb7POnjk2h",
-        },{
+        },
+        {
           type: "开发文档",
           explain: "开发指导文档",
           link: "https://kdocs.cn/l/cd4WRME4V9cc",
+        },
+        {
+          type: "API文档",
+          explain: "API调用说明",
+          link: "https://console-docs.apipost.cn/preview/3108a6f996e7f150/b93f080cfaa157ce?target_id=001",
         },
       ],
       arr: [],
