@@ -78,6 +78,11 @@ export default {
           explain: "API调用说明",
           link: "https://console-docs.apipost.cn/preview/3108a6f996e7f150/b93f080cfaa157ce?target_id=001",
         },
+        {
+          type: "云集成下单流程",
+          explain: "华为云下单流程",
+          link: "https://kdocs.cn/l/ceTBYLykmHvU",
+        }
       ],
       arr: [],
     };
