@@ -1383,11 +1383,22 @@ export default {
       location.href = `${process.env.VUE_APP_BASE_API}/services/fwcore/config/down-plugins/${this.subFormData.id}/${file.name}`
     },
     beforeUpload(file) {
+      const lastDotIndex = file.name.lastIndexOf('.')
+      const extension = file.name.slice(lastDotIndex)
+      const isJs = (extension === '.js')
+
       if (file.size / (1024 * 1024) > 5) {
         this.$notify.warning({
           title: '警告',
           message: `文件大小不得超过2M`
         })
+        return false
+      }else if(!isJs){
+         this.$notify.warning({
+          title: '警告',
+          message: `只能上传js文件`
+        })
+        return isJs
       } else {
         const formData = new FormData()
         formData.append('file', file)
