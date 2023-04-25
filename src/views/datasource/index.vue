@@ -542,7 +542,7 @@ export default {
       this.$set(this.datas.table, 'loading', true)
       this.$set(this.params, 'orgId', this.params.orgName)
   
-      api.getPage({...this.params, key: this.datas.filterList[0].name}).then(res => {
+      api.getPage({...this.params, key: this.datas.filterList[1].name}).then(res => {
         this.$set(this.datas.resData, 'rows', res.model)
         this.$set(this.datas.params, 'currentPage', res.currentPage)
         this.$set(this.datas.params, 'pageSize', res.pageSize)
