@@ -137,7 +137,7 @@ export default {
             filedShow: true,
             // 控制搜索框的label显示与否
             isHiddenSearchLabel: true,
-            label: '名称',
+            label: '模板名称',
             placeholder: '关键词',
             queryName: '关键词',
             align:"left",
@@ -145,7 +145,7 @@ export default {
           {
             prop: "code",
             conditionshow: false,
-            filedShow: true,
+            filedShow: false,
             label: "编码",
             placeholder: "编码"
           },
