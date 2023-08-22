@@ -9,6 +9,7 @@
     "build:prod": "vue-cli-service build",
     "build:stage": "vue-cli-service build --mode staging",
     "build:uat": "vue-cli-service build --mode uat",
+    "build:baiwei": "vue-cli-service build --mode baiwei",
     "preview": "node build/index.js --preview",
     "lint": "eslint --ext .js,.vue src --fix",
     "test:unit": "jest --clearCache && vue-cli-service test:unit",
