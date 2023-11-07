@@ -67,7 +67,7 @@
     </el-form>
     <div class="copyright-container">
         <div class="copyright">
-          Copyright@2017-2023 深圳市商软信息科技有限公司 版权所有
+          Copyright@2017-2023 工业子系统数采平台
         </div>
     </div>
 
@@ -248,7 +248,6 @@ export default {
     },
     handleLogin() {
       this.$refs.loginForm.validate(valid => {
-        console.log(this.license)
         //序列号检测
         if(this.license){
           debugger
