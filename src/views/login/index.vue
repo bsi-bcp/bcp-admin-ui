@@ -67,7 +67,7 @@
     </el-form>
     <div class="copyright-container">
         <div class="copyright">
-          Copyright@2017-2023 工业子系统数采平台
+          Copyright@2017-{{currentYear}} 工业子系统数采平台
         </div>
     </div>
 
@@ -194,6 +194,12 @@ export default {
       loading: false,
       passwordType: 'password',
       redirect: undefined
+    }
+  },
+  computed: {
+    currentYear: function() {
+      // 获取当前年份
+      return new Date().getFullYear();
     }
   },
   watch: {
@@ -388,8 +394,8 @@ $light_gray:#eee;
       height: 56px;
       width: 83%;
       padding-left: 22px;
-      padding-top: 5px;  
-  } 
+      padding-top: 5px;
+  }
 
 .login-container {
   min-height: 100%;
