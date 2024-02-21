@@ -13,7 +13,7 @@
     <!--新增/编辑界面-->
     <el-dialog width="50%" :title="subFormData.id?'编辑':'新增'" :visible.sync="dialogFormVisible">
       <el-form ref="subFormData" :model="subFormData" :rules="subFormDataRule" class="subFormData" label-width="100px">
-        <el-form-item label="关联客户" prop="orgId">
+        <el-form-item label="关联客户" prop="bcpTenantId">
           <el-select v-model="subFormData.bcpTenantId" size="mini">
             <el-option v-for="(item,index) in bcpTenantArr" :key="index" :label="item.name" :value="item.id" />
           </el-select>
@@ -58,6 +58,7 @@ export default {
       dialogPropListFormVisible: false,
       dialogRowTitle: null,
       selectionPropList: [],
+      curIndex: null,
       bcpTenantArr: [],
       rowData: {
         id: null,
@@ -176,8 +177,8 @@ export default {
       }
     }
   },
-  async created() {
-    await this.getTenantArr()
+  created() {
+    this.getTenantArr()
   },
   mounted() {},
   methods: {
@@ -269,15 +270,16 @@ export default {
     getTenantArr() {
       api.getTenantList().then(res => {
         this.bcpTenantArr = res.model
-        const arr = []
+        const arr = {}
         res.model.forEach((item, key) => {
-          var tmp = {
-            'label': item.name,
-            'value': item.id
-          }
-          arr.push(tmp)
+          // var tmp = {
+          //   'label': item.name,
+          //   'value': item.id
+          // }
+          // arr.push(tmp)
+          arr[item.id + ''] = item.name
         })
-        // this.$set(this.datas.filterList[3], 'optList', arr)
+        this.$set(this.datas.filterList[3], 'conv', arr)
       })
     }
   }
