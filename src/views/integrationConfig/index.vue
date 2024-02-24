@@ -378,10 +378,10 @@
                     maxlength="2000"></el-input>
         </el-form-item>
 
-        <el-form-item label="运行结果">
-          <el-input type="textarea" :rows="3" v-model="reRun.responseMsg" placeholder="请输入" class="baseinfo"
-                    maxlength="2000"></el-input>
-        </el-form-item>
+<!--        <el-form-item label="运行结果">-->
+<!--          <el-input type="textarea" :rows="3" v-model="reRun.responseMsg" placeholder="请输入" class="baseinfo"-->
+<!--                    maxlength="2000"></el-input>-->
+<!--        </el-form-item>-->
       </el-form>
 
 
@@ -933,7 +933,7 @@ export default {
         spinner: 'el-icon-loading'
       })
       api.runTask(this.reRun).then(res => {
-        this.$set(this.reRun, 'responseMsg', res.msg)
+        //this.$set(this.reRun, 'responseMsg', res.msg)
         //采集日志
         if (this.logFlag) {
           this.logLoading.text = '日志加载中，请等待...'

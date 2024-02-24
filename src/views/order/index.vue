@@ -93,14 +93,16 @@
                     auto-complete="off"
           />
         </el-form-item>
-        <el-form-item label="客户" prop="customerId">
-          <el-select v-model="subFormData.customerId" placeholder="请选择">
-            <el-option v-for="(optItem,optindex) in customerOptions" :key="optindex" :label="optItem"
-                       :value="optindex"
-            />
-          </el-select>
+        <el-form-item label="客户ID" prop="customerId">
+          <el-input v-model="subFormData.customerId" placeholder="单行输入" maxlength="50" size="mini"
+                    auto-complete="off"
+          />
         </el-form-item>
-
+        <el-form-item label="客户名称" prop="customerName">
+          <el-input v-model="subFormData.customerName" placeholder="单行输入" maxlength="50" size="mini"
+                    auto-complete="off"
+          />
+        </el-form-item>
 
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -124,7 +126,11 @@ export default {
       userCaseOptions: [],
       sourceOptions: [],
       customerOptions: [],
-      convs: [],
+      periodTypeMap: {
+        'year': '年',
+        'month': '月',
+        'day': '日'
+      },
       planCheckWay: 1,
       tenants: [],
       computers: [],
@@ -150,7 +156,8 @@ export default {
         chargingMode: null,
         acceptanceTime: null,
         orderAmount: null,
-        customerId: null
+        customerId: null,
+        customerName: null
       },
       subFormDataRule: {
         'name': [{
@@ -203,17 +210,28 @@ export default {
           {
             type: 'input',
             prop: 'orderId',
-            conditionshow: false,
+            conditionshow: true,
             filedShow: true,
             label: '云商店订单ID',
             placeholder: '云商店订单ID',
+            optList: [],
+            minWidth: 120
+            //align: 'left'
+          },
+          {
+            type: 'input',
+            prop: 'productCycle',
+            conditionshow: false,
+            filedShow: true,
+            label: '产品周期',
+            placeholder: '产品周期',
             optList: []
           },
           {
             type: 'input',
             prop: 'periodNumber',
             conditionshow: false,
-            filedShow: true,
+            filedShow: false,
             label: '规格数量',
             placeholder: '规格数量',
             optList: []
@@ -221,8 +239,8 @@ export default {
           {
             type: 'select',
             prop: 'periodType',
-            conditionshow: true,
-            filedShow: true,
+            conditionshow: false,
+            filedShow: false,
             label: '产品规格',
             placeholder: '产品规格',
             optList: [
@@ -252,16 +270,18 @@ export default {
             filedShow: true,
             label: '开始时间',
             placeholder: '开始时间',
-            optList: []
+            optList: [],
+            minWidth: 120
           },
           {
             type: 'input',
             prop: 'expireTime',
             conditionshow: false,
             filedShow: true,
-            label: '过期时间',
-            placeholder: '过期时间',
-            optList: []
+            label: '到期时间',
+            placeholder: '到期时间',
+            optList: [],
+            minWidth: 120
           },
           {
             type: 'select',
@@ -291,7 +311,8 @@ export default {
             placeholder:
               '用户验收时间',
             optList:
-              []
+              [],
+            minWidth: 120
           }
           ,
           {
@@ -333,7 +354,7 @@ export default {
             conditionshow:
               false,
             filedShow:
-              true,
+              false,
             label:
               '最后更新时间',
             placeholder:
@@ -349,7 +370,24 @@ export default {
             conditionshow:
               false,
             filedShow:
+              false,
+            label:
+              '客户',
+            placeholder:
+              '客户',
+            optList:
+              []
+            //conv: this.convs["customerId"]
+          },
+          {
+            type: 'input',
+            prop:
+              'customerName',
+            conditionshow:
               true,
+            filedShow:
+              true,
+            isHiddenSearchLabel: true,
             label:
               '客户',
             placeholder:
@@ -452,8 +490,16 @@ export default {
       this.$set(this.datas.table, 'loading', true)
       this.$set(this.params, 'orgId', this.params.orgName)
 
+      const periodTypeMap = this.periodTypeMap
       api.getPage({ ...this.params, key: this.datas.filterList[0].name }).then(res => {
-        this.$set(this.datas.resData, 'rows', res.model)
+        const dataArray = res.model
+        dataArray.forEach(
+          function(dataObj) {
+            dataObj.productCycle = dataObj.periodNumber +
+              periodTypeMap[dataObj.periodType]
+          }
+        )
+        this.$set(this.datas.resData, 'rows', dataArray)
         this.$set(this.datas.params, 'currentPage', res.currentPage)
         this.$set(this.datas.params, 'pageSize', res.pageSize)
         this.$set(this.datas.resData, 'totalCount', res.totalCount)
@@ -487,14 +533,13 @@ export default {
       }).catch(e => {
         return false
       })
-      sel.getFreelist({ code: 'bcp.tenant.name', params: '' }).then(res => {
-        this.customerOptions = res.model
-        const index = this.datas.filterList.findIndex(a => {
-          return a.prop == 'customerId'
-        }).valueOf()
-        this.$set(this.datas.filterList[index], 'conv', this.customerOptions)
-
-      })
+      // sel.getFreelist({ code: 'bcp.tenant.name', params: '' }).then(res => {
+      //   this.customerOptions = res.model
+      //   const index = this.datas.filterList.findIndex(a => {
+      //     return a.prop === 'customerId'
+      //   }).valueOf()
+      //   this.$set(this.datas.filterList[index], 'conv', this.customerOptions)
+      // })
     }
   }
 }
