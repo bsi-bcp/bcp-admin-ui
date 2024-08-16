@@ -1,6 +1,6 @@
 module.exports = {
 
-  title: '数采IDE',
+  title: '集成IDE',
 
   /**
    * @type {boolean} true | false

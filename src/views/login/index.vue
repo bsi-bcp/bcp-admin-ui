@@ -5,10 +5,10 @@
     </div>
     <div class="title-container">
         <div class="title">
-          工业物联网平台数采IDE
+          工业物联平台-集成IDE
         </div>
     </div>
-    <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form " auto-complete="on" label-position="left">
+    <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
       <el-row :gutter="20" style="margin-top:5px;">
       <el-col :span="12">
         <!-- 公司图标 -->
