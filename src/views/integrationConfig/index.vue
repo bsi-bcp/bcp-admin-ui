@@ -234,7 +234,7 @@
                   <el-button type="text" @click="deljobList(scope)" width="30">删除</el-button>
                   <el-button type="text" @click="runAgain(scope)" width="30">补数</el-button>
                   <!-- <el-button type="text" disabled width="30">全量</el-button> -->
-                  <el-button type="text" @click="logSearch(scope)" width="30">日志</el-button>
+                  <el-button type="text" @click="logSearch(scope)" width="30" >日志</el-button>
                 </div>
               </template>
             </el-table-column>
@@ -391,6 +391,7 @@
         <el-button size="mini" @click="rerun_falg = false">取 消</el-button>
       </div>
       <br>
+      <!--
       <el-switch
         v-model="logFlag"
         active-text="开启"
@@ -401,7 +402,7 @@
           <li v-for="lg in logList">{{ lg.message }}</li>
         </ul>
       </div>
-
+-->
     </el-dialog>
 
     <!--批量设置界面-->
@@ -889,14 +890,15 @@ export default {
       this.rerun_falg = true
     },
     logSearch(data) {
-      this.log.totalCount = 0
+      alert("建设中...")
+      /*this.log.totalCount = 0
       this.log.pageSize = 20
       this.initData(false)
       this.logList = []
       this.log.message = ''
       this.log.taskId = data.row.id
       this.log_flag = true
-      this.log.repairFlag = false
+      this.log.repairFlag = false*/
     },
     getTaskLog() {
       api.getTaskLog(this.log).then((res) => {
@@ -1435,11 +1437,27 @@ export default {
           api
             .submitForm(obj)
             .then((res) => {
-              this.$message.success('保存成功')
-              this.subFormData.id = res.model
-              this.getData(this.datas)
+                this.$message.success('保存成功')
+                this.subFormData.id = res.model
+                this.getData(this.datas)
+                const rr = api.getIdRow(this.subFormData.id).then(rr => {
+                    console.log(rr)
+                    let cdata = JSON.parse(rr.model)
+                    //把访问路径加到集合中,用来判断是否存在重复的访问路径
+                    this.jobList = cdata.jobList
+                    this.pathMap.clear()
+                    this.jobList.forEach(job => {
+                      if ('apiUp' === job.inNode.type) {
+                        let conf = JSON.parse(job.inNode.configValue)
+                        this.pathMap.set(conf.path, job.inNode.id)
+                      }
+                    })
+                }).catch(e1 => {
+                    console.log(e1)
+                })
             })
-            .catch(() => {
+            .catch(e => {
+              console.log(e)
             })
         } else {
           return false
