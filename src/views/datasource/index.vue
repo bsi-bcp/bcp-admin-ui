@@ -107,10 +107,10 @@
               </template>
             </el-form-item> 
             <el-form-item label="数据库连接串" prop="url" >
-              <el-input v-model="subFormData.jdbcUrl" placeholder="单行输入"  maxlength="100" size="mini" auto-complete="off"></el-input>
+              <el-input v-model="subFormData.jdbcUrl" placeholder="单行输入"  maxlength="500" size="mini" auto-complete="off"></el-input>
             </el-form-item>
             <el-form-item label="数据库地址" prop="url" >
-              <el-input v-model="subFormData.url" placeholder="单行输入"  maxlength="500" size="mini" auto-complete="off"></el-input>
+              <el-input v-model="subFormData.url" placeholder="单行输入"  maxlength="100" size="mini" auto-complete="off"></el-input>
             </el-form-item> 
             <el-form-item label="数据库名称" prop="databaseName" >
               <el-input v-model="subFormData.databaseName" placeholder="单行输入"  maxlength="50" size="mini" auto-complete="off"></el-input>
