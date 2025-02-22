@@ -10,7 +10,7 @@ base:
 	echo building "正在编译打包前端代码..."
 	npm install --unsafe-perm=true --allow-root
 	rm -rf ./dist/*
-	npm run build:stage
+	npm run build:baiwei
 	echo building "前端代码打包完毕"
 
 prod: base
