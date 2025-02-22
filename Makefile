@@ -3,7 +3,7 @@ PRODORG=bcp-cloud
 NAME=bcp-admin-ui
 TAG=$(shell date +%Y%m%d%H%M)
 PRODTAG=1-0-0
-swr.cn-north-4.myhuaweicloud.com/prod-bcp-x86/
+
 base:
     echo building "正在编译打包前端代码..."
 	npm install --unsafe-perm=true --allow-root
