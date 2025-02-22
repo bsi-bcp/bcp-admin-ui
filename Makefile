@@ -16,5 +16,4 @@ prod: base
 	echo building ${NAME}:master
 	docker build -t ${REGISTRY}/${PRODORG}/${NAME}:${PRODTAG} .
 	docker tag ${REGISTRY}/${PRODORG}/${NAME}:${PRODTAG} ${REGISTRY}/${PRODORG}/${NAME}:laster
-	rm Dockerfile
 	docker push ${REGISTRY}/${PRODORG}/${NAME}:laster
