@@ -318,9 +318,12 @@
           <MonAco ref='MonAco'></MonAco>
         </el-form-item>
       </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button size="mini" type="primary" @click="affirmInNode">确 定</el-button>
-        <el-button size="mini" @click="ShowInput_Database = false">取 消</el-button>
+      <div slot="footer" class="dg-footer">
+        <span>{{ foot_job_name }}</span>
+        <div>
+          <el-button size="mini" type="primary" @click="affirmInNode">确 定</el-button>
+          <el-button size="mini" @click="ShowInput_Database = false">取 消</el-button>
+        </div>
       </div>
     </el-dialog>
     <!--任务列表的转换节点-->
@@ -331,9 +334,12 @@
           <MonAco ref='MonAcoTransformNode'></MonAco>
         </el-form-item>
       </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button size="mini" type="primary" @click="affirmTransformNode">确 定</el-button>
-        <el-button size="mini" @click="switchNode = false">取 消</el-button>
+      <div slot="footer" class="dg-footer">
+        <span>{{ foot_job_name }}</span>
+        <div>
+          <el-button size="mini" type="primary" @click="affirmTransformNode">确 定</el-button>
+          <el-button size="mini" @click="switchNode = false">取 消</el-button>
+        </div>
       </div>
     </el-dialog>
     <!--任务列表的输出节点-->
@@ -354,9 +360,12 @@
           <MonAco ref='outMonAco'></MonAco>
         </el-form-item>
       </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button size="mini" type="primary" @click="affirmOutNode">确 定</el-button>
-        <el-button size="mini" @click="Showoutput_Transfer = false">取 消</el-button>
+      <div slot="footer" class="dg-footer">
+        <span>{{ foot_job_name }}</span>
+        <div>
+          <el-button size="mini" type="primary" @click="affirmOutNode">确 定</el-button>
+          <el-button size="mini" @click="Showoutput_Transfer = false">取 消</el-button>
+        </div>
       </div>
     </el-dialog>
     <!--补数界面-->
@@ -566,6 +575,7 @@ export default {
       batchTableData: [],//批量设置的数据
       value: '',
       ShowInput_title: '',
+      foot_job_name: '',
       switchNode_title: '',
       Showoutput_title: '',
       curTenantId: null,
@@ -1069,7 +1079,7 @@ export default {
         }
       })
     },
-    //任务列表的输入节点配置按钮方法
+    // 任务列表的输入节点配置按钮方法
     changeOptionsInput(data) {
       if (this.$refs.inNodeForm) {
         this.$refs.inNodeForm.clearValidate()
@@ -1087,9 +1097,10 @@ export default {
           }
         })
       }, 50)
-      this.ShowInput_title = this.optionsInput.find(val => val.propkey == data.row.inNode.type).propvalue
-      //设置默认值
-      //api上报设置默认值
+      this.ShowInput_title = this.optionsInput.find(val => val.propkey === data.row.inNode.type).propvalue
+      this.foot_job_name = data.row.jobName
+      // 设置默认值
+      // api上报设置默认值
       if ('apiUp' === data.row.inNode.type) {
         this.inNode.protocol = !!this.inNode.protocol ? this.inNode.protocol : this.$set(this.inNode, 'protocol', 'http')
         this.inNode.authFlag = !!this.inNode.authFlag ? this.inNode.authFlag : this.$set(this.inNode, 'authFlag', 'y')
@@ -1114,7 +1125,7 @@ export default {
           }
         })
       }, 50)
-
+      this.foot_job_name = data.row.jobName
       this.switchNode_title = this.optionsTransform.find(val => val.propkey == data.row.transformNode.type).propvalue
       //返回
       this.switchNode = true
@@ -1137,8 +1148,9 @@ export default {
           }
         })
       }, 50)
-      this.Showoutput_title = this.optionsOutput.find(val => val.propkey == data.row.outNode.type).propvalue
-      //返回
+      this.foot_job_name = data.row.jobName
+      this.Showoutput_title = this.optionsOutput.find(val => val.propkey === data.row.outNode.type).propvalue
+      // 返回
       this.Showoutput_Transfer = true
     },
     setValue(monaco, node) {
@@ -1558,7 +1570,7 @@ export default {
 }
 
 //设置form-item中lable的样式
-/deep/ .el-form--label-top .el-form-item__label {
+.el-form--label-top .el-form-item__label {
   float: none;
   display: inline-block;
   text-align: left;
@@ -1566,7 +1578,7 @@ export default {
 }
 
 //设置弹出窗口内容样式
-/deep/ .el-dialog__body {
+.el-dialog__body {
   padding: 10px 20px;
   color: #606266;
   font-size: 14px;
@@ -1574,7 +1586,7 @@ export default {
 }
 
 //新增弹窗样式
-/deep/ .pub_dialog .el-dialog {
+.pub_dialog .el-dialog {
   margin-top: 10vh !important;
   position: relative;
   margin: 0 auto 0px;
@@ -1589,9 +1601,16 @@ export default {
 }
 
 //新增弹窗样式，设置拉拽
-/deep/ .pub_dialog .el-dialog .el-dialog__body {
+.pub_dialog .el-dialog .el-dialog__body {
   max-height: 80% !important;
   overflow-y: auto;
+}
+
+.dg-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  text-align: left;
 }
 
 </style>
