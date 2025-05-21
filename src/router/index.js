@@ -52,12 +52,12 @@ export const constantRoutes = [
   {
     path: '/',
     component: Layout,
-    redirect: '/config-center/datasource',
+    redirect: '/dashboard',
     children: [{
       path: 'dashboard',
       name: '首页',
-      component: (resolve) => require(["@/views/datasource/index"], resolve),
-      //component: () => import('@/views/dashboard/index'),
+      // component: (resolve) => require(["@/views/datasource/index"], resolve),
+      component: (resolve) => import('@/views/dashboard/index'),
       meta: { title: '首页', icon: 'dashboard' }
     }]
   }
