@@ -16,3 +16,20 @@ export function getSystemInfo() {
     method: 'post'
   })
 }
+
+// 计划任务运行统计
+export function getTaskStats() {
+  return request({
+    url: `/services/fwcore/dashboard/task-stats`,
+    method: 'post'
+  })
+}
+// 前5条错误数据
+export function getTaskErrors(param) {
+  return request({
+    url: `/services/fwcore/dashboard/task-errors`,
+    method: 'post',
+    data: param
+  })
+}
+
