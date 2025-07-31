@@ -187,7 +187,7 @@
             </template>
           </el-form-item>
           <!-- 认证方式为BAsic Auth -->
-          <el-form-item label="Broker Servers" prop="servers">
+          <el-form-item label="Broker Server" prop="servers">
             <el-input v-model="subFormData.servers" placeholder="请填写" maxlength="100" size="mini" auto-complete="off" />
           </el-form-item>
           <!-- <el-form-item label="是否SSL" prop="enableSSL" >
@@ -372,6 +372,16 @@ export default {
         'classify': [{
           required: true,
           message: '请选择分类',
+          trigger: 'blur'
+        }],
+        'servers': [{
+          required: true,
+          message: '请填写Broker Server',
+          trigger: 'blur'
+        }],
+        'url': [{
+          required: true,
+          message: '请填写url',
           trigger: 'blur'
         }]
       },
