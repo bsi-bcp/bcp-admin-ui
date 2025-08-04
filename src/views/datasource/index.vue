@@ -378,11 +378,6 @@ export default {
           required: true,
           message: '请填写Broker Server',
           trigger: 'blur'
-        }],
-        'url': [{
-          required: true,
-          message: '请填写url',
-          trigger: 'blur'
         }]
       },
       tableData: [],
