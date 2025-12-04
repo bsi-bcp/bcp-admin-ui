@@ -63,6 +63,20 @@
             </el-form-item>
           </el-form>
         </div>
+
+        <div v-if="subFormData.type === 'feishu'">
+          <el-form ref="subFormData_feishu" :model="subFormData_feishu" :rules="subFormDataRule1" class="subFormData_feishu" label-width="120px" size="mini">
+            <el-form-item label="Webhook地址" prop="webhookUrl">
+              <el-input v-model="subFormData_feishu.webhookUrl" placeholder="Webhook地址" maxlength="200" size="mini" auto-complete="off" />
+            </el-form-item>
+            <el-form-item label="签名密钥" prop="secretkey">
+              <el-input v-model="subFormData_feishu.secretkey" placeholder="密钥" maxlength="200" size="mini" auto-complete="off" show-password />
+            </el-form-item>
+            <el-form-item label="告警内容模板" prop="template">
+              <el-input v-model="subFormData_feishu.template" type="textarea" rows = "6" placeholder="单行输入" maxlength="1000" size="mini" auto-complete="off" />
+            </el-form-item>
+          </el-form>
+        </div>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button v-prevent-repeat-click size="mini" type="primary" @click="subForm('subFormData')">确 定</el-button>
@@ -116,6 +130,11 @@ export default {
       subFormData_tel: {
         phoneNumber: null
       },
+      subFormData_feishu: {
+        webhookUrl: null,
+        secretkey: null,
+        template: null
+      },
       subFormDataRule: {
         'name': [{
           required: true,
@@ -156,6 +175,20 @@ export default {
         'content': [{
           required: true,
           message: '请填写内容'
+        }],
+        'webhookUrl': [{
+          required: true,
+          message: '请填写Webhook地址',
+          trigger: 'blur'
+        }],
+        'secretkey': [{
+          required: true,
+          message: '请填写签名密钥',
+          trigger: 'blur'
+        }],
+        'template': [{
+          required: true,
+          message: '请填写告警内容模板'
         }]
       },
       tableData: [],
@@ -308,6 +341,7 @@ export default {
         Object.keys(this.subFormData).forEach((key) => (this.subFormData[key] = null))
         Object.keys(this.subFormData_email).forEach((key) => (this.subFormData_email[key] = null))
         Object.keys(this.subFormData_tel).forEach((key) => (this.subFormData_tel[key] = null))
+        Object.keys(this.subFormData_feishu).forEach((key) => (this.subFormData_feishu[key] = null))
         // 客户默认当前用户所属租户
         this.subFormData.tenantId = this.cur_user.tenantId + ''
 
