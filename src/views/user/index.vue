@@ -383,7 +383,7 @@ export default {
             type: 'input',
             prop: 'email',
             conditionshow: false,
-            filedShow: true,
+            filedShow: false,
             label: '邮箱',
             placeholder: '邮箱',
             optList: []
@@ -391,8 +391,8 @@ export default {
           {
             type: 'select',
             prop: 'sex',
-            conditionshow: true,
-            filedShow: true,
+            conditionshow: false,
+            filedShow: false,
             slot: true,
             label: '性别',
             placeholder: '性别',
@@ -435,6 +435,15 @@ export default {
             label: '是否有效',
             placeholder: '是否有效',
             optList: [{ label: '启用', value: 1 }, { label: '禁用', value: 0 }]
+          },
+          {
+            type: 'input',
+            prop: 'orgClassName',
+            conditionshow: false,
+            filedShow: true,
+            label: '所属租户',
+            placeholder: '所属租户',
+            optList: []
           },
           {
             type: 'input',
