@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  bcp-admin-ui:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: bcp-admin-ui
+    ports:
+      - "80:80"
+    restart: unless-stopped
+    networks:
+      - bcp-network
+
+networks:
+  bcp-network:
+    external: true

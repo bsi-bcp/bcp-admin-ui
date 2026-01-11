@@ -95,6 +95,79 @@ src/
 └── views/          # 页面视图
 ```
 
+## Docker 部署
+
+### 环境要求
+
+- Docker >= 20.10
+- Docker Compose >= 2.0
+
+### 方式一：使用 Docker 直接部署
+
+```bash
+# 1. 构建前端项目
+npm install
+npm run build:prod
+
+# 2. 构建 Docker 镜像
+docker build -t bcp-admin-ui:latest .
+
+# 3. 运行容器
+docker run -d \
+  --name bcp-admin-ui \
+  -p 80:80 \
+  --restart unless-stopped \
+  bcp-admin-ui:latest
+```
+
+### 方式二：使用 Docker Compose 部署
+
+```bash
+# 1. 构建前端项目
+npm install
+npm run build:prod
+
+# 2. 创建网络（如果不存在）
+docker network create bcp-network
+
+# 3. 启动服务
+docker-compose up -d
+
+# 查看日志
+docker-compose logs -f
+
+# 停止服务
+docker-compose down
+```
+
+### 常用命令
+
+```bash
+# 重新构建并启动
+docker-compose up -d --build
+
+# 查看容器状态
+docker-compose ps
+
+# 进入容器
+docker exec -it bcp-admin-ui sh
+
+# 查看 nginx 配置
+docker exec -it bcp-admin-ui cat /etc/nginx/nginx.conf
+```
+
+### 配置说明
+
+| 文件 | 说明 |
+|------|------|
+| `Dockerfile` | Docker 镜像构建配置，基于 nginx:1.25-alpine |
+| `docker-compose.yml` | Docker Compose 编排配置 |
+| `nginx.conf` | Nginx 配置，包含 Gzip 压缩、API 代理等 |
+
+### API 代理配置
+
+默认配置中，`/bcp-api/` 路径会代理到后端服务 `http://bcp-admin:8819/`。如需修改，请编辑 `nginx.conf` 文件中的 `proxy_pass` 配置。
+
 ## 浏览器支持
 
 支持现代浏览器和 IE10+。
