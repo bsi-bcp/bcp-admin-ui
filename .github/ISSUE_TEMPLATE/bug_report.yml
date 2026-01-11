@@ -1,0 +1,99 @@
+name: Bug 报告
+description: 提交一个 Bug 报告
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        感谢你提交 Bug 报告！请填写以下信息帮助我们定位问题。
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Bug 描述
+      description: 清晰简洁地描述这个 Bug
+      placeholder: 请描述你遇到的问题...
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: 复现步骤
+      description: 详细描述如何复现这个问题
+      placeholder: |
+        1. 进入 '...'
+        2. 点击 '...'
+        3. 滚动到 '...'
+        4. 看到错误
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: 期望行为
+      description: 描述你期望发生什么
+      placeholder: 我期望...
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: 实际行为
+      description: 描述实际发生了什么
+      placeholder: 实际上...
+    validations:
+      required: true
+
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: 截图
+      description: 如果适用，请添加截图帮助解释问题
+      placeholder: 拖拽图片到此处上传
+
+  - type: dropdown
+    id: browser
+    attributes:
+      label: 浏览器
+      description: 你使用的浏览器是什么？
+      options:
+        - Chrome
+        - Firefox
+        - Safari
+        - Edge
+        - IE 11
+        - 其他
+    validations:
+      required: true
+
+  - type: input
+    id: browser-version
+    attributes:
+      label: 浏览器版本
+      description: 浏览器版本号
+      placeholder: "例如: 120.0.6099.109"
+
+  - type: input
+    id: os
+    attributes:
+      label: 操作系统
+      description: 你的操作系统
+      placeholder: "例如: Windows 11, macOS 14.0"
+
+  - type: input
+    id: node-version
+    attributes:
+      label: Node.js 版本
+      description: 如果是开发环境问题，请填写 Node.js 版本
+      placeholder: "例如: 14.21.0"
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: 补充信息
+      description: 任何其他有助于解决问题的信息
+      placeholder: 其他相关信息...

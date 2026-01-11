@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: 提问与讨论
+    url: https://github.com/paul-zhang-sudo/bcp-admin-ui/discussions
+    about: 如果有问题或想法，欢迎在讨论区交流
+  - name: 查看文档
+    url: https://github.com/paul-zhang-sudo/bcp-admin-ui#readme
+    about: 在提交 Issue 前，请先查阅项目文档
