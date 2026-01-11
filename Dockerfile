@@ -1,5 +1,5 @@
 # 第二阶段：生产环境
-FROM nginx:1.25-alpine
+FROM nginx:1.29-alpine
 # 复制自定义配置
 COPY nginx.conf /etc/nginx/nginx.conf
 # 复制构建产物
