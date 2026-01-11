@@ -1,5 +1,13 @@
 # BCP Admin UI
 
+[![License](https://img.shields.io/github/license/paul-zhang-sudo/bcp-admin-ui)](LICENSE)
+[![GitHub stars](https://img.shields.io/github/stars/paul-zhang-sudo/bcp-admin-ui)](https://github.com/paul-zhang-sudo/bcp-admin-ui/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/paul-zhang-sudo/bcp-admin-ui)](https://github.com/paul-zhang-sudo/bcp-admin-ui/network/members)
+[![GitHub issues](https://img.shields.io/github/issues/paul-zhang-sudo/bcp-admin-ui)](https://github.com/paul-zhang-sudo/bcp-admin-ui/issues)
+[![Vue](https://img.shields.io/badge/Vue-2.6.10-brightgreen)](https://vuejs.org/)
+[![Element UI](https://img.shields.io/badge/Element%20UI-2.10.1-blue)](https://element.eleme.io/)
+[![Node](https://img.shields.io/badge/Node-%3E%3D%208.9-green)](https://nodejs.org/)
+
 一个基于 Vue 2.x + Element UI 的企业级后台管理系统，提供数据集成、任务调度、权限管理等功能。
 
 ## 技术栈
