@@ -1,6 +1,10 @@
-# http://editorconfig.org
+# EditorConfig 帮助开发人员在不同编辑器之间保持一致的编码风格
+# https://editorconfig.org
+
+# 顶层配置文件
 root = true
 
+# 所有文件的默认配置
 [*]
 charset = utf-8
 indent_style = space
@@ -9,6 +13,61 @@ end_of_line = lf
 insert_final_newline = true
 trim_trailing_whitespace = true
 
+# JavaScript / Vue / TypeScript
+[*.{js,jsx,ts,tsx,vue}]
+indent_size = 2
+max_line_length = 120
+
+# JSON 文件
+[*.json]
+indent_size = 2
+
+# YAML 文件
+[*.{yml,yaml}]
+indent_size = 2
+
+# Markdown 文件
 [*.md]
-insert_final_newline = false
 trim_trailing_whitespace = false
+insert_final_newline = false
+max_line_length = off
+
+# HTML 文件
+[*.html]
+indent_size = 2
+
+# CSS / SCSS / Less
+[*.{css,scss,sass,less}]
+indent_size = 2
+
+# Shell 脚本
+[*.sh]
+end_of_line = lf
+
+# Windows 批处理文件
+[*.{cmd,bat}]
+end_of_line = crlf
+
+# Makefile 必须使用 Tab
+[Makefile]
+indent_style = tab
+
+# package.json 和 package-lock.json
+[package*.json]
+indent_size = 2
+
+# Docker 文件
+[Dockerfile*]
+indent_size = 2
+
+# Nginx 配置
+[nginx.conf]
+indent_size = 4
+
+# Git 配置
+[.git*]
+indent_size = 2
+
+# SVG 文件
+[*.svg]
+indent_size = 2
