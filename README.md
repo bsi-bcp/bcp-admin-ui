@@ -1,5 +1,7 @@
 # BCP Admin UI
 
+[![CI](https://github.com/paul-zhang-sudo/bcp-admin-ui/actions/workflows/ci.yml/badge.svg)](https://github.com/paul-zhang-sudo/bcp-admin-ui/actions/workflows/ci.yml)
+[![Docker](https://github.com/paul-zhang-sudo/bcp-admin-ui/actions/workflows/docker.yml/badge.svg)](https://github.com/paul-zhang-sudo/bcp-admin-ui/actions/workflows/docker.yml)
 [![License](https://img.shields.io/github/license/paul-zhang-sudo/bcp-admin-ui)](LICENSE)
 [![GitHub stars](https://img.shields.io/github/stars/paul-zhang-sudo/bcp-admin-ui)](https://github.com/paul-zhang-sudo/bcp-admin-ui/stargazers)
 [![GitHub forks](https://img.shields.io/github/forks/paul-zhang-sudo/bcp-admin-ui)](https://github.com/paul-zhang-sudo/bcp-admin-ui/network/members)
@@ -167,6 +169,41 @@ docker exec -it bcp-admin-ui cat /etc/nginx/nginx.conf
 ### API 代理配置
 
 默认配置中，`/bcp-api/` 路径会代理到后端服务 `http://bcp-admin:8819/`。如需修改，请编辑 `nginx.conf` 文件中的 `proxy_pass` 配置。
+
+## CI/CD
+
+本项目使用 GitHub Actions 实现自动化 CI/CD 流程。
+
+### 工作流说明
+
+| 工作流 | 触发条件 | 说明 |
+|--------|----------|------|
+| **CI** | Push/PR 到 master | 代码检查、单元测试、构建验证 |
+| **Docker** | Push 到 master 或创建 tag | 构建并推送 Docker 镜像到 Docker Hub |
+| **Release** | 创建版本 tag (v*) | 自动创建 GitHub Release 并上传构建产物 |
+
+### 配置 Docker Hub 推送
+
+如需启用 Docker 镜像自动推送，请在仓库 Settings > Secrets 中添加：
+
+| Secret 名称 | 说明 |
+|-------------|------|
+| `DOCKERHUB_USERNAME` | Docker Hub 用户名 |
+| `DOCKERHUB_TOKEN` | Docker Hub Access Token |
+
+### 创建版本发布
+
+```bash
+# 创建并推送版本 tag
+git tag v1.0.0
+git push github v1.0.0
+```
+
+推送 tag 后会自动：
+1. 构建生产版本
+2. 创建 GitHub Release
+3. 上传 zip 和 tar.gz 构建包
+4. 构建并推送 Docker 镜像（如已配置）
 
 ## 浏览器支持
 
