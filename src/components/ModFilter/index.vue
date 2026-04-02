@@ -68,10 +68,10 @@
         <slot name="lastBtn" />
       </div>
 
-      <el-table ref="table" v-loading="datas.table.loading"  max-height="600px" class="mt10" :cell-style="{padding:'10px 0px'}" :header-cell-style="{background:'#fafafa',color:'#606266',padding:'12px 0px','text-align':'center'}" :data="datas.resData.rows" fit highlight-current-row @selection-change="handleSelectionChange" @row-click="rowClick" @cell-click="cellClick">
+      <el-table ref="table" v-loading="datas.table.loading"  max-height="600px" class="mt10" :cell-style="{padding:'10px 0px'}" :header-cell-style="{background:'#fafafa',color:'#606266',padding:'12px 0px','text-align':'center'}" :data="datas.resData.rows" fit highlight-current-row @selection-change="handleSelectionChange" @row-click="rowClick" @cell-click="cellClick" @sort-change="sortHandler">
         <el-table-column v-if="datas.table.selection" type="selection" width="55" />
         <el-table-column v-if="datas.table.orderNo" type="index" width="50" label="序号" align="center" />
-        <el-table-column v-for="(rowItem ,rowIdx ) in tableField" :key="rowIdx" :align="rowItem.align==null?'center':rowItem.align" :prop="rowItem.prop" :label="rowItem.label" :type="rowItem.type"  :show-overflow-tooltip="true" :min-width="rowItem.minWidth">
+        <el-table-column v-for="(rowItem ,rowIdx ) in tableField" :key="rowIdx" :align="rowItem.align==null?'center':rowItem.align" :prop="rowItem.prop" :label="rowItem.label" :type="rowItem.type"  :show-overflow-tooltip="true" :min-width="rowItem.minWidth" :sortable="rowItem.sortable ? 'custom' : false">
           <template slot-scope="scope">
             <slot v-if="rowItem.slot==true" :name="rowItem.prop" :value="scope.row" />
             <span v-else-if="!!rowItem.image"><img :src="scope.row[rowItem.prop]"></span>
@@ -207,7 +207,6 @@ export default {
       this.$emit('cellClick', row, column)
     },
     handleSelectionChange(val) {
-      console.log(val)
       this.datas.multipleSelection = val
     },
     changeSearchCondition(value, event) {
@@ -226,10 +225,14 @@ export default {
         }
       })
     },
-    sortHandler(field, event) {
-      this.datas.sort = {
-        prop: field.column.property,
-        order: field.order
+    sortHandler({ column, prop, order }) {
+      // order: 'ascending' | 'descending' | null（取消排序）
+      if (order) {
+        this.datas.params.sortField = prop
+        this.datas.params.sortOrder = order === 'ascending' ? 'asc' : 'desc'
+      } else {
+        this.datas.params.sortField = null
+        this.datas.params.sortOrder = null
       }
       this.$emit('query', this.datas, getReqModel(this.datas))
     },
@@ -239,7 +242,6 @@ export default {
     },
     onSubmit() {
       this.$emit('query', this.datas, getReqModel(this.datas))
-      console.log(this.datas)
     },
     resetForm(formName) {
       this.$refs[formName].model.filterList.forEach((item, index, ary) => {

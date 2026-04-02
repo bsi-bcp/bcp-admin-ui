@@ -580,6 +580,7 @@
 <script>
 import * as sel from '@/api/select'
 import * as api from '@/api/IntegratedConfig'
+import { formatDate } from '@/utils/date'
 import * as menuApi from '@/api/menu'
 import { Loading } from 'element-ui'
 // 引入组件
@@ -782,6 +783,7 @@ export default {
             prop: 'name',
             conditionshow: true,
             filedShow: true,
+            sortable: true,
             label: '名称',
             placeholder: '关键词',
             optList: [],
@@ -810,6 +812,7 @@ export default {
             prop: 'lastUpdateTime',
             conditionshow: false,
             filedShow: true,
+            sortable: true,
             label: '修改时间',
             placeholder: '修改时间',
             optList: []
@@ -819,6 +822,7 @@ export default {
             prop: 'status',
             conditionshow: false,
             filedShow: true,
+            sortable: true,
             label: '状态',
             placeholder: '状态',
             optList: []
@@ -902,8 +906,8 @@ export default {
         pattern = 'yyyy-MM-dd hh:mm:ss'
         this.log.pageSize = 500
       }
-      const startDate = curDate.format(pattern)
-      const endDate = curDate.format('yyyy-MM-dd 23:59:59')
+      const startDate = formatDate(curDate, pattern)
+      const endDate = formatDate(curDate, 'yyyy-MM-dd 23:59:59')
       this.log.runTime.push(startDate)
       this.log.runTime.push(endDate)
     },
@@ -994,7 +998,6 @@ export default {
           this.logLoading.text = '任务执行完毕'
           this.logLoading.close()
         }
-        // console.log(JSON.stringify(this.reRun))
       })
     },
     // 下发（存在前端这边已向后台发送id，但是后台报500的错误）
@@ -1019,8 +1022,6 @@ export default {
     // 任务列表的上移
     moveUp(index, row) {
       var that = this
-      console.log('上移', index, row)
-      console.log(that.jobList[index])
       if (index > 0) {
         const upDate = that.jobList[index - 1]
         that.jobList.splice(index - 1, 1)
@@ -1032,11 +1033,9 @@ export default {
     // 任务列表的下移
     moveDown(index, row) {
       var that = this
-      console.log('下移', index, row)
       if ((index + 1) === that.jobList.length) {
         alert('已经是最后一条，不可下移')
       } else {
-        console.log(index)
         const downDate = that.jobList[index + 1]
         that.jobList.splice(index + 1, 1)
         that.jobList.splice(index, 0, downDate)
@@ -1489,7 +1488,6 @@ export default {
               this.subFormData.id = res.model
               this.getData(this.datas)
               const rr = api.getIdRow(this.subFormData.id).then(rr => {
-                console.log(rr)
                 const cdata = JSON.parse(rr.model)
                 // 把访问路径加到集合中,用来判断是否存在重复的访问路径
                 this.jobList = cdata.jobList
@@ -1501,11 +1499,11 @@ export default {
                   }
                 })
               }).catch(e1 => {
-                console.log(e1)
+                console.error(e1)
               })
             })
             .catch(e => {
-              console.log(e)
+              console.error(e)
             })
         } else {
           return false

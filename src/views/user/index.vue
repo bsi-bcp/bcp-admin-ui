@@ -328,6 +328,7 @@ export default {
             prop: 'name',
             conditionshow: true,
             filedShow: true,
+            sortable: true,
             label: '名称',
             placeholder: '名称',
             optList: []
@@ -337,6 +338,7 @@ export default {
             prop: 'uname',
             conditionshow: true,
             filedShow: true,
+            sortable: true,
             label: '登录名',
             placeholder: '登录名',
             optList: []
@@ -365,6 +367,7 @@ export default {
             prop: 'status',
             conditionshow: true,
             filedShow: true,
+            sortable: true,
             slot: true,
             label: '状态',
             placeholder: '状态',
@@ -540,7 +543,7 @@ export default {
         })
       })
         .catch(e => {
-          console.log(e)
+          console.error(e)
           return false
         })
     },
@@ -651,6 +654,10 @@ export default {
           } else {
             api.submitFormEdit(this.subFormData).then(res => {
               this.$message.success('保存成功')
+              // 如果修改的是当前登录用户，刷新 Vuex 中缓存的用户信息
+              if (this.subFormData.id === this.$store.state.user.cur_user.id) {
+                this.$store.dispatch('user/getInfo')
+              }
               this.getData(this.datas)
               this.dialogFormVisible = false
             }).catch(() => {
@@ -661,7 +668,6 @@ export default {
             })
           }
         } else {
-          console.log('error submit!!')
           return false
         }
       })

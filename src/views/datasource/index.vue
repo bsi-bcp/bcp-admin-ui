@@ -419,11 +419,9 @@ export default {
           {
             type: 'input',
             prop: 'name',
-            // 控制设置内部 复选框勾选的默认值
             conditionshow: true,
-            // 控制该字段是否出现在表格里
             filedShow: true,
-            // 控制搜索框的label显示与否
+            sortable: true,
             isHiddenSearchLabel: true,
             label: '名称',
             placeholder: '关键词',
@@ -437,6 +435,7 @@ export default {
             prop: 'type',
             conditionshow: false,
             filedShow: true,
+            sortable: true,
             label: '类型',
             placeholder: '类型',
             optList: []
@@ -496,7 +495,6 @@ export default {
   },
   methods: {
     input(data) {
-      console.log('data===>', data)
     },
     inputByMenu() {
       this.subFormData.cron = null

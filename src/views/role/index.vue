@@ -174,6 +174,7 @@ export default {
             prop: 'name',
             conditionshow: true,
             filedShow: true,
+            sortable: true,
             label: '名称',
             placeholder: '名称',
             optList: []
@@ -183,6 +184,7 @@ export default {
             prop: 'code',
             conditionshow: true,
             filedShow: true,
+            sortable: true,
             label: '编码',
             placeholder: '编码',
             optList: []
@@ -281,14 +283,12 @@ export default {
           }).catch(() => {
           })
         } else {
-          console.log('error submit!!')
           return false
         }
       })
     },
     // 新增或编辑页面
     edit(row) {
-      console.log('新增')
       this.dialogFormVisible = true
       if (!row) {
         this.$set(this, 'subFormData', {
