@@ -66,7 +66,6 @@ export default {
       })
     },
     handleSelection(val){
-    console.log('this.FromData',val)
        this.$emit('templateData', val,2)
     },
     handleSelectionChange(val) {

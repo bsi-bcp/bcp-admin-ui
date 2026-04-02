@@ -5,6 +5,7 @@ import { resetRouter } from '@/router'
 const state = {
   token: getToken(),
   name: '',
+  orgName: '',
   avatar: '',
   roles: [],
   cur_user: {}
@@ -20,7 +21,7 @@ const mutations = {
   SET_NAME: (state, name) => {
     state.name = name
   },
-  SET_ORGNAME: (state,orgName) => {
+  SET_ORGNAME: (state, orgName) => {
     state.orgName = orgName
   },
   SET_AVATAR: (state, avatar) => {
@@ -62,7 +63,7 @@ const actions = {
         if (!model) {
           reject('验证失败, 请重新登录.')
         }
-        const { userType, name,orgName } = model
+        const { userType, name, orgName } = model
 
         // roles must be a non-empty array
         if (!userType || userType === '') {
@@ -73,7 +74,7 @@ const actions = {
         commit('SET_NAME', name)
         commit('SET_ORGNAME', orgName)
         commit('SET_CURUSER', model)
-        
+
         //  commit('SET_AVATAR', avatar)
         resolve(model)
       }).catch(error => {

@@ -342,7 +342,6 @@ export default {
             this.getData()
           }).catch(e => {})
         } else {
-          console.log('error submit!!')
           return false
         }
       })
@@ -358,7 +357,6 @@ export default {
               this.getData()
             }).catch(e => {})
         } else {
-          console.log('error submit!!')
           return false
         }
       })

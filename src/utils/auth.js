@@ -7,16 +7,10 @@ export function getToken() {
 }
 
 export function setToken(token) {
-  //return Cookies.set(TokenKey, token)
-  //解决https跨域问题
-  console.log(process.env.NODE_ENV)
-  let result
-  if( process.env.NODE_ENV==='production' ){
-    result = Cookies.set(TokenKey, token)
-  }else{
-    result = Cookies.set(TokenKey, token, { secure: true,sameSite: 'None' })
+  if (process.env.NODE_ENV === 'production') {
+    return Cookies.set(TokenKey, token, { secure: true, sameSite: 'Strict' })
   }
-  return result
+  return Cookies.set(TokenKey, token)
 }
 
 export function removeToken() {

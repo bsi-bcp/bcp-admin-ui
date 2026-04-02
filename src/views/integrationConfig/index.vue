@@ -341,7 +341,7 @@
           <el-input v-model="inNode.path" placeholder="请输入" class="baseinfo" :title="inNode.path" />
         </el-form-item>
         <el-form-item required label="脚本">
-          <MonAco ref="MonAco" />
+          <MonAco ref="MonAco" :fields="currentFields" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dg-footer">
@@ -358,7 +358,7 @@
     >
       <el-form ref="transformNodeForm" label-width="100px" size="mini" inline-message label-position="top">
         <el-form-item label="脚本" required>
-          <MonAco ref="MonAcoTransformNode" />
+          <MonAco ref="MonAcoTransformNode" :fields="currentFields" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dg-footer">
@@ -387,7 +387,7 @@
           <el-input v-model="outNode.path" placeholder="请输入" class="baseinfo" />
         </el-form-item>
         <el-form-item label="脚本" required>
-          <MonAco ref="outMonAco" />
+          <MonAco ref="outMonAco" :fields="currentFields" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dg-footer">
@@ -586,11 +586,7 @@ import { Loading } from 'element-ui'
 // 引入组件
 import multipleTable from './moudel/multipleTable'
 import MonAco from './moudel/monaco'
-import { deepEqual } from 'assert'
-import { connect } from 'tls'
 import { mapGetters } from 'vuex'
-import path from 'path'
-import { group } from 'console'
 
 export default {
   // 组件注册
@@ -611,6 +607,7 @@ export default {
       bcpTenantName: [],
       pathMap: new Map(),
       exampleData: [], // 示例数据
+      currentFields: [], // 当前节点的数据源字段列表（Monaco 补全用）
       batchTableData: [], // 批量设置的数据
       value: '',
       ShowInput_title: '',
@@ -1125,6 +1122,8 @@ export default {
       if (this.inNode.scriptContent === undefined) {
         this.inNode.scriptContent = this.exampleData['in']
       }
+      // 获取数据源字段列表（Monaco 自动补全）
+      this.loadDatasourceFields(this.inNode.dataSource)
       setTimeout(() => {
         this.showEditor = 1
         this.$nextTick(() => {
@@ -1176,6 +1175,8 @@ export default {
       if (this.outNode.scriptContent === undefined) {
         this.outNode.scriptContent = this.exampleData['out']
       }
+      // 获取数据源字段列表（Monaco 自动补全）
+      this.loadDatasourceFields(this.outNode.dataSource)
       setTimeout(() => {
         this.showEditor = 3
         this.$nextTick(() => {
@@ -1192,6 +1193,18 @@ export default {
     setValue(monaco, node) {
       monaco.$data.defaultOpts.value = node.scriptContent
       monaco.setValue(node.scriptContent)
+    },
+    // 获取数据源字段列表，传递给 Monaco 编辑器自动补全
+    loadDatasourceFields(datasourceId) {
+      if (datasourceId === null || datasourceId === undefined || datasourceId === '') {
+        this.currentFields = []
+        return
+      }
+      api.getDatasourceFields(datasourceId).then(res => {
+        this.currentFields = res.model || []
+      }).catch(() => {
+        this.currentFields = []
+      })
     },
     // 参数的删除
     delTableData(index) {

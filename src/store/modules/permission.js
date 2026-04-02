@@ -1,5 +1,15 @@
 import { constantRoutes } from '@/router'
 import Layout from '@/layout'
+
+// 安全加载视图组件 -- 组件缺失时显示 404 而非白屏
+function loadView(url) {
+  return (resolve) => {
+    require([`@/views/${url}`], resolve, () => {
+      console.error(`[permission] 视图组件不存在: @/views/${url}`)
+      require(['@/views/404'], resolve)
+    })
+  }
+}
 /**
  * Use meta.role to determine if the current user has permission
  * @param roles
@@ -50,21 +60,19 @@ const actions = {
   generateRoutes({ commit }, menus) {
     return new Promise(resolve => {
       const accessedRoutes = []
-      let route = {}
+      if (!menus || !menus.length) {
+        commit('SET_ROUTES', accessedRoutes)
+        resolve(accessedRoutes)
+        return
+      }
       menus.forEach(({ code, name, url, children }) => {
+        let route
         if (children) {
-          const childMenu = []
-          /*  webpack 编译es6 动态引入 import() 时不能传入变量，例如dir =’path/to/my/file.js’ ； import(dir) , 而要传入字符串 import(‘path/to/my/file.js’)，
-          这是因为webpack的现在的实现方式不能实现完全动态。但一定要用变量的时候，可以通过字符串模板来提供部分信息给webpack；例如import(./path/${myFile}), 这样编译时
-          会编译所有./path下的模块，但运行时确定myFile的值才会加载，从而实现懒加载  */
-          children.forEach(({ code, name, url }) => {
-            childMenu.push({
-              path: code,
-              component: (resolve) => require([`@/views/${url}`], resolve),
-              //component: () => import(`@/views/${url}`),
-              meta: { title: name }
-            })
-          })
+          const childMenu = children.map(({ code, name, url }) => ({
+            path: code,
+            component: loadView(url),
+            meta: { title: name }
+          }))
           route = {
             path: `/${code}`,
             component: Layout,
@@ -76,14 +84,11 @@ const actions = {
             path: `/${code}`,
             component: Layout,
             meta: { title: name },
-            children: [
-              {
-                path: '',
-                component: (resolve) => require([`@/views/${url}`], resolve),
-                //component: () => import(`@/views/${url}`),
-                meta: { title: name }
-              }
-            ]
+            children: [{
+              path: '',
+              component: loadView(url),
+              meta: { title: name }
+            }]
           }
         }
         accessedRoutes.push(route)

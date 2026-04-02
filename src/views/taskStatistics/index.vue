@@ -57,6 +57,7 @@
 <script>
 import * as api from '@/api/taskStatistics'
 import { mapGetters } from 'vuex'
+import { formatDate } from '@/utils/date'
 
 export default {
   data() {
@@ -94,11 +95,8 @@ export default {
 
     // 可选：监听排序变化
     handleSortChange({ column, prop, order }) {
-      debugger
-      console.log('当前排序:', { column, prop, order })
     },
     input(data) {
-      console.log('data===>', data)
     },
     inputByMenu() {
       this.subFormData.cron = null
@@ -110,8 +108,8 @@ export default {
       this.searchForm.runTime = []
       const curDate = new Date()
       const pattern = 'yyyy-MM-dd 00:00:00'
-      const startDate = curDate.format(pattern)
-      const endDate = curDate.format('yyyy-MM-dd 23:59:59')
+      const startDate = formatDate(curDate, pattern)
+      const endDate = formatDate(curDate, 'yyyy-MM-dd 23:59:59')
       this.searchForm.runTime.push(startDate)
       this.searchForm.runTime.push(endDate)
     },

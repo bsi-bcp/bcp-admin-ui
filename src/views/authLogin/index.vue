@@ -28,19 +28,17 @@ export default {
         "code":this.$route.query.code
       }
       api.ssoLogin(params).then(res => {
-        console.log(res)
-        if( res.code===500 ){
+        if (res.code === 500) {
           this.msg1 = '身份认证失败'
           this.msg2 = ''
-        }else{
+        } else {
           this.$store.dispatch('user/token', res.msg).then(rs => {
-            console.log('cookie保存完毕,准备进入首页,rs:'+rs)
             this.$router.push({ path: this.redirect || '/' })
             this.loading = false
           })
         }
       }).catch(e => {
-        console.log('单点登录失败,错误信息:'+e)
+        console.error('单点登录失败,错误信息:' + e)
       })
     },
   }

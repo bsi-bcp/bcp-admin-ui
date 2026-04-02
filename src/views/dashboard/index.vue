@@ -102,6 +102,7 @@ import * as echarts from 'echarts/core'
 import { BarChart } from 'echarts/charts'
 import { GaugeChart } from 'echarts/charts'
 import * as api from '@/api/dashboard'
+import { formatDate } from '@/utils/date'
 import * as statsApi from '@/api/taskStatistics'
 
 // 引入需要的组件
@@ -353,6 +354,12 @@ export default {
     this.initCharts()
     this.initMonthOrderCharts()
   },
+  beforeDestroy() {
+    if (this.cpuChart) this.cpuChart.dispose()
+    if (this.memoryChart) this.memoryChart.dispose()
+    if (this.diskChart) this.diskChart.dispose()
+    if (this.flowChart) this.flowChart.dispose()
+  },
   methods: {
     getFlowIno() {
       api.getFlowInfo().then((res) => {
@@ -373,8 +380,8 @@ export default {
     getMonthDays() {
       const curDate = new Date()
       const pattern = 'yyyy-MM-01 00:00:00'
-      const startDate = curDate.format(pattern)
-      const endDate = curDate.format('yyyy-MM-dd 23:59:59')
+      const startDate = formatDate(curDate, pattern)
+      const endDate = formatDate(curDate, 'yyyy-MM-dd 23:59:59')
       return { 'startDate': startDate, 'endDate': endDate }
     },
     getTaskErrors() {
@@ -437,8 +444,8 @@ export default {
         const filteredAndSorted = res.filter(item => item.execType === '自动').sort((a, b) => b.validSize_sum - a.validSize_sum)
         const labels = filteredAndSorted.map(item => item.taskName)
         const values = filteredAndSorted.map(item => item.validSize_sum)
-        const flowChart = echarts.init(document.getElementById('flow-ranking-chart'))
-        flowChart.setOption({
+        this.flowChart = echarts.init(document.getElementById('flow-ranking-chart'))
+        this.flowChart.setOption({
           tooltip: {
             trigger: 'axis',
             axisPointer: {

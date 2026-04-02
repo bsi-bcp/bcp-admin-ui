@@ -1,11 +1,11 @@
 'use strict'
 const path = require('path')
 const defaultSettings = require('./src/settings.js')
+const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin')
 
 function resolve(dir) {
   return path.join(__dirname, dir)
 }
-const Timestamp = new Date().getTime()
 const name = defaultSettings.title || 'BCP Cloud' // page title
 
 // If your port is set to 80,
@@ -37,17 +37,14 @@ module.exports = {
       errors: true
     },
     proxy: {
-      // change xxx-api/login => mock/login
-      // detail: https://cli.vuejs.org/config/#devserver-proxy
       [process.env.VUE_APP_BASE_API]: {
-        target: `http://127.0.0.1:${port}/mock`,
+        target: 'http://localhost:8819',
         changeOrigin: true,
         pathRewrite: {
           ['^' + process.env.VUE_APP_BASE_API]: ''
         }
       }
-    },
-    after: require('./mock/mock-server.js')
+    }
   },
   configureWebpack: {
     // provide the app's title in webpack's name field, so that
@@ -58,10 +55,20 @@ module.exports = {
         '@': resolve('src')
       }
     },
-    output: { // 输出重构  打包编译后的 文件名称  【模块名称.版本号.时间戳】
-      filename: `static/js/[name].${Timestamp}.js`,
-      chunkFilename: `static/js/[name].${Timestamp}.js`
-    }
+    output: {
+      filename: 'static/js/[name].[contenthash:8].js',
+      chunkFilename: 'static/js/[name].[contenthash:8].js'
+    },
+    plugins: [
+      new MonacoWebpackPlugin({
+        languages: ['javascript', 'typescript'],
+        features: [
+          'bracketMatching', 'clipboard', 'coreCommands', 'comment',
+          'find', 'folding', 'hover', 'suggest', 'wordHighlighter',
+          'indentation', 'parameterHints', 'smartSelect'
+        ]
+      })
+    ]
   },
   chainWebpack(config) {
     config.plugins.delete('preload') // TODO: need test

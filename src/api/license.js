@@ -1,58 +1,19 @@
+import createCrudApi from './_crud'
 import request from '@/utils/request'
-import qs from 'qs'
 
-const URL = {
-  role: '/services/fwcore/kitLicense'
-}
-export async function getId(id) {
-  return request({
-    url: URL.role + '/' + id,
-    method: 'get'
-  })
-}
+const crud = createCrudApi('/services/fwcore/kitLicense', { menuArr: false })
 
-// 1、授权码列表
-export function getLicenseList(params) {
-  return request({
-    url: URL.role,
-    method: 'get',
-    params
-  })
-}
+export const getId = crud.getById
+export const getLicenseList = crud.getPage
+export const submitForm = crud.submitForm
+export const batchDelete = crud.batchDelete
+export const singleDelete = crud.singleDelete
 
-// 1、授权码列表
+// 心跳检查
 export function heatbeat(params) {
   return request({
-    url: URL.role + '/heatbeat',
+    url: '/services/fwcore/kitLicense/heatbeat',
     method: 'POST',
     data: params
-  })
-}
-
-// 2、新增/编辑
-export function submitForm(params) {
-  return request({
-    url: params.id ? URL.role + '/' + params.id + '' : URL.role,
-    method: params.id ? 'PUT' : 'POST',
-    data: params
-  })
-}
-
-// 3、批量删除
-export function batchDelete(params) {
-  const queryParams = qs.stringify(params, { indices: false })
-  return request({
-    url: URL.role + '?' + queryParams,
-    method: 'DELETE'
-    // params
-  })
-}
-
-// 4.单个删除
-export function singleDelete(id) {
-  return request({
-    url: URL.role + '/' + id,
-    method: 'DELETE'
-    // params
   })
 }

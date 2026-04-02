@@ -20,25 +20,17 @@ import MODFilter from '@/components/ModFilter/index.vue'
 import EXPORTExcel from '@/components/ExportExcel/index.vue'
 import SXFFreelist from '@/components/Freelist/index.vue'
 import { preventRepeatClick } from "@/utils/directive.js"
-import * as dateUtils from "@/utils/date.js"
 
 Vue.component('sxf-proplist', SXFProplist)
 Vue.component('mod-filter', MODFilter)
 Vue.component('sxf-export-excel', EXPORTExcel)
 Vue.component('sxf-freelist', SXFFreelist)
 
-/**
- * If you don't want to use mock-server
- * you want to use MockJs for mock api
- * you can execute: mockXHR()
- *
- * Currently MockJs will be used in the production environment,
- * please remove it before going online! ! !
- */
-import { mockXHR } from '../mock'
-if (process.env.NODE_ENV === 'production') {
-  mockXHR()
-}
+// MockJs: disabled for local backend development
+// if (process.env.NODE_ENV === 'development') {
+//   const { mockXHR } = require('../mock')
+//   mockXHR()
+// }
 
 // set ElementUI lang to EN
 Vue.use(ElementUI, { locale })

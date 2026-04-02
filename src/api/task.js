@@ -1,29 +1,13 @@
+import createCrudApi from './_crud'
 import request from '@/utils/request'
 import * as common from '@/api/common.js'
 
-const URL = {
-  frontcomputer: '/services/fwcore/task'
-}
+const crud = createCrudApi('/services/fwcore/task', { menuArr: false })
 
-// 1、计划任务列表
-export function getPage(params) {
-  return request({
-    url: URL.frontcomputer,
-    method: 'get',
-    params
-  })
-}
+export const getPage = crud.getPage
+export const submitForm = crud.submitForm
 
-// 2、新增/保存计划任务
-export function submitForm(params) {
-  return request({
-    url: params.id ? URL.frontcomputer + '/' + params.id + '' : URL.frontcomputer,
-    method: params.id ? 'put' : 'post',
-    data: params
-  })
-}
-
-// 2、分配租户计划任务
+// 分配租户计划任务
 export function submitAllocationForm(params) {
   const items = params.items
   const array = []
@@ -41,17 +25,16 @@ export function submitAllocationForm(params) {
   })
 }
 
-// 3、批量删除
+// 批量删除 — 使用 splitArr 模式（后端依赖 items=1,2,3 格式）
 export function batchDelete(params) {
   var ids = common.splitArr(params.items, ',')
   return request({
-    url: URL.frontcomputer + '?items=' + ids,
+    url: '/services/fwcore/task?items=' + ids,
     method: 'DELETE'
-    // params
   })
 }
 
-// 5、查询字典
+// 查询字典
 export function getSourceTypeOptions(code) {
   return request({
     url: '/services/fwcore/props/getPropListByPropCode?code=' + code,
@@ -59,7 +42,7 @@ export function getSourceTypeOptions(code) {
   })
 }
 
-// 6、查询租户列表
+// 查询租户列表
 export function getTenants() {
   return request({
     url: '/services/fwcore/orgClasses',
@@ -67,7 +50,7 @@ export function getTenants() {
   })
 }
 
-// 6、查询所选租户下所有的前置机
+// 查询所选租户下所有的前置机
 export function getComputers(tenantId) {
   return request({
     url: '/services/fwcore/getFrontComputerByTenantId/' + tenantId,
@@ -75,11 +58,10 @@ export function getComputers(tenantId) {
   })
 }
 
-// 6、查询类型
+// 查询类型
 export function getTypes() {
   return request({
     url: '/services/fwcore/taskTypes',
     method: 'get'
   })
 }
-

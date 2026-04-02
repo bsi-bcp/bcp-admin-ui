@@ -8,7 +8,7 @@ import getPageTitle from '@/utils/get-page-title'
 
 NProgress.configure({ showSpinner: false }) // NProgress Configuration
 
-const whiteList = ['/login','/404','/authLogin'] // no redirect whitelist
+const whiteList = ['/login', '/404', '/authLogin'] // no redirect whitelist
 
 router.beforeEach(async(to, from, next) => {
   // start progress bar
@@ -19,9 +19,7 @@ router.beforeEach(async(to, from, next) => {
 
   // determine whether the user has logged in
   const hasToken = getToken()
-  console.log('token:'+hasToken)
-  if (hasToken && whiteList.indexOf(to.path)<0) {
-    console.log('hasToken')
+  if (hasToken && whiteList.indexOf(to.path) < 0) {
     if (to.path === '/login') {
       // if is logged in, redirect to the home page
       next()
@@ -55,7 +53,7 @@ router.beforeEach(async(to, from, next) => {
     }
   } else {
     /* has no token /bcp-api是后端的链接，前端不鉴权 */
-    if (whiteList.indexOf(to.path) !== -1 || to.path.indexOf("/bcp-api")>-1 ) {
+    if (whiteList.indexOf(to.path) !== -1 || to.path.startsWith('/bcp-api/')) {
       // in the free login whitelist, go directly
       next()
     } else {

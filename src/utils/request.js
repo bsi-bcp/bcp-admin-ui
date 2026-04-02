@@ -3,50 +3,43 @@ import { Message } from 'element-ui'
 import store from '@/store'
 import router from '@/router'
 
-// import { getToken } from '@/utils/auth'
-// create an axios instance
 const service = axios.create({
-  baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
-  // withCredentials: true, // send cookies when cross-domain requests
-  timeout: 15000, // request timeout
+  baseURL: process.env.VUE_APP_BASE_API,
+  timeout: 15000,
   withCredentials: true
 })
 
-// request interceptor
+// 请求拦截器：注入 b-token
 service.interceptors.request.use(
   config => {
-    // do something before request is sent
     if (store.getters.token) {
-      // let each request carry token
-      // ['X-Token'] is a custom headers key
-      // please modify it according to the actual situation
       config.headers['b-token'] = encodeURIComponent(store.getters.token)
     }
     return config
   },
   error => {
-    // do something with request error
-    console.log(error) // for debug
     return Promise.reject(error)
   }
 )
 
-// response interceptor
+// 响应拦截器：统一处理业务错误码
 service.interceptors.response.use(
-  /**
-   * If you want to get http information such as headers or status
-   * Please return  response => response
-  */
-
-  /**
-   * Determine the request status by custom code
-   * Here is just an example
-   * You can also judge the status by HTTP Status Code
-   */
-  response => {
+  async response => {
     const res = response.data
     if (res.code === 403) {
-      this.$router.push({ path: '/login' })
+      await store.dispatch('user/resetToken')
+      router.push('/login')
+      return Promise.reject(new Error('unauthorized'))
+    }
+    if (res.code === 552) {
+      Message({
+        message: '密码已过期，请修改密码后重新登录',
+        type: 'warning',
+        duration: 5 * 1000
+      })
+      await store.dispatch('user/resetToken')
+      router.push('/login')
+      return Promise.reject(new Error('password expired'))
     }
     if (res.code === 550) {
       Message({
@@ -54,58 +47,26 @@ service.interceptors.response.use(
         type: 'error',
         duration: 5 * 1000
       })
-
-      // 50008:非法的token; 50012:其他客户端登录了;  50014:Token 过期了;
-      return Promise.reject('error')
-    } else {
-      return response.data
+      return Promise.reject(new Error(res.message || res.msg || 'error'))
     }
-    /*
-    // if the custom code is not 20000, it is judged as an error.
-    if (res.code !== 20000) {
-      Message({
-        message: res.message || 'Error',
-        type: 'error',
-        duration: 5 * 1000
-      })
-
-      // 50008: Illegal token; 50012: Other clients logged in; 50014: Token expired;
-      if (res.code === 50008 || res.code === 50012 || res.code === 50014) {
-        // to re-login
-        MessageBox.confirm('You have been logged out, you can cancel to stay on this page, or userlog in again', 'Confirm logout', {
-          confirmButtonText: 'Re-Login',
-          cancelButtonText: 'Cancel',
-          type: 'warning'
-        }).then(() => {
-          store.dispatch('user/resetToken').then(() => {
-            location.reload()
-          })
-        })
-      }
-      return Promise.reject(new Error(res.message || 'Error'))
-    } else {
-      return res
-    }
-    */
+    return response.data
   },
   error => {
     if (error.message === 'Network Error') {
       store.dispatch('user/resetToken')
       router.push('/login')
-      return
+      return Promise.reject(error)
     }
-    console.log('response error: ' + error)
     if (error.response && error.response.status === 403) {
       store.dispatch('user/resetToken')
       router.push('/login')
-      return
-    } else {
-      Message({
-        message: error.message,
-        type: 'error',
-        duration: 3 * 1000
-      })
+      return Promise.reject(error)
     }
+    Message({
+      message: error.message,
+      type: 'error',
+      duration: 3 * 1000
+    })
     return Promise.reject(error)
   }
 )

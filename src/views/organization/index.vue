@@ -174,7 +174,7 @@ export default {
         // this.treeData = this.tranTree("id", "parentId", res.model, 0);
       })
         .catch(e => {
-          console.log(e)
+          console.error(e)
           return false
         })
     },

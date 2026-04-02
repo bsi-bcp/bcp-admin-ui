@@ -404,7 +404,6 @@ export default {
     subForm(formData) {
       this.$refs[formData].validate((valid) => {
         if (valid) {
-          console.log(this[formData])
           api.submitForm(this[formData]).then(res => {
             this.$message.success('保存成功')
             this.getData(this.datas)

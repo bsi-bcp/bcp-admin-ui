@@ -289,7 +289,7 @@ export default {
             this.loading = false
           })
         } else {
-          console.log('登录失败!!')
+          console.error('登录失败')
           return false
         }
       })

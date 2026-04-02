@@ -295,7 +295,6 @@ export default {
   },
   methods: {
     input(data) {
-      console.log('data===>', data)
     },
     inputByMenu() {
       this.subFormData.cron = null

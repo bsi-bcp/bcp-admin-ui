@@ -4,104 +4,183 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-BCP Admin UI is an enterprise admin dashboard built with Vue 2.x + Element UI. It provides data integration, task scheduling, and permission management for the BCP (Business Cloud Platform) system.
+BCP Admin UI — BCP 1.0（集成IDE）的企业管理后台前端。
 
-## Common Commands
+**技术栈**: Vue 2.6.10 | Element UI 2.10.1 | ECharts 5.6.0 | Monaco Editor 0.27.0 | Axios 0.21.4 | Vuex 3.1.0 | Vue Router 3.0.6
+
+## Commands
 
 ```bash
 # Development
-npm run dev              # Start dev server on port 9528
+npm run dev                # Dev server on port 9528
 
 # Build
-npm run build:prod       # Production build
-npm run build:uat        # UAT environment build
-npm run build:stage      # Staging build
+npm run build:prod         # Production build (nginx proxy)
+npm run build:stage        # Staging
+npm run build:baiwei       # Baiwei production (nginx proxy, Makefile 使用)
 
 # Code Quality
-npm run lint             # ESLint check and auto-fix
+npm run lint               # ESLint check and auto-fix
+npm run svgo               # Optimize SVG icons
 
 # Testing
-npm run test:unit        # Run unit tests
-npm run test:ci          # Lint + unit tests (CI pipeline)
+npm run test:unit          # Jest unit tests
+npm run test:ci            # Lint + unit tests (CI pipeline)
+
+# Run a single test file
+npx jest tests/unit/utils/validate.spec.js
 ```
+
+## Code Style (ESLint enforced)
+
+- 2 空格缩进，单引号，无分号，无尾逗号
+- `space-before-function-paren`: 禁止（`function() {}` 不是 `function () {}`）
+- `eqeqeq`: 必须用 `===`（null 除外）
+- `prefer-const`: 不修改的变量必须用 `const`
+- `no-console`: warn 级别（允许 `console.warn`/`console.error`，`console.log` 会警告）
+- `no-debugger`: 仅开发环境允许
+- Vue: `name-property-casing` 必须 PascalCase，允许 `v-html`
+
+## Git Conventions
+
+Husky 强制执行：
+- **pre-commit**: lint-staged 对暂存的 `.js/.vue` 文件运行 ESLint
+- **commit-msg**: 必须遵循常规提交格式
+
+```
+<type>(<scope>): <subject>
+# 示例: feat(user): 添加用户登录功能
+# type: feat|fix|docs|style|refactor|perf|test|chore|revert
+```
+
+分支命名: `feature/xxx`, `fix/xxx`, `docs/xxx`, `refactor/xxx`, `style/xxx`, `test/xxx`
 
 ## Architecture
 
 ### Authentication & Permission Flow
 
-1. **Login**: User credentials → `/services/fwcore/login` → Token stored in cookies
-2. **Route Guard** (`src/permission.js`): Intercepts navigation, validates token
-3. **Dynamic Routes**: After login, `user/getInfo` fetches user menus → `permission/generateRoutes` creates routes dynamically from backend menu config
-4. **Token Header**: All API requests include `b-token` header via axios interceptor
+1. **Login**: 用户名 + MD5(密码) → `POST /services/fwcore/login` → Token 存入 cookie (`VSESSIONID`)
+2. **License 检查**: 登录时验证 license 有效期，临近过期弹出倒计时警告
+3. **Route Guard** (`src/permission.js`): 拦截导航、验证 token，白名单: `/login`, `/404`, `/authLogin`
+4. **动态路由**: `user/getInfo` 获取用户菜单 → `permission/generateRoutes` 从后端菜单配置动态创建路由。路由使用 `require` 异步加载: `component: (resolve) => require(['@/views/xxx'], resolve)`
+5. **错误码**: 403→重定向登录, 550→显示错误, 552→强制修改密码
 
 ### State Management (Vuex)
 
 ```
 src/store/
 ├── modules/
-│   ├── user.js        # User info, token, login/logout actions
-│   ├── permission.js  # Dynamic route generation from backend menus
-│   ├── app.js         # Sidebar state, device type
-│   └── settings.js    # UI settings (fixedHeader, etc.)
-└── getters.js         # Computed state accessors
+│   ├── user.js        # Token(VSESSIONID cookie), login/logout, 用户信息
+│   ├── permission.js  # 从后端菜单动态生成路由
+│   ├── app.js         # Sidebar 状态, 设备类型 (desktop/mobile)
+│   └── settings.js    # UI 设置 (fixedHeader, sidebarLogo)
+└── getters.js         # sidebar, device, token, avatar, name, orgName, roles, cur_user, permission_routes
 ```
 
 ### API Pattern
 
-APIs use a centralized request wrapper (`src/utils/request.js`) with:
-- Base URL from `VUE_APP_BASE_API` env variable
-- Auto token injection via interceptor
-- 403/550 error handling with auto-redirect to login
+集中请求封装 (`src/utils/request.js`):
+- Base URL: `VUE_APP_BASE_API` 环境变量
+- `withCredentials: true`, 超时 15s
+- 请求拦截器自动注入 `b-token` header
+- 响应拦截器处理 403/550/552 错误码
 
-API modules follow this pattern:
 ```javascript
+// 标准 CRUD 模式
 import request from '@/utils/request'
 const URL = { resource: '/services/fwcore/resource' }
 
-export function getList(params) {
-  return request({ url: URL.resource, method: 'GET', params })
-}
+getPage(params)      → GET    /services/fwcore/{resource}
+submitForm(params)   → POST (新建) 或 PUT /services/fwcore/{resource}/:id (编辑)
+batchDelete(params)  → DELETE /services/fwcore/{resource}?items=... (qs.stringify)
+singleDelete(id)     → DELETE /services/fwcore/{resource}/:id
 ```
 
-### Layout Structure
+### Key Business Views
 
-```
-src/layout/
-├── index.vue          # Main layout wrapper (Sidebar + Main)
-└── components/
-    ├── Sidebar/       # Dynamic menu from permission routes
-    ├── Navbar.vue     # Top navigation bar
-    └── AppMain.vue    # Router view container
-```
+- `src/views/integrationConfig/` — **核心视图**，集成流配置，任务管线 (input/transform/output 节点)，最复杂的视图
+- `src/views/dashboard/` — ECharts 仪表盘 (CPU/内存/磁盘/流量/失败排行)
+- `src/views/login/` — 登录 (MD5 密码, 密码策略, license 检查)
+- `src/views/authLogin/` — SSO 单点登录
+- `src/components/ModFilter/` — 通用 CRUD 数据表格，多数视图基于此组件
 
 ### View Module Pattern
 
-Each feature module in `src/views/` typically contains:
-- `index.vue` - Main page with data table
-- Dialog components for add/edit forms
-- Corresponding API file in `src/api/`
+各功能模块 (`src/views/`) 典型结构:
+- `index.vue` — 主页面, 使用 `<mod-filter :datas="datas">` 渲染数据表格
+- `datas` 对象定义筛选条件、表格列、分页配置
+- 对话框表单用于新增/编辑, `subFormDataRule` 定义校验规则
+- 对应 API 文件在 `src/api/`
 
-### Environment Configuration
+## Environment Configuration
 
-| File | API Base URL |
-|------|--------------|
-| `.env.development` | `http://localhost:8819` |
-| `.env.production` | Production server |
-| `.env.uat` | UAT environment |
+| 文件 | NODE_ENV | VUE_APP_BASE_API | 说明 |
+|------|----------|------------------|------|
+| `.env.development` | development | `http://localhost:8819` | 本地开发, mock 代理 |
+| `.env.production` | production | `/bcp-api` | 生产构建, Nginx 代理 |
+| `.env.staging` | UAT | `/bcp-api` | Staging 构建 |
+| `.env.baiwei` | production | `/bcp-api` | 百维生产, Nginx 代理 |
 
-### Key Directories
+**开发环境 Mock**: `vue.config.js` 中 devServer proxy 将 `VUE_APP_BASE_API` 请求转发到 `mock/mock-server.js`。`src/main.js` 中 `mockXHR()` 仅在 development 环境加载。
 
-- `src/api/` - API interface definitions (30+ modules)
-- `src/views/` - Page components (35+ feature modules)
-- `src/components/` - Shared components (Cron editor, ExportExcel, etc.)
-- `src/utils/` - Utilities (request wrapper, auth, validation)
-- `mock/` - Mock server for development
+## Build & Deploy
+
+- **Docker**: `nginx:1.25-alpine` 基础镜像, 静态文件 → `/usr/share/nginx/html`, 端口 80
+- **Docker Hub**: `zhangbq1681/bcp-admin-ui` (tags: `latest`, `master`, `v1.x.0`)
+- **Nginx**: SPA 路由 (`try_files`), 反向代理 `/bcp-api/` → `http://bcp-admin:8819/`, gzip 压缩, CORS
+- **docker-compose.yml**: 服务 `bcp-admin-ui`, 外部网络 `bcp-network`
+- **Makefile**: 华为云 SWR 推送 (`swr.cn-north-4.myhuaweicloud.com/bcp-cloud/bcp-admin-ui`)
+- **CI/CD**: 3 个 GitHub Actions — `ci.yml` (lint+test), `docker.yml` (构建推送镜像), `release.yml` (创建 Release)
+- **Release**: `git tag v1.x.0 && git push origin v1.x.0` 触发自动构建+发布
+
+## Build Config & Styling
+
+- 路径别名: `@` → `src/`
+- SVG Sprite Loader: `src/icons/` 目录下 SVG 自动注册为 `<svg-icon>` 组件
+- SCSS 变量: `src/styles/variables.scss`，Element UI 覆写: `src/styles/element-ui.scss`
+- CSS 命名: `.mod-*` (模块), `.app-container` (视图容器, padding 20px)
 
 ## Backend API
 
-The backend runs on port 8819. API paths follow pattern: `/services/fwcore/{resource}`
+后端源码: `../md-bcp-fw-core/` (Gitee `szbsi/fw-core-micro`), Java 8 / Spring Boot 2.3.7 / MyBatis, 端口 8819。
+Agent 引擎: `../md-bcp-agent/` (GitHub `bsi-bcp/bcp-md-agent`), 接收后端下发的集成配置。
 
-Common endpoints:
-- Auth: `/services/fwcore/login` (POST/DELETE)
-- Users: `/services/fwcore/users/*`
-- Current user: `/services/fwcore/users/login-user`
+前端视图与后端 Controller 一一对应，命名规则: `src/views/{module}/` → `src/api/{module}.js` → 后端 `/services/fwcore/{resource}` 端点。核心 Controller: `MdIntegrationConfigController`（集成配置）、`FwUserController`（用户，19端点）。
+
+## 生产部署 (ECS-139: 139.9.27.37)
+
+```
+https://bcpcloud.cn
+  → Host Nginx (:443 HTTPS, /usr/local/nginx)
+    → 静态文件: /usr/local/bcpAdmin/ (前端 SPA)
+    → /bcp-api/* 反向代理 → localhost:8443
+      → fw-core-micro (/usr/local/fw-core-micro/app.jar, nohup 启动)
+        → MySQL (139.9.42.180:3306, bsi-admin-test)
+```
+
+非容器部署。统一入口 bcpcloud.cn（IDE-124 已下线，不再区分生产/测试）。其他域名: grafana.bcpcloud.cn→:3000
+
+## Known Issues
+
+- API 文件命名重复: `Administrative.js` vs `addministrative.js`（两者操作不同 endpoint，已确认非重复）
+- `src/views/integrationConfig/index.vue` 单文件 1651 行，待拆分
+- ~~`src/utils/date.js` 修改 Date.prototype~~ → 已修复，改为纯函数 `formatDate()`
+- ~~动态路由加载无错误边界~~ → 已修复，添加 fallback 到 404
+- ~~全局 62 处 console.log~~ → 已全部清理（0 处残留）
+
+## Architecture Review & Refactoring
+
+完整架构评审报告: `docs/architecture-review-2026-04-02.md`
+完整重构计划: `docs/refactoring-plan-2026-04-02.md`
+
+- P0 修复已完成 5 项 (MockXHR/token泄露/request.js崩溃/qs锁版/no-console)
+- P1 修复已完成 7 项 (axios 0.21.4/ECharts dispose/contenthash/CI门禁/Cookie安全/路径遍历/request.js健壮性)
+- 迁移 Bug 已修复 1 项 (用户名称编辑后 Vuex 缓存未刷新)
+- P2 已完成: API 层 CRUD 工厂重构（`src/api/_crud.js`，16 文件迁移，139 contract test）
+- P3-A 已完成: PropList + Freelist 合并底层 SelectLoader 组件
+- P3-B 评估后跳过: CRUD mixin（getData 各视图变体差异大，投入产出比不足）
+- P4 已完成: date.js 原型污染修复 + permission.js 错误边界 + request.js 552 错误码 + console.log 全量清理
+- Monaco IntelliSense 已完成: Worker 配置 + 编辑器选项增强 + CompletionItemProvider + addExtraLib（fields prop 传入字段即可补全）
+- 下一阶段: integrationConfig 拆分（建议推迟到业务需求驱动时再执行）
+- Phase 2-3 完整方案+风险评估: `docs/refactoring-plan-phase2-3.md`
+- Monaco 分析+方案: `docs/monaco-intellisense-analysis.md`

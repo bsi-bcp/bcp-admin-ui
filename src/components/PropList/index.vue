@@ -1,16 +1,14 @@
-<template lang="html">
-  <div>
-    <el-select v-model="svalue" clearable size="mini" filterable>
-      <el-option v-for="(optItem,optindex) in options" :key="optindex" :label="optItem.label" :value="optItem.value" />
-    </el-select>
-  </div>
+<template>
+  <select-loader :api-method="apiMethod" :api-params="{ code, group }" :value="value" @input="$emit('input', $event)" />
 </template>
 
 <script>
-import * as sel from '@/api/select'
+import SelectLoader from '@/components/SelectLoader/index.vue'
+import { getProplist } from '@/api/select'
 
 export default {
   name: 'SXFProplist',
+  components: { SelectLoader },
   props: {
     code: String,
     group: String,
@@ -18,27 +16,8 @@ export default {
   },
   data() {
     return {
-      options: [],
-      svalue: this.value
+      apiMethod: getProplist
     }
-  },
-  watch: {
-    // 判断下拉框的值是否有改变
-    svalue(val, oldVal) {
-      if (val !== oldVal) {
-        this.$emit('input', val)
-      }
-    }
-  },
-  mounted() {
-    sel.getProplist({ code: this.code, group: this.group }).then(res => {
-      for (const item in res.model) {
-        this.options.push({ label: res.model[item], value: item })
-      }
-    })
   }
 }
 </script>
-
-<style lang="css">
-</style>

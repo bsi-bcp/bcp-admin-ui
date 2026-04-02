@@ -15,7 +15,7 @@ export function login(data) {
 
 export function getUserInfo() {
   return request({
-    url: '/services/fwcore/users/login-user',
+    url: URL.user + '/login-user',
     method: 'get'
   })
 }
@@ -27,19 +27,9 @@ export function logout() {
   })
 }
 
-// 用户列表
-// export function getUserPage(params) {
-//   return request({
-//     url: URL.user + '/checkAll',
-//     method: 'get',
-//     params
-//   })
-// }
-
 // 通过组织获取用户列表
 export function getUserList(params) {
   return request({
-    // url: URL.user + '/check/' + params.orgId,
     url: URL.user + '/pages/',
     method: 'GET',
     params
@@ -78,7 +68,6 @@ export function batchDelete(params) {
   return request({
     url: URL.user + '?' + queryParams,
     method: 'DELETE'
-    // params
   })
 }
 
@@ -86,9 +75,8 @@ export function batchDelete(params) {
 export function batchLocked(params) {
   const queryParams = qs.stringify(params, { indices: false })
   return request({
-    url: URL.user + '/status/lock' + '?' + queryParams,
+    url: URL.user + '/status/lock?' + queryParams,
     method: 'PUT'
-    // params
   })
 }
 
@@ -96,9 +84,8 @@ export function batchLocked(params) {
 export function batchUnLocked(params) {
   const queryParams = qs.stringify(params, { indices: false })
   return request({
-    url: URL.user + '/status/unlock' + '?' + queryParams,
+    url: URL.user + '/status/unlock?' + queryParams,
     method: 'PUT'
-    // params
   })
 }
 
@@ -106,9 +93,8 @@ export function batchUnLocked(params) {
 export function batchResetPsd(params) {
   const queryParams = qs.stringify(params, { indices: false })
   return request({
-    url: URL.user + '/default/pwd' + '?' + queryParams,
+    url: URL.user + '/default/pwd?' + queryParams,
     method: 'PUT'
-    // params
   })
 }
 
@@ -117,7 +103,6 @@ export function syncUser() {
   return request({
     url: URL.user + '/userTemp',
     method: 'POST'
-    // params
   })
 }
 
@@ -126,7 +111,6 @@ export function getCurUser() {
   return request({
     url: URL.user + '/currentUser',
     method: 'GET'
-    // params
   })
 }
 
