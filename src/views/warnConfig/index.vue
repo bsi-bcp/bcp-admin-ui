@@ -194,10 +194,9 @@ export default {
                     {
                         type: 'input',
                         prop: 'taskName',
-                        // 控制设置内部 复选框勾选的默认值
                         conditionshow: false,
-                        // 控制该字段是否出现在表格里
                         filedShow: true,
+                        sortable: true,
                         label: '任务名',
                         placeholder: '任务名',
                         queryName: '任务名',
@@ -226,6 +225,7 @@ export default {
                         prop: 'warnMethodName',
                         conditionshow: false,
                         filedShow: true,
+                        sortable: true,
                         label: '告警方式',
                         placeholder: '告警方式',
                         optList: []
@@ -333,12 +333,11 @@ export default {
 
     methods: {
         input(data) {
-            console.log('data===>', data)
         },
         // 删除
         remove(row) {
             api.singleDelete(row.id).catch(
-                e => console.log(e.message)
+                e => console.error(e.message)
             )
         },
         changeEnable(row) {
@@ -352,7 +351,7 @@ export default {
                     this.getData(this.datas)
                 }
             ).catch(
-                e => console.log(e.message)
+                e => console.error(e.message)
             )
         },
         sendConfig(row) {
@@ -454,7 +453,7 @@ export default {
                     this.$set(this, 'integrationConfigs', commonApi.distinct(arr, val => val.id, null))
                 }
             ).catch(e => {
-                    console.log(e.message())
+                    console.error(e.message)
                     return false
                 }
             )
@@ -463,7 +462,7 @@ export default {
                     thisObj.warnMethods = res.model
                 }
             ).catch(e => {
-                    console.log(e.message())
+                    console.error(e.message)
                     return false
                 }
             )

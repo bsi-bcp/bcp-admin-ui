@@ -55,6 +55,7 @@ export default {
             prop: 'code',
             conditionshow: true,
             filedShow: true,
+            sortable: true,
             label: '任务编码',
             placeholder: '编码',
             optList: []
@@ -64,6 +65,7 @@ export default {
             prop: 'runTime',
             conditionshow: false,
             filedShow: true,
+            sortable: true,
             label: '运行时间',
             placeholder: '运行时间',
             optList: []
@@ -85,6 +87,7 @@ export default {
             prop: 'result',
             conditionshow: true,
             filedShow: true,
+            sortable: true,
             label: '运行结果',
             placeholder: '运行结果',
             optList: [{ label: '成功', value: 'success' }, { label: '失败', value: 'failure' }]
@@ -126,7 +129,6 @@ export default {
       }
     },
     detail(row) {
-      console.log(row)
     },
     getData(datas = this.datas) {
       if (datas.filterList[0].code === '') {

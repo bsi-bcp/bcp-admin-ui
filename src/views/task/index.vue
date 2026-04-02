@@ -217,6 +217,7 @@ export default {
             prop: 'name',
             conditionshow: true,
             filedShow: true,
+            sortable: true,
             label: '名称',
             placeholder: '名称',
             optList: []
@@ -226,6 +227,7 @@ export default {
             prop: 'code',
             conditionshow: true,
             filedShow: true,
+            sortable: true,
             label: '编码',
             placeholder: '编码',
             optList: []
@@ -336,7 +338,6 @@ export default {
       this.showCronBox = false
       this.$refs[formData].validate((valid) => {
         if (valid) {
-          console.log(this[formData])
           api.submitForm(this[formData]).then(res => {
             this.$message.success('保存成功')
             this.getData(this.datas)
@@ -352,7 +353,6 @@ export default {
       this.$refs[formData].validate((valid) => {
         if (valid) {
           api.submitAllocationForm(this[formData]).then(res => {
-            // console.log(this[formData])
             this.$message.success('分配成功')
             this.getData(this.datas)
             this.allocationDialogFormVisible = false
@@ -433,7 +433,6 @@ export default {
       this.allocationSubFormData.computerId = null
       const tenantId = this.allocationSubFormData.tenantId
       api.getComputers(tenantId).then(res => {
-        console.log(res.model)
         this.computers = res.model
         if (this.computers.length === 1) {
           this.allocationSubFormData.computerId = this.computers[0].id

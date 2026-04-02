@@ -131,11 +131,9 @@ export default {
            {
             type: 'input',
             prop: 'name',
-            // 控制设置内部 复选框勾选的默认值
             conditionshow: true,
-            // 控制该字段是否出现在表格里
             filedShow: true,
-            // 控制搜索框的label显示与否
+            sortable: true,
             isHiddenSearchLabel: true,
             label: '模板名称',
             placeholder: '关键词',
@@ -152,6 +150,7 @@ export default {
           {
             prop: "enable",
             filedShow: true,
+            sortable: true,
             slot: true,
             label: "状态",
             placeholder: "状态"
@@ -160,12 +159,14 @@ export default {
             type: "input",
             prop: "createTime",
             filedShow: true,
+            sortable: true,
             label: "创建时间",
             placeholder: "创建时间"
           },
           {
             prop: "lastUpdateTime",
             filedShow: true,
+            sortable: true,
             label: "修改时间",
             placeholder: "修改时间"
           },
@@ -283,7 +284,6 @@ export default {
       }
       //解构赋值id丢失，所以在这里单独设置一下id，原因待查找
       // this.subFormData.id = row.id
-      console.log("row",this.subFormData);
     },
     getData(datas = this.datas) {
       this.$set(this, "datas", datas);

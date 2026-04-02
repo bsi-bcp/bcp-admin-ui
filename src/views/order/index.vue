@@ -203,10 +203,9 @@ export default {
           {
             type: 'input',
             prop: 'source',
-            // 控制设置内部 复选框勾选的默认值
             conditionshow: true,
-            // 控制该字段是否出现在表格里
             filedShow: true,
+            sortable: true,
             label: '订单来源',
             placeholder: '订单来源',
             optList: []
@@ -216,11 +215,11 @@ export default {
             prop: 'orderId',
             conditionshow: true,
             filedShow: true,
+            sortable: true,
             label: '云商店订单ID',
             placeholder: '云商店订单ID',
             optList: [],
             minWidth: 120
-            //align: 'left'
           },
           {
             type: 'input',
@@ -437,14 +436,12 @@ export default {
   },
   methods: {
     input(data) {
-      console.log('data===>', data)
     },
     clearTime() {
       this.subFormData.acceptanceTime = ''
     },
     handleDataLoaded() {
       // 数据加载完成后执行的操作
-      console.log('数据加载完成')
     },
 // 删除
     remove(row) {

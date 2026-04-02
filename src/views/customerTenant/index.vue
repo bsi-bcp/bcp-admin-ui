@@ -113,6 +113,7 @@ export default {
             prop: 'kitTenantId',
             conditionshow: true,
             filedShow: true,
+            sortable: true,
             label: '租户ID',
             placeholder: '租户ID',
             optList: []
@@ -122,6 +123,7 @@ export default {
             prop: 'tenantCode',
             conditionshow: true,
             filedShow: true,
+            sortable: true,
             label: '租户编码',
             placeholder: '租户编码',
             optList: []
@@ -131,6 +133,7 @@ export default {
             prop: 'tenantName',
             conditionshow: true,
             filedShow: true,
+            sortable: true,
             label: '租户名称',
             placeholder: '租户名称',
             optList: []
@@ -225,7 +228,6 @@ export default {
           }).catch(() => {
           })
         } else {
-          console.log('error submit!!')
           return false
         }
       })
