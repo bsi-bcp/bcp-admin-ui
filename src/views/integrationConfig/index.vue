@@ -398,6 +398,16 @@
         </div>
       </div>
     </el-dialog>
+    <!--Cron 可视化设置-->
+    <el-dialog title="Cron 表达式设置" :visible.sync="cronDialogVisible" width="640px"
+               :close-on-click-modal="false" append-to-body
+    >
+      <cron v-model="cronExpression" />
+      <div slot="footer">
+        <el-button size="mini" @click="cronDialogVisible = false">取 消</el-button>
+        <el-button size="mini" type="primary" @click="cronConfirm">确 定</el-button>
+      </div>
+    </el-dialog>
     <!--补数界面-->
     <el-dialog class="dialog-skip" width="1120px" :title="foot_job_name" :visible.sync="rerun_falg" :close-on-click-modal="false"
                :close-on-press-escape="false" @close="clearLogPoll"
@@ -555,7 +565,7 @@
             </template>
           </el-table-column>
         </el-table>
-        <div v-if="this.log.totalCount>0" class="mod-pagination mt10">
+        <div v-if="log.totalCount>0" class="mod-pagination mt10">
           <el-pagination
             background
             prev-text="上一页"
@@ -583,6 +593,7 @@ import { Loading } from 'element-ui'
 // 引入组件
 import multipleTable from './moudel/multipleTable'
 import MonAco from './moudel/monaco'
+import Cron from '@/components/cron/cron'
 import { mapGetters } from 'vuex'
 import Sortable from 'sortablejs'
 
@@ -590,12 +601,15 @@ export default {
   // 组件注册
   components: {
     multipleTable,
-    MonAco
+    MonAco,
+    Cron
   },
   data() {
     return {
       fileList: [],
       sortIdCounter: 0,
+      cronDialogVisible: false,
+      cronExpression: '',
       fileMap: {},
       logLoading: null,
       queryLogTask: null,
@@ -840,15 +854,15 @@ export default {
       temData: {}
     }
   },
-  async created() {
-    // 初始化下拉框
-    this.initOptions()
-    this.initData(false)
-  },
   computed: {
     ...mapGetters([
       'cur_user'
     ])
+  },
+  async created() {
+    // 初始化下拉框
+    this.initOptions()
+    this.initData(false)
   },
   methods: {
     formatContent(content) {
@@ -857,14 +871,14 @@ export default {
       var len = Object.keys(content).length // 原始JSON长度
       // 遍历每一个字符
       for (let i = 0; i < len; i++) {
-        if (content[i] == '{' || content[i] === '[') {
+        if (content[i] === '{' || content[i] === '[') {
           tmpStr += content[i] + '\n'
           stack.push(content[i])
           tmpStr += ' '.repeat(stack.length)
-        } else if (content[i] == ']' || content[i] === '}') {
+        } else if (content[i] === ']' || content[i] === '}') {
           stack.pop()
           tmpStr += '\n' + ' '.repeat(stack.length) + content[i]
-        } else if (content[i] == ',') {
+        } else if (content[i] === ',') {
           tmpStr += content[i] + '\n' + ' '.repeat(stack.length)
         } else {
           tmpStr += content[i]
@@ -900,7 +914,12 @@ export default {
       })
     },
     showCronDialog() {
-      this.$message.info('Cron 可视化控件待开发')
+      this.cronExpression = this.inNode.cron || ''
+      this.cronDialogVisible = true
+    },
+    cronConfirm() {
+      this.inNode.cron = this.cronExpression
+      this.cronDialogVisible = false
     },
     goToDatasource() {
       const routeData = this.$router.resolve({ path: '/config-center/datasource' })
@@ -1104,7 +1123,7 @@ export default {
       const loading = this.$loading({ lock: true, text: '正在下发，请稍候...', background: 'rgba(0,0,0,0.5)' })
       api.issueType(row).then(res => {
         loading.close()
-        if (res.model.code == 200) {
+        if (res.model.code === 200) {
           this.$message({
             showClose: true,
             message: '下发成功!',
@@ -1146,7 +1165,7 @@ export default {
     },
     templateData(val, type) {
       this.temData = { ...val }
-      if (type == 2) {
+      if (type === 2) {
         this.modelShow()
       }
     },
@@ -1156,7 +1175,7 @@ export default {
           // 如果是api上报类型，则需要判断访问路径是否唯一
           if (this.jobList[this.currentRow].inNode.type === 'apiUp') {
             let nodeId = this.pathMap.get(this.inNode.path)
-            if (nodeId != undefined && nodeId != this.jobList[this.currentRow].inNode.id) {
+            if (nodeId !== undefined && nodeId !== this.jobList[this.currentRow].inNode.id) {
               this.$message.error({
                 message: this.inNode.path + '已存在，请重新输入访问路径'
               })
@@ -1267,7 +1286,7 @@ export default {
         })
       }, 50)
       this.foot_job_name = data.row.jobName
-      this.switchNode_title = this.optionsTransform.find(val => val.propkey == data.row.transformNode.type).propvalue
+      this.switchNode_title = this.optionsTransform.find(val => val.propkey === data.row.transformNode.type).propvalue
       // 返回
       this.switchNode = true
     },
@@ -1611,7 +1630,7 @@ export default {
               this.$message.success('保存成功')
               this.subFormData.id = res.model
               this.getData(this.datas)
-              const rr = api.getIdRow(this.subFormData.id).then(rr => {
+              api.getIdRow(this.subFormData.id).then(rr => {
                 const cdata = JSON.parse(rr.model)
                 // 把访问路径加到集合中,用来判断是否存在重复的访问路径
                 this.jobList = cdata.jobList
@@ -1694,8 +1713,8 @@ export default {
           this.fileMap[ps.name] = ps.fileUrl
         })
       }
-      let { id, name, nodeId, templateId, tenantId, templateName } = data
-      tenantId = tenantId + ''
+      const { id, name, nodeId, templateId, templateName } = data
+      const tenantId = data.tenantId + ''
       this.subFormData = { id, name, nodeId, templateId, tenantId, templateName }
       this.dialogFormVisible = true
       this.initParamSortable()
