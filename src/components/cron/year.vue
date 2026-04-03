@@ -9,9 +9,9 @@
     <div>
       <el-radio v-model="type" label="2" size="mini" border>周期</el-radio>
       <span style="margin-left: 10px; margin-right: 5px;">从</span>
-      <el-input-number @change="type = '2'" v-model="cycle.start" :min="2000" size="mini" style="width: 100px;"></el-input-number>
+      <el-input-number v-model="cycle.start" :min="2000" size="mini" style="width: 100px;" @change="type = '2'" />
       <span style="margin-left: 5px; margin-right: 5px;">至</span>
-      <el-input-number @change="type = '2'" v-model="cycle.end" :min="2000"  size="mini" style="width: 100px;"></el-input-number>
+      <el-input-number v-model="cycle.end" :min="2000" size="mini" style="width: 100px;" @change="type = '2'" />
       年
     </div>
   </div>
@@ -25,8 +25,8 @@ export default {
       default: '*'
     }
   },
-  data () {
-    let year = new Date().getFullYear()
+  data() {
+    const year = new Date().getFullYear()
     return {
       type: '1', // 类型
       cycle: { // 周期
@@ -47,8 +47,8 @@ export default {
     }
   },
   computed: {
-    value_ () {
-      let result = []
+    value_() {
+      const result = []
       switch (this.type) {
         case '1': // 每秒
           result.push('*')
@@ -68,18 +68,21 @@ export default {
         default: // 不指定
           result.push('?')
           break
-      };
+      }
       this.$emit('input', result.join(''))
       return result.join('')
     }
   },
   watch: {
-    'value' (a, b) {
+    'value'(a, b) {
       this.updateVal()
     }
   },
+  created() {
+    this.updateVal()
+  },
   methods: {
-    updateVal () {
+    updateVal() {
       if (!this.value) {
         return
       }
@@ -116,9 +119,6 @@ export default {
         this.appoint = this.value.split(',')
       }
     }
-  },
-  created () {
-    this.updateVal()
   }
 }
 </script>

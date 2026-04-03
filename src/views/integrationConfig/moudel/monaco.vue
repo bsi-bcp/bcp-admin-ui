@@ -1,6 +1,8 @@
 <template>
   <div ref="mEditor" class="the-code-editor-container">
-    <div>
+    <div class="editor-toolbar">
+      <i class="el-icon-magic-stick" title="格式化代码" @click="formatCode" />
+      <i class="el-icon-document-copy" title="复制代码" @click="copyCode" />
       <i v-if="isMaximum" class="el-icon-rank" title="点击缩小" @click="minEditor" />
       <i v-else class="el-icon-full-screen" title="点击放大" @click="maxEditor" />
     </div>
@@ -313,6 +315,18 @@ export default {
         // TypeScript language service 可能未完全加载，降级到仅 CompletionItemProvider
         console.warn('[Monaco] addExtraLib failed, falling back to CompletionItemProvider only:', e.message)
       }
+    },
+    formatCode() {
+      if (!this.monacoEditor) return
+      this.monacoEditor.getAction('editor.action.formatDocument').run()
+    },
+    copyCode() {
+      if (!this.monacoEditor) return
+      const code = this.monacoEditor.getValue()
+      if (!code) return
+      navigator.clipboard.writeText(code).then(() => {
+        this.$message({ message: '已复制', type: 'success', duration: 1500 })
+      })
     },
     maxEditor() {
       this.isMaximum = true

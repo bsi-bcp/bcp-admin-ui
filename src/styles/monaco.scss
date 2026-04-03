@@ -12,14 +12,22 @@
     width: 100%;
     height: 300px;
     position: relative;
-    [class^="el-icon"] {
-      font-size: 35px;
-      cursor: pointer;
+    .editor-toolbar {
+      display: flex;
+      gap: 12px;
       position: absolute;
       right: 10px;
       top: 0;
       z-index: 9999;
+    }
+    .editor-toolbar [class^="el-icon"] {
+      font-size: 28px;
+      cursor: pointer;
       color: #fff;
+      opacity: 0.7;
+      &:hover {
+        opacity: 1;
+      }
     }
     .my-editor {
       width: 100%;

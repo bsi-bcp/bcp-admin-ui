@@ -124,7 +124,7 @@ export default {
       var query = this.$route.query
       const code = query.code
       if (code) {
-        this.$router.push({ query: {} })
+        this.$router.push({ query: {}})
         this.$set(this.datas.filterList[0], 'code', code)
       }
     },

@@ -54,20 +54,19 @@
           </el-col>
         </el-row>
 
-
         <el-row>
           <el-col :span="12">
             <el-form-item label="开始时间" prop="startTime">
               <el-time-picker v-model="subFormData.startTime" placeholder="选择时间" format="yyyy-MM-dd HH:mm:ss"
                               value-format="yyyy-MM-dd HH:mm:ss"
-              ></el-time-picker>
+              />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="过期时间" prop="expireTime">
               <el-time-picker v-model="subFormData.expireTime" placeholder="选择时间" format="yyyy-MM-dd HH:mm:ss"
                               value-format="yyyy-MM-dd HH:mm:ss"
-              ></el-time-picker>
+              />
             </el-form-item>
           </el-col>
         </el-row>
@@ -84,7 +83,7 @@
         <el-form-item label="用户验收时间" prop="acceptanceTime">
           <el-time-picker v-model="subFormData.acceptanceTime" placeholder="选择时间" format="yyyy-MM-dd HH:mm:ss"
                           value-format="yyyy-MM-dd HH:mm:ss"
-          ></el-time-picker>
+          />
           <el-button @click="clearTime">清空时间</el-button>
         </el-form-item>
         <el-form-item label="订单金额" prop="orderAmount">
@@ -316,8 +315,7 @@ export default {
             optList:
               [],
             minWidth: 120
-          }
-          ,
+          },
           {
             type: 'input',
             prop:
@@ -332,8 +330,7 @@ export default {
               '订单金额',
             optList:
               []
-          }
-          ,
+          },
           {
             type: 'input',
             prop:
@@ -348,8 +345,7 @@ export default {
               '创建时间',
             optList:
               []
-          }
-          ,
+          },
           {
             type: 'input',
             prop:
@@ -364,8 +360,7 @@ export default {
               '最后更新时间',
             optList:
               []
-          }
-          ,
+          },
           {
             type: 'input',
             prop:
@@ -380,7 +375,7 @@ export default {
               '客户',
             optList:
               []
-            //conv: this.convs["customerId"]
+            // conv: this.convs["customerId"]
           },
           {
             type: 'input',
@@ -397,9 +392,8 @@ export default {
               '客户',
             optList:
               []
-            //conv: this.convs["customerId"]
-          }
-          ,
+            // conv: this.convs["customerId"]
+          },
           {
             type: 'input',
             prop:
@@ -443,7 +437,7 @@ export default {
     handleDataLoaded() {
       // 数据加载完成后执行的操作
     },
-// 删除
+    // 删除
     remove(row) {
       this.$confirm('是否删除?', '提示', {
         confirmButtonText: '确定',
@@ -470,19 +464,19 @@ export default {
     },
     // 新增或编辑页面
     async edit(row) {
-      //清空验证信息
-      if (!!this.$refs.subFormData) {
+      // 清空验证信息
+      if (this.$refs.subFormData) {
         this.$refs.subFormData.clearValidate()
       }
       this.dialogFormVisible = true
-      //如果是新增
+      // 如果是新增
       if (row === 0) {
-        //清空属性值
+        // 清空属性值
         Object.keys(this.subFormData).forEach((key) => (this.subFormData[key] = null))
         this.subFormData.enable = true
         return
       }
-      //如果是更新
+      // 如果是更新
       Object.keys(this.subFormData).forEach((key) => (this.subFormData[key] = row[key]))
     },
     getData(datas = this.datas) {

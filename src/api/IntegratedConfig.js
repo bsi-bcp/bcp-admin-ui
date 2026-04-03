@@ -52,7 +52,8 @@ export function runTask(param) {
   return request({
     url: '/services/fwcore/config/run-task',
     method: 'post',
-    data: param
+    data: param,
+    timeout: 120000
   })
 }
 
@@ -60,15 +61,17 @@ export function getTaskLog(param) {
   return request({
     url: '/services/fwcore/config/task/log',
     method: 'post',
-    data: param
+    data: param,
+    timeout: 30000
   })
 }
 
-// 下发集成配置
+// 下发集成配置（后端需同步等待 Agent 重载，耗时较长）
 export function issueType(param) {
   return request({
     url: '/services/fwcore/config/send/' + param,
-    method: 'get'
+    method: 'get',
+    timeout: 120000
   })
 }
 

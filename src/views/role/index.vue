@@ -317,7 +317,7 @@ export default {
       this.$set(this.datas.table, 'loading', true)
       this.$set(this.params, 'orgId', this.params.orgName)
       api.getPage(this.params).then(res => {
-        if(res.model!=null){
+        if (res.model != null) {
           for (var i = 0; i < res.model.length; i++) {
             this.addDisable(res.model[i].menuTree)
           }

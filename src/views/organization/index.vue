@@ -8,7 +8,7 @@
               <span style="font-size:15px;"><b>组织结构树</b></span>
             </div>
           </div>
-          <el-button icon="el-icon-plus" type="text" class="indigo" size="medium" @click="showAddDialog" style="padding-left:5px;">新增</el-button>
+          <el-button icon="el-icon-plus" type="text" class="indigo" size="medium" style="padding-left:5px;" @click="showAddDialog">新增</el-button>
           <el-button icon="el-icon-delete" type="text" class="indigo" size="medium" @click="del">删除</el-button>
           <el-tree
             ref="tree"
@@ -268,7 +268,7 @@ export default {
       this.clickTree.parentName = data.name
     },
     isLeaf(data, node) {
-    },
+    }
   }
 }
 </script>

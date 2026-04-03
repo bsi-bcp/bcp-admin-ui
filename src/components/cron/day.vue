@@ -9,23 +9,23 @@
     <div>
       <el-radio v-model="type" label="2" size="mini" border>周期</el-radio>
       <span style="margin-left: 10px; margin-right: 5px;">从</span>
-      <el-input-number @change="type = '2'" v-model="cycle.start" :min="1" :max="31" size="mini" style="width: 100px;"></el-input-number>
+      <el-input-number v-model="cycle.start" :min="1" :max="31" size="mini" style="width: 100px;" @change="type = '2'" />
       <span style="margin-left: 5px; margin-right: 5px;">至</span>
-      <el-input-number @change="type = '2'" v-model="cycle.end" :min="2" :max="31" size="mini" style="width: 100px;"></el-input-number>
+      <el-input-number v-model="cycle.end" :min="2" :max="31" size="mini" style="width: 100px;" @change="type = '2'" />
       日
     </div>
     <div>
       <el-radio v-model="type" label="3" size="mini" border>循环</el-radio>
       <span style="margin-left: 10px; margin-right: 5px;">从</span>
-      <el-input-number @change="type = '3'" v-model="loop.start" :min="1" :max="31" size="mini" style="width: 100px;"></el-input-number>
+      <el-input-number v-model="loop.start" :min="1" :max="31" size="mini" style="width: 100px;" @change="type = '3'" />
       <span style="margin-left: 5px; margin-right: 5px;">日开始，每</span>
-      <el-input-number @change="type = '3'" v-model="loop.end" :min="1" :max="31" size="mini" style="width: 100px;"></el-input-number>
+      <el-input-number v-model="loop.end" :min="1" :max="31" size="mini" style="width: 100px;" @change="type = '3'" />
       日执行一次
     </div>
     <div>
       <el-radio v-model="type" label="8" size="mini" border>工作日</el-radio>
       <span style="margin-left: 10px; margin-right: 5px;">本月</span>
-      <el-input-number @change="type = '8'" v-model="work" :min="1" :max="7" size="mini" style="width: 100px;"></el-input-number>
+      <el-input-number v-model="work" :min="1" :max="7" size="mini" style="width: 100px;" @change="type = '8'" />
       号，最近的工作日
     </div>
     <div>
@@ -34,8 +34,8 @@
     <div>
       <el-radio v-model="type" label="4" size="mini" border>指定</el-radio>
       <el-checkbox-group v-model="appoint">
-        <div  v-for="i in 4" :key="i" style="margin-left: 10px;  line-height: 25px;">
-          <el-checkbox @change="type = '4'"  v-for="j in 10" v-if="parseInt((i - 1) + '' + (j - 1)) < 32 && !(i === 1 && j === 1)" :key="j" :label="(i - 1) + '' + (j - 1)"></el-checkbox>
+        <div v-for="i in 4" :key="i" style="margin-left: 10px;  line-height: 25px;">
+          <el-checkbox v-for="j in 10" v-if="parseInt((i - 1) + '' + (j - 1)) < 32 && !(i === 1 && j === 1)" :key="j" :label="(i - 1) + '' + (j - 1)" @change="type = '4'" />
         </div>
       </el-checkbox-group>
     </div>
@@ -50,7 +50,7 @@ export default {
       default: '?'
     }
   },
-  data () {
+  data() {
     return {
       type: '5', // 类型
       cycle: { // 周期
@@ -71,8 +71,8 @@ export default {
     }
   },
   computed: {
-    value_ () {
-      let result = []
+    value_() {
+      const result = []
       switch (this.type) {
         case '1': // 每秒
           result.push('*')
@@ -98,18 +98,21 @@ export default {
         default: // 不指定
           result.push('?')
           break
-      };
+      }
       this.$emit('input', result.join(''))
       return result.join('')
     }
   },
   watch: {
-    'value' (a, b) {
+    'value'(a, b) {
       this.updateVal()
     }
   },
+  created() {
+    this.updateVal()
+  },
   methods: {
-    updateVal () {
+    updateVal() {
       if (!this.value) {
         return
       }
@@ -146,9 +149,6 @@ export default {
         this.appoint = this.value.split(',')
       }
     }
-  },
-  created () {
-    this.updateVal()
   }
 }
 </script>

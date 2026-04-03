@@ -6,23 +6,22 @@
       :data="tableData"
       max-height="380"
       class="mt10"
-      :cell-style="{padding:'5px 0px'}" 
+      :cell-style="{padding:'5px 0px'}"
       highlight-current-row
-      fit 
+      fit
       style="width: 100%"
-      @row-click = "rowClick"
+      @row-click="rowClick"
       @current-change="handleSelectionChange"
-      @row-dblclick = "handleSelection"
+      @row-dblclick="handleSelection"
     >
       <!-- <el-table-column type="selection" width="55"> </el-table-column> -->
-      <el-table-column  width="55">
+      <el-table-column width="55">
 　　　  <template slot-scope="scope">
-　　　　　<el-radio :label="scope.row.name" v-model="radioId">&nbsp;</el-radio>
+　　　　　<el-radio v-model="radioId" :label="scope.row.name">&nbsp;</el-radio>
 　　　  </template>
 　　   </el-table-column>
-      <el-table-column type="index" width="55"> </el-table-column>
-      <el-table-column prop="name" align="center" label="模板名称">
-      </el-table-column>
+      <el-table-column type="index" width="55" />
+      <el-table-column prop="name" align="center" label="模板名称" />
     </el-table>
   </div>
 </template>
@@ -34,8 +33,8 @@ export default {
     return {
       tableData: [],
       modelData: null,
-      FromData:{},
-      radioId:'',
+      FromData: {},
+      radioId: '',
       total: null,
       setData: {
         currentPage: 1,
@@ -47,32 +46,32 @@ export default {
     this.getList()
   },
   methods: {
-    modelShow(){
+    modelShow() {
 
     },
-    //表格单选按钮
-    rowClick(row){
-				this.radioId=row.name;
-		},
+    // 表格单选按钮
+    rowClick(row) {
+      this.radioId = row.name
+    },
     // 去除表头全选选项
-    // cellClass(row){     
-    //   if (row.columnIndex === 0) {           
-    //     return 'disabledCheck'     
-    //   } 
+    // cellClass(row){
+    //   if (row.columnIndex === 0) {
+    //     return 'disabledCheck'
+    //   }
     // },
     getList() {
-      api.getPageAuth({"tenantId":this.$parent.$parent.cur_user.tenantId}).then((res) => {
+      api.getPageAuth({ 'tenantId': this.$parent.$parent.cur_user.tenantId }).then((res) => {
         this.tableData = res
       })
     },
-    handleSelection(val){
-       this.$emit('templateData', val,2)
+    handleSelection(val) {
+      this.$emit('templateData', val, 2)
     },
     handleSelectionChange(val) {
       // if (selection.length === 1) {
-        // this.modelData = selection[0]
-        // 发送出去的
-        this.$emit('templateData', val,1)
+      // this.modelData = selection[0]
+      // 发送出去的
+      this.$emit('templateData', val, 1)
       // }
     //   if (selection.length > 1) {
     //     const arr = selection

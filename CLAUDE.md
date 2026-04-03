@@ -162,25 +162,11 @@ https://bcpcloud.cn
 
 ## Known Issues
 
-- API 文件命名重复: `Administrative.js` vs `addministrative.js`（两者操作不同 endpoint，已确认非重复）
-- `src/views/integrationConfig/index.vue` 单文件 1651 行，待拆分
-- ~~`src/utils/date.js` 修改 Date.prototype~~ → 已修复，改为纯函数 `formatDate()`
-- ~~动态路由加载无错误边界~~ → 已修复，添加 fallback 到 404
-- ~~全局 62 处 console.log~~ → 已全部清理（0 处残留）
+- API 文件命名: `Administrative.js` vs `addministrative.js`（两者操作不同 endpoint，已确认非重复）
+- `src/views/integrationConfig/index.vue` 单文件 1651 行，待拆分（建议推迟到业务需求驱动时再执行）
 
 ## Architecture Review & Refactoring
 
-完整架构评审报告: `docs/architecture-review-2026-04-02.md`
-完整重构计划: `docs/refactoring-plan-2026-04-02.md`
+架构评审报告: `docs/architecture-review-2026-04-02.md` | 重构计划: `docs/refactoring-plan-2026-04-02.md`
 
-- P0 修复已完成 5 项 (MockXHR/token泄露/request.js崩溃/qs锁版/no-console)
-- P1 修复已完成 7 项 (axios 0.21.4/ECharts dispose/contenthash/CI门禁/Cookie安全/路径遍历/request.js健壮性)
-- 迁移 Bug 已修复 1 项 (用户名称编辑后 Vuex 缓存未刷新)
-- P2 已完成: API 层 CRUD 工厂重构（`src/api/_crud.js`，16 文件迁移，139 contract test）
-- P3-A 已完成: PropList + Freelist 合并底层 SelectLoader 组件
-- P3-B 评估后跳过: CRUD mixin（getData 各视图变体差异大，投入产出比不足）
-- P4 已完成: date.js 原型污染修复 + permission.js 错误边界 + request.js 552 错误码 + console.log 全量清理
-- Monaco IntelliSense 已完成: Worker 配置 + 编辑器选项增强 + CompletionItemProvider + addExtraLib（fields prop 传入字段即可补全）
-- 下一阶段: integrationConfig 拆分（建议推迟到业务需求驱动时再执行）
-- Phase 2-3 完整方案+风险评估: `docs/refactoring-plan-phase2-3.md`
-- Monaco 分析+方案: `docs/monaco-intellisense-analysis.md`
+已完成: P0-P4 安全加固、API CRUD 工厂重构(`src/api/_crud.js`)、SelectLoader 组件合并、Monaco IntelliSense、console.log 全量清理。详见 `docs/refactoring-plan-phase2-3.md`。

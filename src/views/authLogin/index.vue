@@ -1,9 +1,9 @@
 <template lang="html">
   <div class="app-container">
-     <div class="background" align="center">
-      <img :src="loadSrc" alt="" />
-      <span style="display:inherit;font-size: 22px;margin-top: 30px">{{msg1}}</span>
-      <span style="display:inherit;font-size: 15px;margin-top: 10px">{{msg2}}</span>
+    <div class="background" align="center">
+      <img :src="loadSrc" alt="">
+      <span style="display:inherit;font-size: 22px;margin-top: 30px">{{ msg1 }}</span>
+      <span style="display:inherit;font-size: 15px;margin-top: 10px">{{ msg2 }}</span>
     </div>
   </div>
 </template>
@@ -22,10 +22,10 @@ export default {
     this.ssoLogin()
   },
   methods: {
-    ssoLogin(){
-      let params = {
-        "tenant":this.$route.query.tenant,
-        "code":this.$route.query.code
+    ssoLogin() {
+      const params = {
+        'tenant': this.$route.query.tenant,
+        'code': this.$route.query.code
       }
       api.ssoLogin(params).then(res => {
         if (res.code === 500) {
@@ -40,7 +40,7 @@ export default {
       }).catch(e => {
         console.error('单点登录失败,错误信息:' + e)
       })
-    },
+    }
   }
 }
 </script>

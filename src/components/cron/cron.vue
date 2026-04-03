@@ -2,25 +2,25 @@
   <div class="cron" :val="value_">
     <el-tabs v-model="activeName">
       <el-tab-pane label="秒" name="s">
-        <second-and-minute v-model="sVal" lable="秒"></second-and-minute>
+        <second-and-minute v-model="sVal" lable="秒" />
       </el-tab-pane>
       <el-tab-pane label="分" name="m">
-        <second-and-minute v-model="mVal" lable="分"></second-and-minute>
+        <second-and-minute v-model="mVal" lable="分" />
       </el-tab-pane>
       <el-tab-pane label="时" name="h">
-        <hour v-model="hVal" lable="时"></hour>
+        <hour v-model="hVal" lable="时" />
       </el-tab-pane>
       <el-tab-pane label="日" name="d">
-        <day v-model="dVal" lable="日"></day>
+        <day v-model="dVal" lable="日" />
       </el-tab-pane>
       <el-tab-pane label="月" name="month">
-        <month v-model="monthVal" lable="月"></month>
+        <month v-model="monthVal" lable="月" />
       </el-tab-pane>
       <el-tab-pane label="周" name="week">
-        <week v-model="weekVal" lable="周"></week>
+        <week v-model="weekVal" lable="周" />
       </el-tab-pane>
       <el-tab-pane label="年" name="year">
-        <year v-model="yearVal" lable="年"></year>
+        <year v-model="yearVal" lable="年" />
       </el-tab-pane>
     </el-tabs>
     <!-- table -->
@@ -34,43 +34,36 @@
         prop="sVal"
         label="秒"
         width="70"
-      >
-      </el-table-column>
+      />
       <el-table-column
         prop="mVal"
         label="分"
         width="70"
-      >
-      </el-table-column>
+      />
       <el-table-column
         prop="hVal"
         label="时"
         width="70"
-      >
-      </el-table-column>
+      />
       <el-table-column
         prop="dVal"
         label="日"
         width="70"
-      >
-      </el-table-column>
+      />
       <el-table-column
         prop="monthVal"
         label="月"
         width="70"
-      >
-      </el-table-column>
+      />
       <el-table-column
         prop="weekVal"
         label="周"
         width="70"
-      >
-      </el-table-column>
+      />
       <el-table-column
         prop="yearVal"
         label="年"
-      >
-      </el-table-column>
+      />
     </el-table>
   </div>
 </template>
@@ -84,6 +77,9 @@ import week from './week'
 import year from './year'
 
 export default {
+  components: {
+    SecondAndMinute, hour, day, month, week, year
+  },
   props: {
     value: {
       type: String
@@ -100,11 +96,6 @@ export default {
       monthVal: '',
       weekVal: '',
       yearVal: ''
-    }
-  },
-  watch: {
-    'value'(a, b) {
-      this.updateVal()
     }
   },
   computed: {
@@ -129,19 +120,27 @@ export default {
       if (this.dVal !== '?' && this.weekVal !== '?') {
         this.$message.error('日期与星期必须有一个为“不指定”')
       }
-      let v = `${this.sVal} ${this.mVal} ${this.hVal} ${this.dVal} ${this.monthVal} ${this.weekVal} ${this.yearVal}`
+      const v = `${this.sVal} ${this.mVal} ${this.hVal} ${this.dVal} ${this.monthVal} ${this.weekVal} ${this.yearVal}`
       if (v !== this.value) {
         this.$emit('input', v)
       }
       return v
     }
   },
+  watch: {
+    'value'(a, b) {
+      this.updateVal()
+    }
+  },
+  created() {
+    this.updateVal()
+  },
   methods: {
     updateVal() {
       if (!this.value) {
         return
       }
-      let arrays = this.value.split(' ')
+      const arrays = this.value.split(' ')
       this.sVal = arrays[0]
       this.mVal = arrays[1]
       this.hVal = arrays[2]
@@ -150,12 +149,6 @@ export default {
       this.weekVal = arrays[5]
       this.yearVal = arrays[6]
     }
-  },
-  created() {
-    this.updateVal()
-  },
-  components: {
-    SecondAndMinute, hour, day, month, week, year
   }
 }
 </script>

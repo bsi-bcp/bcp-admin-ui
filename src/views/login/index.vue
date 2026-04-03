@@ -1,74 +1,74 @@
 <template>
   <div class="login-container">
     <div class="background">
-      <img :src="imgSrc" width="100%" height="100%" alt="" />
+      <img :src="imgSrc" width="100%" height="100%" alt="">
     </div>
     <div class="title-container">
-        <div class="title">
-          工业物联平台-集成IDE
-        </div>
+      <div class="title">
+        工业物联平台-集成IDE
+      </div>
     </div>
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
       <el-row :gutter="20" style="margin-top:5px;">
-      <el-col :span="12">
-        <!-- 公司图标 -->
-        <div class="CompanyLogos">
-          <img :src="imgSrc2" width="100%" height="100%" alt="" />
-        </div>
-      </el-col>
-      <el-col :span="12"  style="padding-top: 78px;">
-        <el-form-item prop="uname" class="ef-fore">
-          <!-- 用户名 -->
-          <span class="svg-container">
-            <svg-icon icon-class="user" class="svgstyle" />
-          </span>
-          <el-input
-            ref="uname"
-            v-model="loginForm.uname"
-            placeholder="用户名"
-            name="uname"
-            type="text"
-            tabindex="1"
-            auto-complete="on"
-            maxlength="50"
-            class="unamestyle"
-          />
-        </el-form-item>
+        <el-col :span="12">
+          <!-- 公司图标 -->
+          <div class="CompanyLogos">
+            <img :src="imgSrc2" width="100%" height="100%" alt="">
+          </div>
+        </el-col>
+        <el-col :span="12" style="padding-top: 78px;">
+          <el-form-item prop="uname" class="ef-fore">
+            <!-- 用户名 -->
+            <span class="svg-container">
+              <svg-icon icon-class="user" class="svgstyle" />
+            </span>
+            <el-input
+              ref="uname"
+              v-model="loginForm.uname"
+              placeholder="用户名"
+              name="uname"
+              type="text"
+              tabindex="1"
+              auto-complete="on"
+              maxlength="50"
+              class="unamestyle"
+            />
+          </el-form-item>
 
-        <el-form-item prop="password" class="ef-fore">
-          <span class="svg-container">
-            <svg-icon icon-class="password" class="svgstyle"/>
-          </span>
-          <el-input
-            :key="passwordType"
-            ref="password"
-            v-model="loginForm.password"
-            :type="passwordType"
-            placeholder="密码"
-            name="password"
-            tabindex="2"
-            auto-complete="on"
-            @keyup.enter.native="handleLogin"
-            class="unamestyle"
-          />
+          <el-form-item prop="password" class="ef-fore">
+            <span class="svg-container">
+              <svg-icon icon-class="password" class="svgstyle" />
+            </span>
+            <el-input
+              :key="passwordType"
+              ref="password"
+              v-model="loginForm.password"
+              :type="passwordType"
+              placeholder="密码"
+              name="password"
+              tabindex="2"
+              auto-complete="on"
+              class="unamestyle"
+              @keyup.enter.native="handleLogin"
+            />
           <!--
           <span class="show-pwd" @click="showPwd">
             <svg-icon  :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" class="showPwdstyle"/>
           </span>
           -->
-        </el-form-item>
+          </el-form-item>
 
-        <el-button :loading="loading" type="primary" style="width:108%;margin-bottom:30px;" @click.native.prevent="handleLogin">
-          登录
-        </el-button>
-      </el-col>
+          <el-button :loading="loading" type="primary" style="width:108%;margin-bottom:30px;" @click.native.prevent="handleLogin">
+            登录
+          </el-button>
+        </el-col>
       </el-row>
 
     </el-form>
     <div class="copyright-container">
-        <div class="copyright">
-          <!--Copyright@2017-{{currentYear}} 工业子系统数采平台 -->
-        </div>
+      <div class="copyright">
+        <!--Copyright@2017-{{currentYear}} 工业子系统数采平台 -->
+      </div>
     </div>
 
     <el-dialog width="30%" title="修改密码" :visible.sync="dialogFormVisible">
@@ -167,7 +167,7 @@ export default {
         containsUpper: null,
         containsLower: null
       },
-      license:{
+      license: {
         license: null,
         limitTime: null,
         limitDay: null
@@ -199,7 +199,7 @@ export default {
   computed: {
     currentYear: function() {
       // 获取当前年份
-      return new Date().getFullYear();
+      return new Date().getFullYear()
     }
   },
   watch: {
@@ -237,7 +237,7 @@ export default {
         this.passwordStrategy = res.model
       })
     },
-     getLicense() {
+    getLicense() {
       pwdApi.getLicDetail().then(res => {
         this.license = res.model
       })
@@ -254,15 +254,15 @@ export default {
     },
     handleLogin() {
       this.$refs.loginForm.validate(valid => {
-        //序列号检测
-        if(this.license){
+        // 序列号检测
+        if (this.license) {
           debugger
-          if(this.license.limitDay<0){
+          if (this.license.limitDay < 0) {
             this.$message.error('序列号已到期，登录失败！请联系客服续期.')
             return false
           }
-          if(this.license.limitDay>0 && this.license.limitDay<=10){
-            this.$message.info('序列号还有'+this.license.limitDay+'天就要到期了。请注意续费，以免影响正常使用.')
+          if (this.license.limitDay > 0 && this.license.limitDay <= 10) {
+            this.$message.info('序列号还有' + this.license.limitDay + '天就要到期了。请注意续费，以免影响正常使用.')
           }
         }
         if (valid) {
@@ -301,8 +301,6 @@ export default {
 <style lang="scss">
 $light_gray:rgb(0, 0, 0);
 $cursor: #000000;
-
-
 
 @supports (-webkit-mask: none) and (not (cater-color: $cursor)) {
   .login-container .login-form .el-input input {
@@ -355,7 +353,6 @@ $cursor: #000000;
 }
 </style>
 
-
 <style lang="scss" scoped>
 
 $bg:#2d3a4b;
@@ -386,7 +383,6 @@ $light_gray:#eee;
   border: 1px solid #000000;
   color: #666;
 }
-
 
 .unamestyle{
       display: inline-block;

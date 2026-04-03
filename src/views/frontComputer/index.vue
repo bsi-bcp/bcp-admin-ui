@@ -18,14 +18,14 @@
       <el-form ref="subFormData" :model="subFormData" :rules="subFormDataRule" class="subFormData" label-width="100px">
         <el-form-item label="租户" prop="sourceType">
           <el-select v-model="subFormData.tenantId" size="mini">
-            <el-option v-for="(optItem,optindex) in tenants" :key="optindex" :label="optItem.name" :value="optItem.id"/>
+            <el-option v-for="(optItem,optindex) in tenants" :key="optindex" :label="optItem.name" :value="optItem.id" />
           </el-select>
         </el-form-item>
         <el-form-item label="名称" prop="name">
-          <el-input v-model="subFormData.name" maxlength="100" size="mini" auto-complete="off"/>
+          <el-input v-model="subFormData.name" maxlength="100" size="mini" auto-complete="off" />
         </el-form-item>
         <el-form-item label="编码" prop="code">
-          <el-input v-model="subFormData.code" maxlength="20" size="mini" auto-complete="off"/>
+          <el-input v-model="subFormData.code" maxlength="20" size="mini" auto-complete="off" />
         </el-form-item>
         <el-form-item label="节点id" prop="nodeId">
           <el-input v-model="subFormData.nodeId" maxlength="50" size="mini" auto-complete="off"
@@ -33,7 +33,7 @@
           />
         </el-form-item>
         <el-form-item label="备注" prop="remark">
-          <el-input v-model="subFormData.remark" maxlength="500" size="mini" auto-complete="off"/>
+          <el-input v-model="subFormData.remark" maxlength="500" size="mini" auto-complete="off" />
         </el-form-item>
         <el-form-item label="状态" prop="enable">
           <el-radio-group v-model="subFormData.enable">

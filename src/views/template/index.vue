@@ -10,40 +10,41 @@
       <template slot="oper" slot-scope="scope">
         <el-button size="mini" type="text" @click="edit(scope.value)">编辑</el-button>
         <el-button size="mini" type="text" @click="disableType(scope.value)">
-          {{scope.value.enable ? "禁用" : "启用"}}
+          {{ scope.value.enable ? "禁用" : "启用" }}
         </el-button>
         <!-- <el-button size="mini" type="text" @click="remove(scope.value)">删除</el-button> -->
         <el-button size="mini" type="text" @click="download(scope.value)">下载</el-button>
       </template>
     </mod-filter>
     <!--新增/编辑界面-->
-    <el-dialog width="50%" :title="subFormData.id?'编辑':'新增'" :visible.sync="dialogFormVisible" :close-on-click-modal="false"  :close-on-press-escape="false">
+    <el-dialog width="50%" :title="subFormData.id?'编辑':'新增'" :visible.sync="dialogFormVisible" :close-on-click-modal="false" :close-on-press-escape="false">
       <el-form ref="subFormData" :model="subFormData" :rules="subFormDataRule" class="subFormData" label-width="100px">
         <el-form-item label="编码" prop="code">
-          <el-input v-model="subFormData.code" maxlength="200" size="mini" auto-complete="off"/>
+          <el-input v-model="subFormData.code" maxlength="200" size="mini" auto-complete="off" />
         </el-form-item>
         <el-form-item label="名称" prop="name">
-          <el-input v-model="subFormData.name" maxlength="100" size="mini"  />
+          <el-input v-model="subFormData.name" maxlength="100" size="mini" />
         </el-form-item>
         <el-form-item label="备注" prop="remark">
-          <el-input v-model="subFormData.remark" maxlength="500" size="mini" type="textarea" autosize auto-complete="off"/>
+          <el-input v-model="subFormData.remark" maxlength="500" size="mini" type="textarea" autosize auto-complete="off" />
         </el-form-item>
-        <el-form-item label="模板" prop="fileUrl" v-if="!subFormData.id">
-          <el-input v-model="subFormData.fileUrl" v-show="false"  size="mini" auto-complete="off"/>
+        <el-form-item v-if="!subFormData.id" label="模板" prop="fileUrl">
+          <el-input v-show="false" v-model="subFormData.fileUrl" size="mini" auto-complete="off" />
           <!--on-exceed文件超出个数；:limit最大允许上传个数；http-request实现自定义上传；	action必选参数，上传的地址；before-upload 限制用户上传的图片格式和大小-->
-          <el-upload 
+          <el-upload
             :on-exceed="exceedFile"
             :file-list="fileList"
             :limit="3"
             :http-request="handleUpload"
-            action='undefined'
-            :beforeUpload="beforeUpload">
-              <el-button size="small" type="primary">点击上传</el-button>
+            action="undefined"
+            :before-upload="beforeUpload"
+          >
+            <el-button size="small" type="primary">点击上传</el-button>
           </el-upload>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button size="mini" type="primary" @click="subForm('subFormData')" v-prevent-repeat-click>确 定</el-button>
+        <el-button v-prevent-repeat-click size="mini" type="primary" @click="subForm('subFormData')">确 定</el-button>
         <el-button size="mini" @click="dialogFormVisible = false;showCronBox=false">取 消</el-button>
       </div>
     </el-dialog>
@@ -51,18 +52,18 @@
 </template>
 
 <script>
-import * as api from "@/api/addministrative";
+import * as api from '@/api/addministrative'
 import {
   upData,
   AddTemplate,
   GetTemplate,
   disableType,
-  delType,
-} from "@/api/Administrative";
+  delType
+} from '@/api/Administrative'
 export default {
   data() {
     return {
-      fileList:[],
+      fileList: [],
       typeOptions: [],
       nameOptions: [],
       dialogFormVisible: false,
@@ -72,63 +73,63 @@ export default {
         name: null,
         code: null,
         remark: null,
-        fileUrl:"bcp-template#custom.txt",
+        fileUrl: 'bcp-template#custom.txt'
       },
       subFormDataRule: {
         name: [
           {
             required: true,
-            message: "请填写名称",
-            trigger: 'blur',
+            message: '请填写名称',
+            trigger: 'blur'
           }
         ],
         code: [
           {
             required: true,
-            message: "请填写编码",
+            message: '请填写编码',
             trigger: 'blur'
           }
         ],
         type: [
           {
             required: true,
-            message: "请填写类型",
+            message: '请填写类型',
             trigger: 'blur'
           }
         ],
         fileUrl: [
           {
             required: false,
-            message: "请上传模板文件",
+            message: '请上传模板文件',
             trigger: 'change'
           }
         ]
       },
       params: {
         currentPage: 1,
-        pageSize: 10,
+        pageSize: 10
       },
       datas: {
         // multipleSelection: [],
-        nosubmit: false,//true设置按钮消失 
-        noresetForm:false,
+        nosubmit: false, // true设置按钮消失
+        noresetForm: false,
         params: {
           currentPage: 1,
-          pageSize: 10,
+          pageSize: 10
         },
         table: {
           orderNo: true,
           selection: false,
-          loading: true,
+          loading: true
         },
         resData: {
           rows: [],
           pageSize: 10,
           currentPage: 1,
-          totalCount: 0,
+          totalCount: 0
         },
         filterList: [
-           {
+          {
             type: 'input',
             prop: 'name',
             conditionshow: true,
@@ -138,52 +139,52 @@ export default {
             label: '模板名称',
             placeholder: '关键词',
             queryName: '关键词',
-            align:"left",
+            align: 'left'
           },
           {
-            prop: "code",
+            prop: 'code',
             conditionshow: false,
             filedShow: false,
-            label: "编码",
-            placeholder: "编码"
+            label: '编码',
+            placeholder: '编码'
           },
           {
-            prop: "enable",
+            prop: 'enable',
             filedShow: true,
             sortable: true,
             slot: true,
-            label: "状态",
-            placeholder: "状态"
+            label: '状态',
+            placeholder: '状态'
           },
           {
-            type: "input",
-            prop: "createTime",
+            type: 'input',
+            prop: 'createTime',
             filedShow: true,
             sortable: true,
-            label: "创建时间",
-            placeholder: "创建时间"
+            label: '创建时间',
+            placeholder: '创建时间'
           },
           {
-            prop: "lastUpdateTime",
+            prop: 'lastUpdateTime',
             filedShow: true,
             sortable: true,
-            label: "修改时间",
-            placeholder: "修改时间"
+            label: '修改时间',
+            placeholder: '修改时间'
           },
           {
-            prop: "oper",
+            prop: 'oper',
             conditionshow: false,
             filedShow: true,
             isSearchHide: true,
             slot: true,
-            label: "操作",
-            placeholder: "操作",
+            label: '操作',
+            placeholder: '操作',
             optList: []
-          },
-        ],
+          }
+        ]
       },
-      showCronBox: false,
-    };
+      showCronBox: false
+    }
   },
   async created() {},
   mounted() {},
@@ -192,115 +193,115 @@ export default {
       this.$notify.warning({
         title: '警告',
         message: `只能选择1个文件，当前共选择了 ${files.length + fileList.length} 个`
-      });
+      })
     },
     disableType(row) {
-      let obj = {
-        enable:row.enable,
-        id:row.id
+      const obj = {
+        enable: row.enable,
+        id: row.id
       }
       disableType(obj).then((res) => {
         this.$message.success({
-          message: "操作成功",
-        });
-        this.getData();
-      });
+          message: '操作成功'
+        })
+        this.getData()
+      })
     },
     beforeUpload(file) {
       if (file.size / (1024 * 1024) > 5) {
-          this.$notify.warning({
-            title: '警告',
-            message: `文件大小不得超过5M`
-          });
-      }else{
-        const formData = new FormData();
-        formData.append("file", file);
+        this.$notify.warning({
+          title: '警告',
+          message: `文件大小不得超过5M`
+        })
+      } else {
+        const formData = new FormData()
+        formData.append('file', file)
         upData(formData).then((res) => {
-          this.subFormData.fileUrl = res.model;
-        });
+          this.subFormData.fileUrl = res.model
+        })
       }
     },
     handleUpload(file, fileList) {},
     inputByMenu() {
-      this.subFormData.cron = null;
+      this.subFormData.cron = null
     },
     inputByCustom() {
-      this.subFormData.cron = null;
+      this.subFormData.cron = null
     },
     // 删除
     remove(row) {
-      this.$confirm("是否删除?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
+      this.$confirm('是否删除?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
       })
         .then(() => {
           delType(row.id).then((res) => {
             this.$message.success({
-              message: "删除成功",
-            });
-            this.getData();
+              message: '删除成功'
+            })
+            this.getData()
             // this.dialogFormVisible = false
-          });
+          })
         })
-        .catch(() => {});
+        .catch(() => {})
     },
     download(row) {
       location.href = `${process.env.VUE_APP_BASE_API}/services/fwcore/template/down/${row.id}`
     },
-    //新增的方法
+    // 新增的方法
     subForm(formData) {
-      this.showCronBox = false;
+      this.showCronBox = false
       this.$refs[formData].validate((valid) => {
         if (valid) {
-          let obj = {
-            ...this.subFormData,
-          };
-        obj.showType=  obj.id? true:false
+          const obj = {
+            ...this.subFormData
+          }
+          obj.showType = !!obj.id
           AddTemplate(obj).then((res) => {
-            this.$message.success("操作成功");
-            this.getData(this.datas);
-            this.dialogFormVisible = false;
-          });
+            this.$message.success('操作成功')
+            this.getData(this.datas)
+            this.dialogFormVisible = false
+          })
         } else {
-          return false;
+          return false
         }
-      });
+      })
     },
     // 新增或编辑页面
     edit(row) {
       this.dialogFormVisible = true
       // this.fileList = []
-      //如果是新增
-      if (row===0) {
-        //清空属性值
-        Object.keys(this.subFormData).forEach((key) => (this.subFormData[key] = null));
-        this.subFormData.fileUrl = "bcp-template#custom.txt";
+      // 如果是新增
+      if (row === 0) {
+        // 清空属性值
+        Object.keys(this.subFormData).forEach((key) => (this.subFormData[key] = null))
+        this.subFormData.fileUrl = 'bcp-template#custom.txt'
         return
       }
-      //如果是更新
+      // 如果是更新
       this.subFormData = {
         ...row
       }
-      //解构赋值id丢失，所以在这里单独设置一下id，原因待查找
+      // 解构赋值id丢失，所以在这里单独设置一下id，原因待查找
       // this.subFormData.id = row.id
     },
     getData(datas = this.datas) {
-      this.$set(this, "datas", datas);
-      this.$set(this, "params", datas.params);
-      this.$set(this.datas.table, "loading", true);
-      this.$set(this.params, "orgId", this.params.orgName);
- 
-      api.getPage({ ...this.params,key:this.params.name}).then((res) => {
-          this.$set(this.datas.resData, "rows", res.model);
-          this.$set(this.datas.params, "currentPage", res.currentPage);
-          this.$set(this.datas.params, "pageSize", res.pageSize);
-          this.$set(this.datas.resData, "totalCount", res.totalCount);
-          this.$set(this.datas.table, "loading", false);
-        });
+      this.$set(this, 'datas', datas)
+      this.$set(this, 'params', datas.params)
+      this.$set(this.datas.table, 'loading', true)
+      this.$set(this.params, 'orgId', this.params.orgName)
+
+      api.getPage({ ...this.params, key: this.params.name }).then((res) => {
+        this.$set(this.datas.resData, 'rows', res.model)
+        this.$set(this.datas.params, 'currentPage', res.currentPage)
+        this.$set(this.datas.params, 'pageSize', res.pageSize)
+        this.$set(this.datas.resData, 'totalCount', res.totalCount)
+        this.$set(this.datas.table, 'loading', false)
+      })
     }
   }
-};
+}
 </script>
 
 <style lang="scss" scoped>

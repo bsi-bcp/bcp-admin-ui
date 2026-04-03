@@ -37,11 +37,12 @@ module.exports = {
       errors: true
     },
     proxy: {
-      [process.env.VUE_APP_BASE_API]: {
-        target: 'http://localhost:8819',
+      '/dev-api': {
+        target: 'https://bcpcloud.cn',
         changeOrigin: true,
+        secure: false,
         pathRewrite: {
-          ['^' + process.env.VUE_APP_BASE_API]: ''
+          '^/dev-api': '/bcp-api'
         }
       }
     }
@@ -55,16 +56,16 @@ module.exports = {
         '@': resolve('src')
       }
     },
-    output: {
+    output: process.env.NODE_ENV === 'production' ? {
       filename: 'static/js/[name].[contenthash:8].js',
       chunkFilename: 'static/js/[name].[contenthash:8].js'
-    },
+    } : {},
     plugins: [
       new MonacoWebpackPlugin({
         languages: ['javascript', 'typescript'],
         features: [
           'bracketMatching', 'clipboard', 'coreCommands', 'comment',
-          'find', 'folding', 'hover', 'suggest', 'wordHighlighter',
+          'find', 'folding', 'format', 'hover', 'suggest', 'wordHighlighter',
           'indentation', 'parameterHints', 'smartSelect'
         ]
       })

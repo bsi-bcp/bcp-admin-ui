@@ -11,7 +11,7 @@
       <template slot="oper" slot-scope="scope">
         <el-button size="mini" type="text" @click="edit(scope.value)">编辑</el-button>
         <el-button size="mini" type="text" @click="editConfig(scope.value.id)">配置</el-button>
-         <el-button size="mini" type="text" @click="templateConfig(scope.value.id)">模板</el-button>
+        <el-button size="mini" type="text" @click="templateConfig(scope.value.id)">模板</el-button>
         <el-button size="mini" type="text" @click="remove(scope.value)">删除</el-button>
       </template>
     </mod-filter>
@@ -19,22 +19,22 @@
     <el-dialog width="50%" :title="subFormData.id?'编辑':'新增'" :visible.sync="dialogFormVisible">
       <el-form ref="subFormData" :model="subFormData" :rules="subFormDataRule" class="subFormData" label-width="100px">
         <el-form-item label="名称" prop="name">
-          <el-input v-model="subFormData.name" maxlength="100" size="mini" auto-complete="off"/>
+          <el-input v-model="subFormData.name" maxlength="100" size="mini" auto-complete="off" />
         </el-form-item>
         <el-form-item label="编码" prop="code">
-          <el-input v-model="subFormData.code" maxlength="20" size="mini" auto-complete="off"/>
+          <el-input v-model="subFormData.code" maxlength="20" size="mini" auto-complete="off" />
         </el-form-item>
         <el-form-item label="最大用户数" prop="number">
-          <el-input-number v-model="subFormData.number" :min="0" size="mini" auto-complete="off"/>
+          <el-input-number v-model="subFormData.number" :min="0" size="mini" auto-complete="off" />
         </el-form-item>
         <el-form-item label="联系方式" prop="phone">
-          <el-input v-model="subFormData.phone" maxlength="50" size="mini" auto-complete="off"/>
+          <el-input v-model="subFormData.phone" maxlength="50" size="mini" auto-complete="off" />
         </el-form-item>
         <el-form-item label="地址" prop="address">
-          <el-input v-model="subFormData.address" maxlength="200" size="mini" auto-complete="off"/>
+          <el-input v-model="subFormData.address" maxlength="200" size="mini" auto-complete="off" />
         </el-form-item>
         <el-form-item label="备注" prop="remark">
-          <el-input v-model="subFormData.remark" maxlength="500" size="mini" auto-complete="off"/>
+          <el-input v-model="subFormData.remark" maxlength="500" size="mini" auto-complete="off" />
         </el-form-item>
         <el-form-item label="状态" prop="enable">
           <el-radio-group v-model="subFormData.enable">
@@ -59,29 +59,29 @@
             <el-option v-for="(optItem,optindex) in typeOptions" :key="optindex" :label="optItem.propvalue" :value="optItem.propkey" />
           </el-select>
         </el-form-item>
-         <el-form-item label="下发api地址" prop="url" v-if="subConfigFormData.sendType === 'noiot'">
-          <el-input v-model="subConfigFormData.url" maxlength="500" size="mini" auto-complete="off"/>
+        <el-form-item v-if="subConfigFormData.sendType === 'noiot'" label="下发api地址" prop="url">
+          <el-input v-model="subConfigFormData.url" maxlength="500" size="mini" auto-complete="off" />
         </el-form-item>
-        <el-form-item label="项目id" prop="projectId" v-if="subConfigFormData.sendType === 'iot'">
-          <el-input v-model="subConfigFormData.projectId" maxlength="50" size="mini" auto-complete="off"/>
+        <el-form-item v-if="subConfigFormData.sendType === 'iot'" label="项目id" prop="projectId">
+          <el-input v-model="subConfigFormData.projectId" maxlength="50" size="mini" auto-complete="off" />
         </el-form-item>
-        <el-form-item label="项目名称" prop="projectName" v-if="subConfigFormData.sendType === 'iot'">
-          <el-input v-model="subConfigFormData.projectName" maxlength="50" size="mini" auto-complete="off"/>
+        <el-form-item v-if="subConfigFormData.sendType === 'iot'" label="项目名称" prop="projectName">
+          <el-input v-model="subConfigFormData.projectName" maxlength="50" size="mini" auto-complete="off" />
         </el-form-item>
-        <el-form-item label="模块id" prop="moduleId" v-if="subConfigFormData.sendType === 'iot'">
-          <el-input v-model="subConfigFormData.moduleId" maxlength="50" size="mini" auto-complete="off"/>
+        <el-form-item v-if="subConfigFormData.sendType === 'iot'" label="模块id" prop="moduleId">
+          <el-input v-model="subConfigFormData.moduleId" maxlength="50" size="mini" auto-complete="off" />
         </el-form-item>
-        <el-form-item label="iam账号" prop="iamUname" v-if="subConfigFormData.sendType === 'iot'">
-          <el-input v-model="subConfigFormData.iamUname" maxlength="100" size="mini" auto-complete="off"/>
+        <el-form-item v-if="subConfigFormData.sendType === 'iot'" label="iam账号" prop="iamUname">
+          <el-input v-model="subConfigFormData.iamUname" maxlength="100" size="mini" auto-complete="off" />
         </el-form-item>
-        <el-form-item label="iam密码" prop="iamPassword" v-if="subConfigFormData.sendType === 'iot'">
-          <el-input v-model="subConfigFormData.iamPassword" maxlength="100" size="mini" auto-complete="off"/>
+        <el-form-item v-if="subConfigFormData.sendType === 'iot'" label="iam密码" prop="iamPassword">
+          <el-input v-model="subConfigFormData.iamPassword" maxlength="100" size="mini" auto-complete="off" />
         </el-form-item>
-        <el-form-item label="iam域账号" prop="iamDomain" v-if="subConfigFormData.sendType === 'iot'">
-          <el-input v-model="subConfigFormData.iamDomain" maxlength="100" size="mini" auto-complete="off"/>
+        <el-form-item v-if="subConfigFormData.sendType === 'iot'" label="iam域账号" prop="iamDomain">
+          <el-input v-model="subConfigFormData.iamDomain" maxlength="100" size="mini" auto-complete="off" />
         </el-form-item>
-        <el-form-item label="备注" prop="remark" v-if="subConfigFormData.sendType === 'iot'">
-          <el-input v-model="subConfigFormData.remark" maxlength="100" size="mini" auto-complete="off"/>
+        <el-form-item v-if="subConfigFormData.sendType === 'iot'" label="备注" prop="remark">
+          <el-input v-model="subConfigFormData.remark" maxlength="100" size="mini" auto-complete="off" />
         </el-form-item>
         <el-form-item label="状态" prop="enable">
           <el-radio-group v-model="subConfigFormData.enable">
@@ -90,7 +90,7 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item v-show="false" label="租户id" prop="tenantId">
-          <el-input v-model="subConfigFormData.tenantId" size="mini" auto-complete="off"/>
+          <el-input v-model="subConfigFormData.tenantId" size="mini" auto-complete="off" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -98,26 +98,25 @@
         <el-button size="mini" type="primary" @click="subConfigForm('subConfigFormData')">确 定</el-button>
       </div>
     </el-dialog>
- 
+
     <!-- 模板选择 -->
     <el-dialog :close-on-click-modal="false" :close-on-press-escape="false" width="50%" title="选择模板" :visible.sync="templateDialogFormVisible">
       <div style="width: 100%;">
         <!-- //table 表格 -->
         <el-table
-          max-height="380"
           ref="templateTable"
+          max-height="380"
           :data="templateData"
           class="mt10"
-          @selection-change="handleSelectionChange"
-          :cell-style="{padding:'5px 0px'}" 
+          :cell-style="{padding:'5px 0px'}"
           highlight-current-row
-          fit 
+          fit
           style="width: 100%;"
+          @selection-change="handleSelectionChange"
         >
-          <el-table-column type="selection" width="55"> </el-table-column>
-          <el-table-column type="index" width="55"> </el-table-column>
-          <el-table-column prop="templateName" align="center" label="模板名称">
-          </el-table-column>
+          <el-table-column type="selection" width="55" />
+          <el-table-column type="index" width="55" />
+          <el-table-column prop="templateName" align="center" label="模板名称" />
         </el-table>
       </div>
       <div slot="footer" class="dialog-footer">
@@ -134,14 +133,14 @@ import * as menuApi from '@/api/menu'
 export default {
   data() {
     return {
-      typeOptions: [], 
+      typeOptions: [],
       dialogFormVisible: false,
       configDialogFormVisible: false,
       templateDialogFormVisible: false,
       dialogRowTitle: null,
       selectionPropList: [],
       selectionTemplateList: [],
-      selectionTenantId:null,
+      selectionTenantId: null,
       rowData: {
         id: null,
         name: null,
@@ -340,7 +339,7 @@ export default {
     }
   },
   created() {
-      this.getSourceTypeOptions()
+    this.getSourceTypeOptions()
   },
   mounted() {
   },
@@ -445,7 +444,7 @@ export default {
       this.configDialogFormVisible = true
       if (id == null) {
         this.resetConfigValue()
-      }else{
+      } else {
         this.getConfigData(id)
         this.$set(this.subConfigFormData, 'tenantId', id)
       }
@@ -454,13 +453,13 @@ export default {
     templateConfig(id) {
       this.templateDialogFormVisible = true
       this.selectionTenantId = id
-      var params = {"tenantId":id}
-      api.getTemplate(params).then( res=>{
+      var params = { 'tenantId': id }
+      api.getTemplate(params).then(res => {
         this.templateData = res
-      }).then(a=>{
+      }).then(a => {
         this.templateData.forEach(
-          row =>{
-            if(row.checked==='1'){
+          row => {
+            if (row.checked === '1') {
               this.$refs.templateTable.toggleRowSelection(row, true)
             }
           }
@@ -469,20 +468,20 @@ export default {
     },
     handleSelectionChange(val) {
       this.selectionTemplateList = []
-      //val是选中的数据的数组
+      // val是选中的数据的数组
       val.forEach(item => {
         const id = item.templateId
-        const obj = {"tenantId":this.selectionTenantId,"templateId":item.templateId}
+        const obj = { 'tenantId': this.selectionTenantId, 'templateId': item.templateId }
         this.selectionTemplateList.push(obj)
       })
     },
-    saveTemplateList(){
-      api.saveTemplate(this.selectionTenantId,this.selectionTemplateList).then(
-        res=>{
+    saveTemplateList() {
+      api.saveTemplate(this.selectionTenantId, this.selectionTemplateList).then(
+        res => {
           this.$message.success('保存成功')
         }
       )
-      this.templateDialogFormVisible = false;
+      this.templateDialogFormVisible = false
     },
     resetConfigValue() {
       this.$set(this, 'subConfigFormData', {

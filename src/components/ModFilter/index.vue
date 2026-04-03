@@ -1,4 +1,4 @@
-<template >
+<template>
   <div style="background: #fff;">
     <div style="padding:20px">
       <div v-if="!datas.noFilter" class="mod-filter">
@@ -34,7 +34,7 @@
             <template v-if="!datas.noresetForm">
               <el-button v-if="searchCon.length>0" size="mini" type="primary" @click="resetForm('datas')">重置</el-button>
             </template>
-            <el-dropdown :hide-on-click="false" :show-timeout="100" trigger="click" style="padding-left:10px;" v-show="false">
+            <el-dropdown v-show="false" :hide-on-click="false" :show-timeout="100" trigger="click" style="padding-left:10px;">
               <el-button type="primary" size="mini">
                 设置
                 <i class="el-icon-caret-bottom el-icon--right" />
@@ -68,10 +68,10 @@
         <slot name="lastBtn" />
       </div>
 
-      <el-table ref="table" v-loading="datas.table.loading"  max-height="600px" class="mt10" :cell-style="{padding:'10px 0px'}" :header-cell-style="{background:'#fafafa',color:'#606266',padding:'12px 0px','text-align':'center'}" :data="datas.resData.rows" fit highlight-current-row @selection-change="handleSelectionChange" @row-click="rowClick" @cell-click="cellClick" @sort-change="sortHandler">
+      <el-table ref="table" v-loading="datas.table.loading" max-height="600px" class="mt10" :cell-style="{padding:'10px 0px'}" :header-cell-style="{background:'#fafafa',color:'#606266',padding:'12px 0px','text-align':'center'}" :data="datas.resData.rows" fit highlight-current-row @selection-change="handleSelectionChange" @row-click="rowClick" @cell-click="cellClick" @sort-change="sortHandler">
         <el-table-column v-if="datas.table.selection" type="selection" width="55" />
         <el-table-column v-if="datas.table.orderNo" type="index" width="50" label="序号" align="center" />
-        <el-table-column v-for="(rowItem ,rowIdx ) in tableField" :key="rowIdx" :align="rowItem.align==null?'center':rowItem.align" :prop="rowItem.prop" :label="rowItem.label" :type="rowItem.type"  :show-overflow-tooltip="true" :min-width="rowItem.minWidth" :sortable="rowItem.sortable ? 'custom' : false">
+        <el-table-column v-for="(rowItem ,rowIdx ) in tableField" :key="rowIdx" :align="rowItem.align==null?'center':rowItem.align" :prop="rowItem.prop" :label="rowItem.label" :type="rowItem.type" :show-overflow-tooltip="true" :min-width="rowItem.minWidth" :sortable="rowItem.sortable ? 'custom' : false">
           <template slot-scope="scope">
             <slot v-if="rowItem.slot==true" :name="rowItem.prop" :value="scope.row" />
             <span v-else-if="!!rowItem.image"><img :src="scope.row[rowItem.prop]"></span>

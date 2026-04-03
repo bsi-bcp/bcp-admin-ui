@@ -51,10 +51,10 @@
           <el-input v-model="subPropListFormData.orderNo" size="mini" auto-complete="off" />
         </el-form-item>
         <el-form-item label="分组" prop="group">
-          <el-input v-model="subPropListFormData.group"  maxlength="50" size="mini" auto-complete="off" />
+          <el-input v-model="subPropListFormData.group" maxlength="50" size="mini" auto-complete="off" />
         </el-form-item>
         <el-form-item label="备注" prop="remark">
-          <el-input v-model="subPropListFormData.remark"  maxlength="1000" size="mini" auto-complete="off" />
+          <el-input v-model="subPropListFormData.remark" maxlength="1000" size="mini" auto-complete="off" />
         </el-form-item>
         <el-form-item label="状态" prop="enable">
           <el-radio-group v-model="subPropListFormData.enable">

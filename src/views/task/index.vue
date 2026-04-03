@@ -18,10 +18,10 @@
     <el-dialog width="50%" :title="subFormData.id?'编辑':'新增'" :visible.sync="dialogFormVisible">
       <el-form ref="subFormData" :model="subFormData" :rules="subFormDataRule" class="subFormData" label-width="100px">
         <el-form-item label="名称" prop="name">
-          <el-input v-model="subFormData.name" maxlength="100" size="mini" auto-complete="off"/>
+          <el-input v-model="subFormData.name" maxlength="100" size="mini" auto-complete="off" />
         </el-form-item>
         <el-form-item label="编码" prop="code">
-          <el-input v-model="subFormData.code" maxlength="20" size="mini" auto-complete="off"/>
+          <el-input v-model="subFormData.code" maxlength="20" size="mini" auto-complete="off" />
         </el-form-item>
         <el-form-item label="计划输入方式">
           <el-radio-group v-model="planCheckWay">
@@ -37,14 +37,14 @@
             />
           </el-select>
         </el-form-item>
-<!--        <el-form-item v-if="planCheckWay===1" v-show="false" label="cron" prop="cron">-->
-<!--          <el-input v-model="subFormData.cron" maxlength="50" size="mini" auto-complete="off"/>-->
-<!--        </el-form-item>-->
+        <!--        <el-form-item v-if="planCheckWay===1" v-show="false" label="cron" prop="cron">-->
+        <!--          <el-input v-model="subFormData.cron" maxlength="50" size="mini" auto-complete="off"/>-->
+        <!--        </el-form-item>-->
         <el-form-item v-if="planCheckWay===2" label="cron" prop="cron">
-          <el-input v-model="subFormData.cron" maxlength="50" size="mini" auto-complete="off"/>
+          <el-input v-model="subFormData.cron" maxlength="50" size="mini" auto-complete="off" />
         </el-form-item>
         <el-form-item label="绑定service" prop="execService">
-          <el-input v-model="subFormData.execService" maxlength="50" size="mini" auto-complete="off"/>
+          <el-input v-model="subFormData.execService" maxlength="50" size="mini" auto-complete="off" />
         </el-form-item>
         <!--        <el-form-item label="类型" prop="type">-->
         <!--          <el-select v-model="subFormData.type" size="mini" auto-complete="off">-->
@@ -61,7 +61,7 @@
         <!--          </el-select>-->
         <!--        </el-form-item>-->
         <el-form-item label="备注" prop="remark">
-          <el-input v-model="subFormData.remark" maxlength="500" size="mini" auto-complete="off"/>
+          <el-input v-model="subFormData.remark" maxlength="500" size="mini" auto-complete="off" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -77,16 +77,15 @@
       >
         <el-form-item label="计划任务名称">
           <el-select v-model="allocationNames" multiple disabled size="mini" auto-complete="off">
-            <el-option v-for="item in allocationNames" :key="item" :label="item" :value="item"
-            ></el-option>
+            <el-option v-for="item in allocationNames" :key="item" :label="item" :value="item" />
           </el-select>
         </el-form-item>
         <el-form-item v-show="false" label="items" prop="items">
-          <el-input v-model="allocationSubFormData.items" size="mini" auto-complete="off"/>
+          <el-input v-model="allocationSubFormData.items" size="mini" auto-complete="off" />
         </el-form-item>
         <el-form-item label="租户" prop="sourceType">
           <el-select v-model="allocationSubFormData.tenantId" size="mini" @change="getComputers">
-            <el-option v-for="(optItem,optindex) in tenants" :key="optindex" :label="optItem.name" :value="optItem.id"/>
+            <el-option v-for="(optItem,optindex) in tenants" :key="optindex" :label="optItem.name" :value="optItem.id" />
           </el-select>
         </el-form-item>
         <el-form-item label="前置机" prop="sourceType">
@@ -440,7 +439,7 @@ export default {
       }).catch(e => {
         return false
       })
-    },
+    }
     // // 定义plan转cron表达式
     // getCronByPlan(plan) {
     //   let cron

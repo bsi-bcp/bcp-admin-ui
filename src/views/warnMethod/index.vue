@@ -52,7 +52,7 @@
               <el-input v-model="subFormData_email.receiver" placeholder="单行输入" maxlength="500" size="mini" auto-complete="off" />
             </el-form-item>
             <el-form-item label="内容" prop="content">
-              <el-input v-model="subFormData_email.content" type="textarea" rows = "6" placeholder="单行输入" maxlength="1000" size="mini" auto-complete="off" />
+              <el-input v-model="subFormData_email.content" type="textarea" rows="6" placeholder="单行输入" maxlength="1000" size="mini" auto-complete="off" />
             </el-form-item>
           </el-form>
         </div>
@@ -73,7 +73,7 @@
               <el-input v-model="subFormData_feishu.secretkey" placeholder="密钥" maxlength="200" size="mini" auto-complete="off" show-password />
             </el-form-item>
             <el-form-item label="告警内容模板" prop="template">
-              <el-input v-model="subFormData_feishu.template" type="textarea" rows = "6" placeholder="单行输入" maxlength="1000" size="mini" auto-complete="off" />
+              <el-input v-model="subFormData_feishu.template" type="textarea" rows="6" placeholder="单行输入" maxlength="1000" size="mini" auto-complete="off" />
             </el-form-item>
           </el-form>
         </div>

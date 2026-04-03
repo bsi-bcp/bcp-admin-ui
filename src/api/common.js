@@ -44,26 +44,26 @@ export function deepClone(obj) {
  * @param {*} compareFunc function
  * @returns
  */
-export function distinct(dataArray, keyFunc , compareFunc){
-    let resMap = {};
-    dataArray.forEach(
-        function(val){
-            let key = keyFunc(val);
-            if( resMap[key] == null
-                || (
-                    compareFunc != null && typeof compareFunc == 'function'
-                    && compareFunc(val,resMap[key]) === true
+export function distinct(dataArray, keyFunc, compareFunc) {
+  const resMap = {}
+  dataArray.forEach(
+    function(val) {
+      const key = keyFunc(val)
+      if (resMap[key] == null ||
+                (
+                  compareFunc != null && typeof compareFunc === 'function' &&
+                    compareFunc(val, resMap[key]) === true
                 )
-            ){
-                resMap[key] = val;
-            }
-        }
-    )
-    let resArray = [];
-    Object.keys(resMap).forEach(
-        function(key){
-            resArray.push(resMap[key])
-        }
-    )
-    return resArray;
+      ) {
+        resMap[key] = val
+      }
+    }
+  )
+  const resArray = []
+  Object.keys(resMap).forEach(
+    function(key) {
+      resArray.push(resMap[key])
+    }
+  )
+  return resArray
 }
