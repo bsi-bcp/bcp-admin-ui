@@ -50,7 +50,7 @@ export function submitFormEdit(data) {
   return request({
     url: URL.user + '/' + data.id,
     method: 'PUT',
-    data: data
+    data
   })
 }
 

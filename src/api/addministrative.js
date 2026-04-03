@@ -1,57 +1,21 @@
+import createCrudApi from './_crud'
 import request from '@/utils/request'
-import qs from 'qs'
 
-const URL = {
-  role: '/services/fwcore/template'
-}
+const crud = createCrudApi('/services/fwcore/template')
 
-// 2、新增/编辑
-export function submitForm(params) {
-  params.menuIds = params.menuArr ? params.menuArr.join(',') : ''
-  delete params.menuArr
-  return request({
-    url: params.id ? URL.role + '/' + params.id + '' : URL.role,
-    method: params.id ? 'PUT' : 'POST',
-    data: params
-  })
-}
+export const getPage = crud.getPage
+export const submitForm = crud.submitForm
+export const batchDelete = crud.batchDelete
+export const singleDelete = crud.singleDelete
 
-// 3、批量删除
-export function batchDelete(params) {
-  const queryParams = qs.stringify(params, { indices: false })
-  return request({
-    url: URL.role + '?' + queryParams,
-    method: 'DELETE'
-    // params
-  })
-}
-
-// 4.单个删除
-export function singleDelete(id) {
-  return request({
-    url: URL.role + '/' + id,
-    method: 'DELETE'
-    // params
-  })
-}
-// 6、获取页面表格信息的名称
 export function getName(params) {
   return request({
-    url: URL.role,
-    method: 'get',
-    params
-  })
-}
-// 1、角色列表
-export function getPage(params) {
-  return request({
-    url: URL.role,
+    url: '/services/fwcore/template',
     method: 'get',
     params
   })
 }
 
-// 1、角色列表
 export function getPageAuth(params) {
   return request({
     url: '/services/fwcore/template-auth',
