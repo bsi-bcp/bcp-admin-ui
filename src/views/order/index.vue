@@ -119,7 +119,6 @@
 <script>
 import * as api from '@/api/order'
 import * as menuApi from '@/api/menu'
-import * as sel from '@/api/select'
 import { mapGetters } from 'vuex'
 
 export default {
@@ -418,15 +417,13 @@ export default {
       showCronBox: false
     }
   },
-  created() {
-    this.getSourceTypeOptions()
-  },
-  mounted() {
-  },
   computed: {
     ...mapGetters([
       'cur_user'
     ])
+  },
+  created() {
+    this.getSourceTypeOptions()
   },
   methods: {
     input(data) {

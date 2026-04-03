@@ -39,21 +39,21 @@
             <el-select id="config_id" v-model="subFormData.configId" placeholder="请选择"
                        @change="subFormData.taskId = null"
             >
-              <el-option v-for="item in integrationConfigs" :label="item.name" :value="item.id" />
+              <el-option v-for="item in integrationConfigs" :key="item.id" :label="item.name" :value="item.id" />
             </el-select>
           </template>
         </el-form-item>
         <el-form-item label="任务" prop="taskId">
           <template>
             <el-select id="task_id" v-model="subFormData.taskId" value-key="id" placeholder="请选择">
-              <el-option v-for="item in getConfigTask" :label="item.taskName" :value="item.taskId" />
+              <el-option v-for="item in getConfigTask" :key="item.taskId" :label="item.taskName" :value="item.taskId" />
             </el-select>
           </template>
         </el-form-item>
 
         <el-form-item label="告警方式" prop="warnMethodId">
           <el-select v-model="subFormData.warnMethodId" placeholder="请选择">
-            <el-option v-for="item in warnMethods" :label="item.name" :value="item.id" />
+            <el-option v-for="item in warnMethods" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>
         </el-form-item>
         <el-form-item label="节点id" prop="nodeId">
@@ -317,11 +317,6 @@ export default {
       showCronBox: false
     }
   },
-  created() {
-    this.baseLoad()
-  },
-  mounted() {
-  },
   computed: {
     ...mapGetters([
       'cur_user'
@@ -334,6 +329,11 @@ export default {
         }
       )
     }
+  },
+  created() {
+    this.baseLoad()
+  },
+  mounted() {
   },
 
   methods: {

@@ -16,10 +16,10 @@
     >
       <!-- <el-table-column type="selection" width="55"> </el-table-column> -->
       <el-table-column width="55">
-　　　  <template slot-scope="scope">
-　　　　　<el-radio v-model="radioId" :label="scope.row.name">&nbsp;</el-radio>
-　　　  </template>
-　　   </el-table-column>
+        <template slot-scope="scope">
+          <el-radio v-model="radioId" :label="scope.row.name">&nbsp;</el-radio>
+        </template>
+      </el-table-column>
       <el-table-column type="index" width="55" />
       <el-table-column prop="name" align="center" label="模板名称" />
     </el-table>

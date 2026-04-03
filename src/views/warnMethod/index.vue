@@ -283,15 +283,13 @@ export default {
       showCronBox: false
     }
   },
-  async created() {
-    this.getSourceTypeOptions()
-  },
-  mounted() {
-  },
   computed: {
     ...mapGetters([
       'cur_user'
     ])
+  },
+  async created() {
+    this.getSourceTypeOptions()
   },
   methods: {
     input(data) {

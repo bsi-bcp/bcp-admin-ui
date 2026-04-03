@@ -34,8 +34,8 @@
     <div>
       <el-radio v-model="type" label="4" size="mini" border>指定</el-radio>
       <el-checkbox-group v-model="appoint">
-        <div v-for="i in 4" :key="i" style="margin-left: 10px;  line-height: 25px;">
-          <el-checkbox v-for="j in 10" v-if="parseInt((i - 1) + '' + (j - 1)) < 32 && !(i === 1 && j === 1)" :key="j" :label="(i - 1) + '' + (j - 1)" @change="type = '4'" />
+        <div v-for="(row, rowIndex) in dayRows" :key="rowIndex" style="margin-left: 10px;  line-height: 25px;">
+          <el-checkbox v-for="item in row" :key="item" :label="item" @change="type = '4'" />
         </div>
       </el-checkbox-group>
     </div>
@@ -71,6 +71,22 @@ export default {
     }
   },
   computed: {
+    dayRows() {
+      const rows = []
+      for (let i = 1; i <= 4; i++) {
+        const row = []
+        for (let j = 1; j <= 10; j++) {
+          const val = parseInt((i - 1) + '' + (j - 1))
+          if (val < 32 && !(i === 1 && j === 1)) {
+            row.push((i - 1) + '' + (j - 1))
+          }
+        }
+        if (row.length) {
+          rows.push(row)
+        }
+      }
+      return rows
+    },
     value_() {
       const result = []
       switch (this.type) {

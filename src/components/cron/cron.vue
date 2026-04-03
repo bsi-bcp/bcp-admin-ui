@@ -82,7 +82,8 @@ export default {
   },
   props: {
     value: {
-      type: String
+      type: String,
+      default: ''
     }
   },
   data() {

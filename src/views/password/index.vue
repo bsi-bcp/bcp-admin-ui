@@ -49,10 +49,7 @@
 </template>
 
 <script>
-import ModFilter from '../../components/ModFilter/index.vue'
 import * as api from '@/api/password'
-import * as menuApi from '@/api/menu'
-import { collectParam } from '../../utils'
 
 export default {
   data() {

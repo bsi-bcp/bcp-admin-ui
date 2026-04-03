@@ -10,9 +10,9 @@ export default {
   name: 'SXFProplist',
   components: { SelectLoader },
   props: {
-    code: String,
-    group: String,
-    value: String
+    code: { type: String, default: '' },
+    group: { type: String, default: '' },
+    value: { type: String, default: '' }
   },
   data() {
     return {

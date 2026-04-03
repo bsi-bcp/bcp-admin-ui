@@ -39,7 +39,8 @@ export default {
       default: '*'
     },
     lable: {
-      type: String
+      type: String,
+      default: ''
     }
   },
   data() {

@@ -10,9 +10,9 @@ export default {
   name: 'SXFSqllist',
   components: { SelectLoader },
   props: {
-    code: String,
-    value: String,
-    params: String
+    code: { type: String, default: '' },
+    value: { type: String, default: '' },
+    params: { type: String, default: '' }
   },
   data() {
     return {

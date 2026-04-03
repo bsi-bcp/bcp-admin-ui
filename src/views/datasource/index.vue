@@ -137,7 +137,7 @@
           <el-form-item label="认证方式" prop="xxx2">
             <template>
               <el-select id="xxx2_id" v-model="subFormData.xxx2" placeholder="请选择">
-                <el-option v-for="item in xxx2Options" :label="item.label" :value="item.value" />
+                <el-option v-for="(item, optindex) in xxx2Options" :key="optindex" :label="item.label" :value="item.value" />
               </el-select>
             </template>
           </el-form-item>
@@ -226,16 +226,16 @@
           </el-form-item>
         </div>
 
-       <!--新增界面的参数-->
-        <el-form-item label="全局参数" prop="parameter" style="margin-top:20px;">
+        <!--新增界面的参数-->
+        <el-form-item label="全局参数" prop="parameter" style="margin-top:20px;">
           <el-table :data="tableData" class="mt10" :cell-style="{padding:'10px 0px'}" :header-cell-style="{background:'#fafafa',color:'#606266',padding:'0px 0px'}" fit highlight-current-row style="width: 100%">
             <!-- align="center"使内容居中 -->
-             <el-table-column label="加密" align="center" width="50">
+            <el-table-column label="加密" align="center" width="50">
               <!-- slot-scope="scope"获取表格到当前行的数据 -->
               <template slot-scope="scope">
                 <el-switch
                   v-model="scope.row.secret"
-/>
+                />
               </template>
             </el-table-column>
 
@@ -254,15 +254,15 @@
 
             <el-table-column label="操作" align="center" width="200">
               <template slot-scope="scope">
-             <el-button type="text" @click="delTableData(scope)">删除</el-button>
+                <el-button type="text" @click="delTableData(scope)">删除</el-button>
               </template>
             </el-table-column>
           </el-table>
           <!--参数的添加按钮-->
           <el-button type="text" style="margin-top:5px" @click="addParam">添加</el-button>
-        </el-form-item>
+        </el-form-item>
 
-      </el-form-item label="全局参数" prop="parameter"></el-form>
+      </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button v-prevent-repeat-click size="mini" type="primary" @click="subForm('subFormData')">确 定</el-button>
         <el-button size="mini" @click="dialogFormVisible = false;showCronBox=false">取 消</el-button>
@@ -483,15 +483,15 @@ export default {
       showCronBox: false
     }
   },
-  async created() {
-    this.getSourceTypeOptions()
-  },
-  mounted() {
-  },
   computed: {
     ...mapGetters([
       'cur_user'
     ])
+  },
+  async created() {
+    this.getSourceTypeOptions()
+  },
+  mounted() {
   },
   methods: {
     input(data) {
@@ -569,7 +569,7 @@ export default {
       this.showCronBox = false
       this.$refs.subFormData.validate((valid) => {
         if (valid) {
-          if (this.subFormData.type === 'api' || this.subFormData.type == 'sapRFC') {
+          if (this.subFormData.type === 'api' || this.subFormData.type === 'sapRFC') {
             this.subFormData.classify = this.subFormData.type
           }
           // 如果说类型位api上报，分类暂时设置成边缘网关，后续可支持roma、apig等

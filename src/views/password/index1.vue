@@ -295,16 +295,7 @@ export default {
     },
     // 删除行表数据
     removePropList(row) {
-      // let items = []
-      // if (!row) {
-      //   if (!this.selectionPropList.length) {
-      //     this.$message.info('请选择相关数据')
-      //     return
-      //   }
-      //   items = collectParam(this.selectionPropList, 'id')
-      // } else {
-      //   items.push(row.id)
-      // }
+      const items = [row.id]
       this.$confirm('是否删除?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',

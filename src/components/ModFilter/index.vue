@@ -5,7 +5,7 @@
         <el-form ref="datas" size="mini" :model="datas" style="border:0" @keyup.enter.native="onSubmit();" @submit.native.prevent>
           <slot name="manyBtn" />
           <el-row v-for="(page,index) in filterConditions" :key="index" :gutter="20" type="flex">
-            <el-col v-for="(item) of page" :key="item.prop" :span="datas.listRowSize">
+            <el-col v-for="(item) of page" :key="item.prop" :span="listRowSize">
               <el-row type="flex">
                 <el-form-item :label="item.queryName||item.label" :prop="item.prop" style="white-space:nowrap" />
                 <el-col>
@@ -158,22 +158,25 @@ export default {
     }
   },
   computed: {
+    listRowSize() {
+      const hasDateRange = this.datas.filterList.findIndex((value) => value.type === 'daterange') > 0
+      return hasDateRange ? 8 : 6
+    },
     filterConditions: function() {
       const pages = []
       const filterConditions = this.datas.filterList.filter(function(cond) {
         return cond.conditionshow
       })
-      const rowsize = this.datas.filterList.findIndex((value) => value.type === 'daterange') > 0 ? 3 : 4
+      const rowsize = this.listRowSize === 8 ? 3 : 4
       filterConditions.forEach((item, index) => {
         if (item.conditionshow) {
-          const page = Math.floor(index / rowsize) // 4代表4条为一行，随意更改
+          const page = Math.floor(index / rowsize)
           if (!pages[page]) {
             pages[page] = []
           }
           pages[page].push(item)
         }
       })
-      this.datas.listRowSize = (rowsize === 3 ? 8 : 6)
       return pages
     },
     searchDisplay: function() {

@@ -26,7 +26,7 @@ export default {
       type: Object,
       default: () => ({})
     },
-    value: String
+    value: { type: String, default: '' }
   },
   data() {
     return {

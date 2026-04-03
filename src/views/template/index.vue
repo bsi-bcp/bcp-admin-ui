@@ -56,7 +56,6 @@ import * as api from '@/api/addministrative'
 import {
   upData,
   AddTemplate,
-  GetTemplate,
   disableType,
   delType
 } from '@/api/Administrative'
