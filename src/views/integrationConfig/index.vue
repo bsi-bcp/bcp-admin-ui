@@ -308,7 +308,7 @@
             <el-form-item v-if="ShowInput_title!='自定义脚本'" prop="dataSource" label="数据源">
               <el-select v-model="inNode.dataSource" placeholder="请选择" style="width:calc(100% - 85px)">
                 <el-option v-for="(optItem,optindex) in bcpDatasourceName" :key="optindex" :label="optItem"
-                           :value="optindex + ''"
+                           :value="optindex"
                 />
               </el-select>
               <el-button type="text" size="mini" @click="goToDatasource">管理数据源</el-button>
@@ -376,7 +376,7 @@
             <el-form-item v-if="Showoutput_title!='自定义脚本'" prop="dataSource" label="数据源">
               <el-select v-model="outNode.dataSource" placeholder="请选择" style="width:calc(100% - 85px)">
                 <el-option v-for="(optItem,optindex) in bcpDatasourceName" :key="optindex" :label="optItem"
-                           :value="optindex + ''"
+                           :value="optindex"
                 />
               </el-select>
               <el-button type="text" size="mini" @click="goToDatasource">管理数据源</el-button>
@@ -482,7 +482,7 @@
           <template slot-scope="scope">
             <el-select v-model="scope.row.dataSource" placeholder="请选择">
               <el-option v-for="(optItem,optindex) in bcpDatasourceName" :key="optindex" :label="optItem"
-                         :value="optindex + ''"
+                         :value="optindex"
               />
             </el-select>
           </template>
@@ -1120,26 +1120,42 @@ export default {
         this.logLoading.close()
       }
     },
-    // 下发配置到 Agent
+    // 异步下发配置到 Agent（立即返回 + 轮询状态）
     issue(row) {
-      const loading = this.$loading({ lock: true, text: '正在下发，请稍候...', background: 'rgba(0,0,0,0.5)' })
-      api.issueType(row).then(res => {
-        loading.close()
-        if (res.model.code === 200) {
-          this.$message({
-            showClose: true,
-            message: '下发成功!',
-            type: 'success'
+      var self = this
+      var loading = self.$loading({ lock: true, text: '正在下发，请稍候...', background: 'rgba(0,0,0,0.5)' })
+      api.issueType(row).then(function() {
+        var pollCount = 0
+        var maxPoll = 90 // 最多 90 次 × 2s = 3 分钟
+        var timer = setInterval(function() {
+          pollCount++
+          if (pollCount > maxPoll) {
+            clearInterval(timer)
+            loading.close()
+            self.$message({ showClose: true, message: '下发超时，请稍后检查配置状态', type: 'warning' })
+            self.getData(self.datas)
+            return
+          }
+          api.getSendStatus(row).then(function(res) {
+            var status = res.model
+            if (status !== '下发中') {
+              clearInterval(timer)
+              loading.close()
+              if (status === '下发成功') {
+                self.$message({ showClose: true, message: '下发成功!', type: 'success' })
+              } else {
+                self.$message({ showClose: true, message: '下发失败', type: 'error' })
+              }
+              self.getData(self.datas)
+            }
+          }).catch(function() {
+            clearInterval(timer)
+            loading.close()
+            self.getData(self.datas)
           })
-          this.getData(this.datas)
-        } else {
-          this.$message({
-            showClose: true,
-            message: res.model.msg,
-            type: 'error'
-          })
-        }
-      }).catch(() => {
+        }, 2000)
+      }).catch(function() {
+        // 550（重复下发）由 Axios 拦截器自动弹窗
         loading.close()
       })
     },

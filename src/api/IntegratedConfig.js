@@ -66,12 +66,19 @@ export function getTaskLog(param) {
   })
 }
 
-// 下发集成配置（后端需同步等待 Agent 重载，耗时较长）
+// 异步下发集成配置（立即返回，通过 getSendStatus 轮询结果）
 export function issueType(param) {
   return request({
     url: '/services/fwcore/config/send/' + param,
-    method: 'get',
-    timeout: 120000
+    method: 'post'
+  })
+}
+
+// 查询下发状态（轮询端点）
+export function getSendStatus(id) {
+  return request({
+    url: '/services/fwcore/config/send-status/' + id,
+    method: 'get'
   })
 }
 
