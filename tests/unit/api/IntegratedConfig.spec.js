@@ -1,4 +1,4 @@
-import { getPage, submitForm, batchDelete, singleDelete, getIdRow, getRolesByUserId, getName, exportExcel, expForIot, runTask, getTaskLog, issueType, getTemplateContent, upload } from '@/api/IntegratedConfig'
+import { getPage, submitForm, batchDelete, singleDelete, getIdRow, getRolesByUserId, getName, exportExcel, expForIot, runTask, getTaskLog, issueType, getSendStatus, getTemplateContent, upload } from '@/api/IntegratedConfig'
 const request = require('@/utils/request')
 
 jest.mock('@/utils/request', () => { const fn = jest.fn(() => Promise.resolve({})); fn.default = fn; return fn })
@@ -119,12 +119,19 @@ describe('API: IntegratedConfig.js', () => {
     })
   })
 
-  it('issueType sends GET to /send/:id', () => {
+  it('issueType sends POST to /send/:id', () => {
     issueType('c1')
     expect(request).toHaveBeenCalledWith({
       url: '/services/fwcore/config/send/c1',
-      method: 'get',
-      timeout: 120000
+      method: 'post'
+    })
+  })
+
+  it('getSendStatus sends GET to /send-status/:id', () => {
+    getSendStatus('c1')
+    expect(request).toHaveBeenCalledWith({
+      url: '/services/fwcore/config/send-status/c1',
+      method: 'get'
     })
   })
 

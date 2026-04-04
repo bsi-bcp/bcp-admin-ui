@@ -18,7 +18,8 @@ jest.mock('@/api/IntegratedConfig', () => ({
   expForIot: jest.fn(() => Promise.resolve('blob-stub')),
   runTask: jest.fn(() => Promise.resolve({})),
   getTaskLog: jest.fn(() => Promise.resolve({ model: [], totalCount: 0 })),
-  issueType: jest.fn(() => Promise.resolve({ model: { code: 200 } })),
+  issueType: jest.fn(() => Promise.resolve({ model: 1 })),
+  getSendStatus: jest.fn(() => Promise.resolve({ model: '下发成功' })),
   getTemplateContent: jest.fn(() => Promise.resolve({ jobList: [], configValue: null })),
   upload: jest.fn(() => Promise.resolve({})),
   getDatasourceFields: jest.fn(() => Promise.resolve({ model: [] }))
@@ -692,33 +693,42 @@ describe('integrationConfig/index.vue — method logic', () => {
   // 8. Issue & Run task (5)
   // =========================================================================
   describe('issue', () => {
-    it('shows success message when code is 200', async() => {
-      api.issueType.mockResolvedValueOnce({ model: { code: 200 } })
-      const closeFn = jest.fn()
-      const vm = createVm()
-      vm.$loading = jest.fn(() => ({ close: closeFn }))
+    it('calls issueType then polls getSendStatus until success', function(done) {
+      api.issueType.mockResolvedValueOnce({ model: 1 })
+      api.getSendStatus.mockResolvedValueOnce({ model: '下发成功' })
+      var closeFn = jest.fn()
+      var vm = createVm()
+      vm.$loading = jest.fn(function() { return { close: closeFn } })
       vm.getData = jest.fn()
       vm.issue('config1')
-      await new Promise(r => setTimeout(r, 0))
-      expect(api.issueType).toHaveBeenCalledWith('config1')
-      expect(closeFn).toHaveBeenCalled()
-      expect(vm.$message).toHaveBeenCalledWith(
-        expect.objectContaining({ type: 'success', message: '下发成功!' })
-      )
-    })
+      // 等待 issueType resolve + 首次 2s 轮询 + getSendStatus resolve
+      setTimeout(function() {
+        expect(api.issueType).toHaveBeenCalledWith('config1')
+        expect(api.getSendStatus).toHaveBeenCalledWith('config1')
+        expect(closeFn).toHaveBeenCalled()
+        expect(vm.$message).toHaveBeenCalledWith(
+          expect.objectContaining({ type: 'success', message: '下发成功!' })
+        )
+        done()
+      }, 2500)
+    }, 10000)
 
-    it('shows error message when code is not 200', async() => {
-      api.issueType.mockResolvedValueOnce({ model: { code: 500, msg: '连接失败' } })
-      const closeFn = jest.fn()
-      const vm = createVm()
-      vm.$loading = jest.fn(() => ({ close: closeFn }))
+    it('shows error when getSendStatus returns failure', function(done) {
+      api.issueType.mockResolvedValueOnce({ model: 1 })
+      api.getSendStatus.mockResolvedValueOnce({ model: '下发失败' })
+      var closeFn = jest.fn()
+      var vm = createVm()
+      vm.$loading = jest.fn(function() { return { close: closeFn } })
+      vm.getData = jest.fn()
       vm.issue('config1')
-      await new Promise(r => setTimeout(r, 0))
-      expect(closeFn).toHaveBeenCalled()
-      expect(vm.$message).toHaveBeenCalledWith(
-        expect.objectContaining({ type: 'error', message: '连接失败' })
-      )
-    })
+      setTimeout(function() {
+        expect(closeFn).toHaveBeenCalled()
+        expect(vm.$message).toHaveBeenCalledWith(
+          expect.objectContaining({ type: 'error', message: '下发失败' })
+        )
+        done()
+      }, 2500)
+    }, 10000)
   })
 
   describe('runTask', () => {
@@ -1354,13 +1364,13 @@ describe('integrationConfig/index.vue — method logic', () => {
   // 16. P1: Error branches
   // =========================================================================
   describe('issue — API error branch', () => {
-    it('closes loading on API rejection', async() => {
-      api.issueType.mockRejectedValueOnce(new Error('network'))
-      const closeFn = jest.fn()
-      const vm = createVm()
-      vm.$loading = jest.fn(() => ({ close: closeFn }))
+    it('closes loading when issueType is rejected (e.g. 550 duplicate)', async() => {
+      api.issueType.mockRejectedValueOnce(new Error('配置正在下发中，请勿重复操作'))
+      var closeFn = jest.fn()
+      var vm = createVm()
+      vm.$loading = jest.fn(function() { return { close: closeFn } })
       vm.issue('config1')
-      await new Promise(r => setTimeout(r, 0))
+      await new Promise(function(r) { setTimeout(r, 0) })
 
       expect(closeFn).toHaveBeenCalled()
     })
