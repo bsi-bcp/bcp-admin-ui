@@ -7,7 +7,8 @@ module.exports = {
     '^.+\\.jsx?$': 'babel-jest'
   },
   moduleNameMapper: {
-    '^@/(.*)$': '<rootDir>/src/$1'
+    '^@/(.*)$': '<rootDir>/src/$1',
+    '^monaco-editor$': '<rootDir>/tests/unit/__mocks__/monaco-editor.js'
   },
   snapshotSerializers: ['jest-serializer-vue'],
   testMatch: [
