@@ -20,5 +20,8 @@ module.exports = {
     'lcov',
     'text-summary'
   ],
-  testURL: 'http://localhost/'
+  testURL: 'http://localhost/',
+  transformIgnorePatterns: [
+    '/node_modules/(?!@babel/runtime-corejs2/helpers/esm)'
+  ]
 }

@@ -299,7 +299,9 @@
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item v-if="ShowInput_title!='API上报'" prop="cron" label="定时设置">
-              <el-input v-model="inNode.cron" placeholder="请输入cron表达式" />
+              <el-input v-model="inNode.cron" placeholder="请输入cron表达式" style="width:calc(100% - 40px)">
+                <el-button slot="append" icon="el-icon-date" @click="showCronDialog" />
+              </el-input>
             </el-form-item>
           </el-col>
           <el-col :span="12">

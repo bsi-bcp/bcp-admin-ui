@@ -103,7 +103,8 @@ describe('API: IntegratedConfig.js', () => {
     expect(request).toHaveBeenCalledWith({
       url: '/services/fwcore/config/run-task',
       method: 'post',
-      data: param
+      data: param,
+      timeout: 120000
     })
   })
 
@@ -113,7 +114,8 @@ describe('API: IntegratedConfig.js', () => {
     expect(request).toHaveBeenCalledWith({
       url: '/services/fwcore/config/task/log',
       method: 'post',
-      data: param
+      data: param,
+      timeout: 30000
     })
   })
 
@@ -121,7 +123,8 @@ describe('API: IntegratedConfig.js', () => {
     issueType('c1')
     expect(request).toHaveBeenCalledWith({
       url: '/services/fwcore/config/send/c1',
-      method: 'get'
+      method: 'get',
+      timeout: 120000
     })
   })
 
